@@ -59,9 +59,14 @@ class AppConfig(AbstractSettings):
     debug: bool = Field(default=False)
 
 
+class BotConfig(AbstractSettings):
+    token: str
+
+
 class Settings(AbstractSettings):
     try:
         app: AppConfig = AppConfig()
+        bot: BotConfig = BotConfig()
     except ValidationError as e:
         logger.critical(e)
         sys.exit(0)
