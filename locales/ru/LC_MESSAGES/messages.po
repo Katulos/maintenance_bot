@@ -1,0 +1,61 @@
+# Russian translations for .
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the  project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+
+#: app/exceptions/keyboard_utils.py:17
+msgid "Unknown keyboard button property"
+msgstr "Неизвестное свойство кнопки клавиатуры"
+
+#: app/exceptions/keyboard_utils.py:29
+msgid "Not enough args to create button"
+msgstr "Недостаточно аргументов для создания кнопки"
+
+#: app/exceptions/keyboard_utils.py:40
+msgid "Too many args to create button"
+msgstr "Слишком много аргументов для создания кнопки"
+
+#: app/exceptions/keyboard_utils.py:49
+msgid "Payment button must be first in keyboard"
+msgstr "Кнопка оплаты должна быть первой на клавиатуре"
+
+#: app/exceptions/keyboard_utils.py:55
+msgid "Schema size not equal to buttons count"
+msgstr "Размер схемы не равен количеству кнопок"
+
+#: app/handlers/user/start.py:18
+msgid "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>"
+msgstr "Привет, <a href='tg://user?id={user_id}'>{user_full_name}</a>"
+
+#: app/keyboards/default/basic.py:13 app/keyboards/default/basic.py:25
+#: app/keyboards/default/basic.py:42 app/keyboards/default/basic.py:54
+#: app/keyboards/default/basic.py:69 app/keyboards/default/basic.py:84
+#: app/keyboards/default/basic.py:99 app/keyboards/default/basic.py:137
+msgid "◀️Back"
+msgstr "◀️Назад"
+
+#: app/keyboards/default/basic.py:19 app/keyboards/default/basic.py:25
+#: app/keyboards/default/basic.py:37 app/keyboards/default/basic.py:57
+#: app/keyboards/default/basic.py:72 app/keyboards/default/basic.py:87
+#: app/keyboards/default/basic.py:102 app/keyboards/default/basic.py:140
+msgid "🚫 Cancel"
+msgstr "🚫 Отмена"
+
+#: app/keyboards/default/basic.py:39
+msgid "✅Confirm"
+msgstr "✅Подтвердить"
+
+#: app/keyboards/default/basic.py:51
+msgid "▶️Skip"
+msgstr "▶️Пропустить"
+
+#: app/keyboards/default/basic.py:66 app/keyboards/default/basic.py:96
+msgid "✅Yes"
+msgstr "✅Да"
+
+#: app/keyboards/default/basic.py:81 app/keyboards/default/basic.py:96
+msgid "❌No"
+msgstr "❌Нет"

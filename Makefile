@@ -2,7 +2,7 @@ locales = locales
 
 # i18n
 extract:
-	@pybabel extract -F babel.cfg -o $(locales)/messages.pot ./
+	@pybabel extract -k _:1,1t -k _:1,2 -k __ -F babel.cfg -o $(locales)/messages.pot ./
 
 update:
 	@pybabel update -d $(locales) -i $(locales)/messages.pot

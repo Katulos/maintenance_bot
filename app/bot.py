@@ -7,6 +7,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.telegram import TelegramAPIServer
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.utils.i18n import I18n, SimpleI18nMiddleware
 from aiohttp import web
 from orjson import orjson
 
@@ -23,6 +24,14 @@ def setup_handlers(dp: Dispatcher) -> None:
 def setup_middlewares(dp: Dispatcher) -> None:
     dp.update.outer_middleware(
         StructLoggingMiddleware(logger=dp["aiogram_logger"]),
+    )
+    i18n = I18n(
+        path=settings.app.BASE_DIR / "locales",
+        domain="messages",
+        default_locale=settings.app.DEFAULT_LOCALE,
+    )
+    dp.update.outer_middleware(
+        SimpleI18nMiddleware(i18n),
     )
 
 

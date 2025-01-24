@@ -58,6 +58,8 @@ class AppConfig(AbstractSettings):
 
     DEBUG: bool = Field(default=False)
 
+    DEFAULT_LOCALE: str = Field(default="en")
+
     LOGGING_LEVEL: str = Field(default="INFO")
 
     USE_CUSTOM_API_SERVER: bool = Field(default=False)
