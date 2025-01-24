@@ -42,7 +42,7 @@ packages = ['app']
 version = {attr = "app.__version__"}
 
 [tool.setuptools.package-data]
-app= ['migrations/*']
+app= ['locales/*']
 
 [tool.black]
 line-length = 78

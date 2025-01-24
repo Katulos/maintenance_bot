@@ -11,7 +11,7 @@ from ..models.base import orjson_dumps
 
 def setup_logger() -> structlog.typing.FilteringBoundLogger:
     logging.basicConfig(
-        level=settings.app.LOGGING_LEVEL,
+        level=settings.app.logging_level,
         stream=sys.stdout,
     )
     log: structlog.typing.FilteringBoundLogger = structlog.get_logger(
@@ -39,7 +39,7 @@ def setup_logger() -> structlog.typing.FilteringBoundLogger:
     structlog.configure(
         processors=processors,
         wrapper_class=structlog.make_filtering_bound_logger(
-            settings.app.LOGGING_LEVEL,
+            settings.app.logging_level,
         ),
     )
     return log

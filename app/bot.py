@@ -28,7 +28,7 @@ def setup_middlewares(dp: Dispatcher) -> None:
     i18n = I18n(
         path=settings.app.BASE_DIR / "locales",
         domain="messages",
-        default_locale=settings.app.DEFAULT_LOCALE,
+        default_locale=settings.app.default_locale,
     )
     dp.update.outer_middleware(
         SimpleI18nMiddleware(i18n),
@@ -80,16 +80,16 @@ async def aiogram_on_startup_webhook(
 ) -> None:
     await setup_aiogram(dispatcher)
     webhook_logger = dispatcher["aiogram_logger"].bind(
-        webhook_url=settings.app.MAIN_WEBHOOK_ADDRESS,
+        webhook_url=settings.app.main_webhook_address,
     )
     webhook_logger.debug("Configuring webhook")
     await bot.set_webhook(
-        url=settings.app.MAIN_WEBHOOK_ADDRESS.format(
-            token=settings.bot.BOT_TOKEN,
-            bot_id=settings.bot.BOT_TOKEN.split(":")[0],
+        url=settings.app.main_webhook_address.format(
+            token=settings.bot.bot_token,
+            bot_id=settings.bot.bot_token.split(":")[0],
         ),
         allowed_updates=dispatcher.resolve_used_update_types(),
-        secret_token=settings.app.MAIN_WEBHOOK_SECRET_TOKEN,
+        secret_token=settings.app.main_webhook_secret_token,
     )
     webhook_logger.info("Configured webhook")
 
@@ -108,7 +108,7 @@ async def aiogram_on_startup_polling(
     dispatcher: Dispatcher,
     bot: Bot,
 ) -> None:
-    if settings.app.DROP_PREVIOUS_UPDATES:
+    if settings.app.drop_previous_updates:
         await bot.delete_webhook(drop_pending_updates=True)
     await setup_aiogram(dispatcher)
     dispatcher["aiogram_logger"].info("Started polling")
@@ -150,12 +150,12 @@ def main() -> None:
     aiogram_session_logger = logging.setup_logger().bind(
         type="aiogram_session",
     )
-    if settings.app.USE_CUSTOM_API_SERVER:
+    if settings.app.use_custom_api_server:
         session = smart_session.SmartAiogramAiohttpSession(
             api=TelegramAPIServer(
-                base=settings.app.CUSTOM_API_SERVER_BASE,
-                file=settings.app.CUSTOM_API_SERVER_FILE,
-                is_local=settings.app.CUSTOM_API_SERVER_IS_LOCAL,
+                base=settings.app.custom_api_server_base,
+                file=settings.app.custom_api_server_file,
+                is_local=settings.app.custom_api_server_is_local,
             ),
             json_loads=orjson.loads,
             logger=aiogram_session_logger,
@@ -166,7 +166,7 @@ def main() -> None:
             logger=aiogram_session_logger,
         )
     bot = Bot(
-        settings.bot.BOT_TOKEN,
+        settings.bot.bot_token,
         session=session,
         default=DefaultBotProperties(parse_mode="HTML"),
     )
@@ -176,14 +176,14 @@ def main() -> None:
     )
     dp["aiogram_session_logger"] = aiogram_session_logger
 
-    if settings.app.USE_WEBHOOK:
+    if settings.app.use_webhook:
         dp.startup.register(aiogram_on_startup_webhook)
         dp.shutdown.register(aiogram_on_shutdown_webhook)
         web.run_app(
             asyncio.run(setup_aiohttp_app(bot, dp)),
             handle_signals=True,
-            host=settings.app.MAIN_WEBHOOK_LISTENING_HOST,
-            port=settings.app.MAIN_WEBHOOK_LISTENING_PORT,
+            host=settings.app.main_webhook_listening_host,
+            port=settings.app.main_webhook_listening_port,
         )
     else:
         dp.startup.register(aiogram_on_startup_polling)

@@ -28,7 +28,7 @@ async def process_update(
 async def execute(req: web.Request) -> web.Response:
     if not secrets.compare_digest(
         req.headers.get("X-Telegram-Bot-Api-Secret-Token", ""),
-        settings.bot.MAIN_WEBHOOK_SECRET_TOKEN,
+        settings.bot.main_webhook_secret_token,
     ):
         raise aiohttp.web.HTTPNotFound
     if not secrets.compare_digest(

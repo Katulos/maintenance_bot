@@ -56,35 +56,35 @@ class AppConfig(AbstractSettings):
         default=BASE_DIR,
     )
 
-    DEBUG: bool = Field(default=False)
+    debug: bool = Field(default=False)
 
-    DEFAULT_LOCALE: str = Field(default="en")
+    default_locale: str = Field(default="en")
 
-    LOGGING_LEVEL: str = Field(default="INFO")
+    logging_level: str = Field(default="INFO")
 
-    USE_CUSTOM_API_SERVER: bool = Field(default=False)
+    use_custom_api_server: bool = Field(default=False)
 
-    CUSTOM_API_SERVER_BASE: str = Field(default="")
+    custom_api_server_base: str = Field(default="")
 
-    CUSTOM_API_SERVER_FILE: str = Field(default="")
+    custom_api_server_file: str = Field(default="")
 
-    CUSTOM_API_SERVER_IS_LOCAL: bool = Field(default=False)
+    custom_api_server_is_local: bool = Field(default=False)
 
-    USE_WEBHOOK: bool = Field(default=False)
+    use_webhook: bool = Field(default=False)
 
-    MAIN_WEBHOOK_LISTENING_HOST: str = Field(default="127.0.0.1")
+    main_webhook_listening_host: str = Field(default="127.0.0.1")
 
-    MAIN_WEBHOOK_LISTENING_PORT: int = Field(default=8080)
+    main_webhook_listening_port: int = Field(default=8080)
 
-    MAIN_WEBHOOK_ADDRESS: str = Field(default="")
+    main_webhook_address: str = Field(default="")
 
-    MAIN_WEBHOOK_SECRET_TOKEN: str = Field(default="")
+    main_webhook_secret_token: str = Field(default="")
 
-    DROP_PREVIOUS_UPDATES: bool = Field(default=False)
+    drop_previous_updates: bool = Field(default=False)
 
 
 class BotConfig(AbstractSettings):
-    BOT_TOKEN: str
+    bot_token: str
 
 
 class Settings(AbstractSettings):
