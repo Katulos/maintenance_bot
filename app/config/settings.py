@@ -52,15 +52,37 @@ class AbstractSettings(BaseSettings):
 
 
 class AppConfig(AbstractSettings):
-    base_dir: Union[pathlib.PosixPath, pathlib.WindowsPath] = Field(
+    BASE_DIR: Union[pathlib.PosixPath, pathlib.WindowsPath] = Field(
         default=BASE_DIR,
     )
 
-    debug: bool = Field(default=False)
+    DEBUG: bool = Field(default=False)
+
+    LOGGING_LEVEL: str = Field(default="INFO")
+
+    USE_CUSTOM_API_SERVER: bool = Field(default=False)
+
+    CUSTOM_API_SERVER_BASE: str = Field(default="")
+
+    CUSTOM_API_SERVER_FILE: str = Field(default="")
+
+    CUSTOM_API_SERVER_IS_LOCAL: bool = Field(default=False)
+
+    USE_WEBHOOK: bool = Field(default=False)
+
+    MAIN_WEBHOOK_LISTENING_HOST: str = Field(default="127.0.0.1")
+
+    MAIN_WEBHOOK_LISTENING_PORT: int = Field(default=8080)
+
+    MAIN_WEBHOOK_ADDRESS: str = Field(default="")
+
+    MAIN_WEBHOOK_SECRET_TOKEN: str = Field(default="")
+
+    DROP_PREVIOUS_UPDATES: bool = Field(default=False)
 
 
 class BotConfig(AbstractSettings):
-    token: str
+    BOT_TOKEN: str
 
 
 class Settings(AbstractSettings):
