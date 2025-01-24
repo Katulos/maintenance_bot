@@ -5,8 +5,8 @@ import sys
 
 import structlog
 
-from .config import settings
-from .models.base import orjson_dumps
+from ..config import settings
+from ..models.base import orjson_dumps
 
 
 def setup_logger() -> structlog.typing.FilteringBoundLogger:
