@@ -3,9 +3,9 @@ from __future__ import annotations
 import logging
 import pathlib
 import sys
-from typing import Tuple, Type, Union
+from typing import Dict, Tuple, Type
 
-from pydantic import Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
@@ -35,6 +35,7 @@ class AbstractSettings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=True,
         extra="ignore",
+        env_nested_delimiter=".",
         yaml_file=config,
         yaml_file_encoding="utf-8",
     )
@@ -51,8 +52,8 @@ class AbstractSettings(BaseSettings):
         return (YamlConfigSettingsSource(settings_cls),)
 
 
-class AppConfig(AbstractSettings):
-    BASE_DIR: Union[pathlib.PosixPath, pathlib.WindowsPath] = Field(
+class AppConfig(BaseModel):
+    BASE_DIR: pathlib.Path = Field(
         default=BASE_DIR,
     )
 
@@ -61,6 +62,10 @@ class AppConfig(AbstractSettings):
     default_locale: str = Field(default="en")
 
     logging_level: str = Field(default="INFO")
+
+
+class BotConfig(BaseModel):
+    token: str
 
     use_custom_api_server: bool = Field(default=False)
 
@@ -83,14 +88,29 @@ class AppConfig(AbstractSettings):
     drop_previous_updates: bool = Field(default=False)
 
 
-class BotConfig(AbstractSettings):
-    bot_token: str
+class OdooUserCredentials(BaseModel):
+    username: str
+
+    password: str
+
+
+class OdooConfig(BaseModel):
+    host: str
+
+    port: int = Field(default=8069)
+
+    database: str
+
+    protocol: str = Field(default="jsonrpc+ssl")
+
+    users: Dict[int, OdooUserCredentials]
 
 
 class Settings(AbstractSettings):
     try:
-        app: AppConfig = AppConfig()
-        bot: BotConfig = BotConfig()
+        app: AppConfig
+        bot: BotConfig
+        odoo: OdooConfig
     except ValidationError as e:
         logger.critical(e)
         sys.exit(0)
@@ -99,4 +119,11 @@ class Settings(AbstractSettings):
         sys.exit(0)
 
 
-settings = Settings()
+try:
+    settings = Settings()
+except ValidationError as e:
+    logger.critical(e)
+    sys.exit(0)
+except ValueError as e:
+    logger.critical("Configuration file validation error: %s", e)
+    sys.exit(0)

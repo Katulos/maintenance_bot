@@ -108,7 +108,7 @@ async def aiogram_on_startup_polling(
     dispatcher: Dispatcher,
     bot: Bot,
 ) -> None:
-    if settings.app.drop_previous_updates:
+    if settings.bot.drop_previous_updates:
         await bot.delete_webhook(drop_pending_updates=True)
     await setup_aiogram(dispatcher)
     dispatcher["aiogram_logger"].info("Started polling")
@@ -150,12 +150,12 @@ def main() -> None:
     aiogram_session_logger = logging.setup_logger().bind(
         type="aiogram_session",
     )
-    if settings.app.use_custom_api_server:
+    if settings.bot.use_custom_api_server:
         session = smart_session.SmartAiogramAiohttpSession(
             api=TelegramAPIServer(
-                base=settings.app.custom_api_server_base,
-                file=settings.app.custom_api_server_file,
-                is_local=settings.app.custom_api_server_is_local,
+                base=settings.bot.custom_api_server_base,
+                file=settings.bot.custom_api_server_file,
+                is_local=settings.bot.custom_api_server_is_local,
             ),
             json_loads=orjson.loads,
             logger=aiogram_session_logger,
@@ -166,7 +166,7 @@ def main() -> None:
             logger=aiogram_session_logger,
         )
     bot = Bot(
-        settings.bot.bot_token,
+        settings.bot.token,
         session=session,
         default=DefaultBotProperties(parse_mode="HTML"),
     )
@@ -176,14 +176,14 @@ def main() -> None:
     )
     dp["aiogram_session_logger"] = aiogram_session_logger
 
-    if settings.app.use_webhook:
+    if settings.bot.use_webhook:
         dp.startup.register(aiogram_on_startup_webhook)
         dp.shutdown.register(aiogram_on_shutdown_webhook)
         web.run_app(
             asyncio.run(setup_aiohttp_app(bot, dp)),
             handle_signals=True,
-            host=settings.app.main_webhook_listening_host,
-            port=settings.app.main_webhook_listening_port,
+            host=settings.bot.main_webhook_listening_host,
+            port=settings.bot.main_webhook_listening_port,
         )
     else:
         dp.startup.register(aiogram_on_startup_polling)
