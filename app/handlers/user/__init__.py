@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from aiogram import Router
 from aiogram.filters import CommandStart, StateFilter
+from aiogram.utils.i18n import gettext as _
 
 from ... import states
 from ...filters import ChatTypeFilter, TextFilter
@@ -15,7 +16,7 @@ def prepare_router() -> Router:
     user_router.message.register(start.start, CommandStart())
     user_router.message.register(
         start.start,
-        TextFilter("🏠Home"),
+        TextFilter(_("🏠Home")),
         StateFilter(states.user.UserMainMenu.menu),
     )
 

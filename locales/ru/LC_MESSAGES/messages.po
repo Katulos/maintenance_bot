@@ -26,9 +26,9 @@ msgstr "Кнопка оплаты должна быть первой на кла
 msgid "Schema size not equal to buttons count"
 msgstr "Размер схемы не равен количеству кнопок"
 
-#: app/handlers/user/start.py:18
-msgid "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>"
-msgstr "Привет, <a href='tg://user?id={user_id}'>{user_full_name}</a>"
+#: app/handlers/user/__init__.py:20
+msgid "🏠Home"
+msgstr "🏠В главное меню"
 
 #: app/keyboards/default/basic.py:13 app/keyboards/default/basic.py:25
 #: app/keyboards/default/basic.py:42 app/keyboards/default/basic.py:54
@@ -59,3 +59,6 @@ msgstr "✅Да"
 #: app/keyboards/default/basic.py:81 app/keyboards/default/basic.py:96
 msgid "❌No"
 msgstr "❌Нет"
+
+#~ msgid "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>"
+#~ msgstr "Привет, <a href='tg://user?id={user_id}'>{user_full_name}</a>"
