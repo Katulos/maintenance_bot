@@ -61,7 +61,9 @@ class AppConfig(BaseModel):
 
     default_locale: str = Field(default="en")
 
-    logging_level: str = Field(default="INFO")
+    @property
+    def logging_level(self) -> str:
+        return "DEBUG" if self.debug else "INFO"
 
 
 class BotConfig(BaseModel):

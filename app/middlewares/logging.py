@@ -268,6 +268,7 @@ class StructLoggingMiddleware(BaseMiddleware):
             "business_logger",
             "aiogram_logger",
             "aiogram_session_logger",
+            "odoo_logger",
         ]:
             with suppress(
                 Exception,

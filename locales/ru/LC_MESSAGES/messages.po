@@ -26,9 +26,27 @@ msgstr "Кнопка оплаты должна быть первой на кла
 msgid "Schema size not equal to buttons count"
 msgstr "Размер схемы не равен количеству кнопок"
 
-#: app/handlers/user/__init__.py:20
-msgid "🏠Home"
-msgstr "🏠В главное меню"
+#: app/filters/odoo_register.py:24
+msgid "User is missing from the configuration file"
+msgstr ""
+
+#: app/filters/odoo_register.py:35
+msgid "Incorrect authorization data"
+msgstr ""
+
+#: app/filters/odoo_register.py:42
+msgid "User is not registered in Odoo"
+msgstr ""
+
+#: app/filters/odoo_register.py:55
+msgid ""
+"Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>!\n"
+"We haven't met.\n"
+"Please contact your system administrator."
+msgstr ""
+"Привет, <a href='tg://user?id={user_id}'>{user_full_name}</a>!\n"
+"Мы не знакомы.\n"
+"Пожалуйста обратитесь к своему системному администратору."
 
 #: app/keyboards/default/basic.py:13 app/keyboards/default/basic.py:25
 #: app/keyboards/default/basic.py:42 app/keyboards/default/basic.py:54
@@ -59,6 +77,3 @@ msgstr "✅Да"
 #: app/keyboards/default/basic.py:81 app/keyboards/default/basic.py:96
 msgid "❌No"
 msgstr "❌Нет"
-
-#~ msgid "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>"
-#~ msgstr "Привет, <a href='tg://user?id={user_id}'>{user_full_name}</a>"

@@ -27,6 +27,7 @@ multidict==6.1.0
 mypy==1.13.0
 mypy-extensions==1.0.0
 nodeenv==1.9.1
+odoorpc==0.10.1
 orjson==3.10.15
 packaging==24.2
 pip-tools==6.14.0

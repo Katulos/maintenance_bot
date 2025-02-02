@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+import odoorpc
+import structlog
 import tenacity
 from tenacity import _utils
+
+TIMEOUT_BETWEEN_ATTEMPTS = 2
+MAX_TIMEOUT = 30
 
 
 def before_log(retry_state: tenacity.RetryCallState) -> None:
@@ -40,3 +45,30 @@ def after_log(retry_state: tenacity.RetryCallState) -> None:
             "attempt": _utils.to_ordinal(retry_state.attempt_number),
         },
     )
+
+
+@tenacity.retry(
+    wait=tenacity.wait_fixed(TIMEOUT_BETWEEN_ATTEMPTS),
+    stop=tenacity.stop_after_delay(MAX_TIMEOUT),
+    before_sleep=before_log,
+    after=after_log,
+)
+async def wait_odoo(
+    logger: structlog.typing.FilteringBoundLogger,
+    host: str,
+    port: int,
+    protocol: str,
+) -> odoorpc.ODOO:
+    odoo = odoorpc.ODOO(
+        host=host,
+        port=port,
+        protocol=protocol,
+    )
+
+    logger.info("Connecting to Odoo version %s", odoo.version)
+    logger.debug(
+        "Available Odoo databases: {}".format(
+            ", ".join(map(str, odoo.db.list())),
+        ),
+    )
+    return odoo

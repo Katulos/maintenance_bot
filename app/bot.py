@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import asyncio
+from typing import TYPE_CHECKING
 
 import aiojobs
-from aiogram import Bot, Dispatcher
+import tenacity
+from aiogram import Bot, Dispatcher, types
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.telegram import TelegramAPIServer
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -14,7 +16,28 @@ from orjson import orjson
 from . import handlers, web_handlers
 from .config import settings
 from .middlewares import StructLoggingMiddleware
-from .utils import logging, smart_session
+from .utils import connect_to_services, logging, smart_session
+
+if TYPE_CHECKING:
+    import structlog
+
+
+async def create_odoo_connections(dp: Dispatcher) -> None:
+    logger: structlog.typing.FilteringBoundLogger = dp["business_logger"]
+    logger.debug("Connecting to Odoo")
+    try:
+        odoo = await connect_to_services.wait_odoo(
+            logger=dp["odoo_logger"],
+            host=settings.odoo.host,
+            port=settings.odoo.port,
+            protocol=settings.odoo.protocol,
+        )
+    except tenacity.RetryError:
+        logger.exception("Failed to connect to Odoo")
+        exit(1)
+    else:
+        logger.debug("Successfully connected to Odoo")
+    dp["odoo"] = odoo
 
 
 def setup_handlers(dp: Dispatcher) -> None:
@@ -38,15 +61,27 @@ def setup_middlewares(dp: Dispatcher) -> None:
 def setup_logging(dp: Dispatcher) -> None:
     dp["aiogram_logger"] = logging.setup_logger().bind(type="aiogram")
     dp["business_logger"] = logging.setup_logger().bind(type="business")
+    dp["odoo_logger"] = logging.setup_logger().bind(type="odoo")
 
 
 async def setup_aiogram(dp: Dispatcher) -> None:
     setup_logging(dp)
     logger = dp["aiogram_logger"]
     logger.debug("Configuring aiogram")
+    await create_odoo_connections(dp)
     setup_handlers(dp)
     setup_middlewares(dp)
     logger.info("Configured aiogram")
+
+
+async def setup_default_commands(bot: Bot) -> None:
+    await bot.delete_my_commands()
+    await bot.set_my_commands(
+        commands=[
+            types.BotCommand(command="start", description="Start Bot"),
+            types.BotCommand(command="help", description="Get Help"),
+        ],
+    )
 
 
 async def aiohttp_on_startup(app: web.Application) -> None:
@@ -92,6 +127,8 @@ async def aiogram_on_startup_webhook(
         secret_token=settings.app.main_webhook_secret_token,
     )
     webhook_logger.info("Configured webhook")
+    webhook_logger.info("Setup default commands")
+    await setup_default_commands(bot)
 
 
 async def aiogram_on_shutdown_webhook(
@@ -110,6 +147,7 @@ async def aiogram_on_startup_polling(
 ) -> None:
     if settings.bot.drop_previous_updates:
         await bot.delete_webhook(drop_pending_updates=True)
+    await setup_default_commands(bot)
     await setup_aiogram(dispatcher)
     dispatcher["aiogram_logger"].info("Started polling")
 
