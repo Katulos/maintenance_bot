@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import pathlib
 import sys
 from typing import Dict, List, Tuple, Type
@@ -59,13 +60,21 @@ class AppConfig(BaseModel):
 
     debug: bool = Field(default=False)
 
-    supported_locales: List[str, ...] = ["en", "ru"]
+    supported_locales: List[str] = ["en", "ru"]
 
     default_locale: str = Field(default="en")
 
     @property
     def logging_level(self) -> str:
         return "DEBUG" if self.debug else "INFO"
+
+    fsm_storage_path: pathlib.Path = Field(
+        default=os.path.join(
+            pathlib.Path(__file__).resolve().parent.parent.parent,
+            "data",
+            "fsm_storage.db",
+        ),
+    )
 
 
 class BotConfig(BaseModel):

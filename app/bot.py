@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import asyncio
 import os
 
 from aiogram import Bot, Dispatcher
+from aiogram_sqlite_storage.sqlitestore import SQLStorage
 from fluent.runtime import FluentLocalization, FluentResourceLoader
 
 from .config import settings
@@ -35,8 +37,8 @@ def setup_middlewares(dp: Dispatcher) -> None:
     dp.callback_query.middleware(make_i18n_middleware())
 
 
-async def main():
-    dp = Dispatcher()
+def main():
+    dp = Dispatcher(storage=SQLStorage(settings.app.fsm_storage_path))
     setup_middlewares(dp)
     bot = Bot(token=settings.bot.token)
-    await dp.start_polling(bot)
+    asyncio.run(dp.start_polling(bot))
