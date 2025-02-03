@@ -4,10 +4,12 @@ import asyncio
 import os
 
 from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
 from aiogram_sqlite_storage.sqlitestore import SQLStorage
 from fluent.runtime import FluentLocalization, FluentResourceLoader
 
 from .config import settings
+from .handlers.user import prepare_router
 from .middlewares import I18nMiddleware
 
 
@@ -32,6 +34,10 @@ def make_i18n_middleware():
     return I18nMiddleware(l10ns, default_locale)
 
 
+def setup_handlers(dp: Dispatcher) -> None:
+    dp.include_router(prepare_router())
+
+
 def setup_middlewares(dp: Dispatcher) -> None:
     dp.message.middleware(make_i18n_middleware())
     dp.callback_query.middleware(make_i18n_middleware())
@@ -39,6 +45,10 @@ def setup_middlewares(dp: Dispatcher) -> None:
 
 def main():
     dp = Dispatcher(storage=SQLStorage(settings.app.fsm_storage_path))
+    setup_handlers(dp)
     setup_middlewares(dp)
-    bot = Bot(token=settings.bot.token)
+    bot = Bot(
+        token=settings.bot.token,
+        default=DefaultBotProperties(parse_mode="HTML"),
+    )
     asyncio.run(dp.start_polling(bot))
