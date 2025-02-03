@@ -1,13 +1,13 @@
 locales = locales
 
 # i18n
+locales = locales
+
+# i18n
 extract:
-	@pybabel extract -k _:1,1t -k _:1,2 -k __ -F babel.cfg -o $(locales)/messages.pot ./
+	@ftl_extract --default-ftl-file main.ftl \
+		-k i18n -k I18N -k i18n -k LF -k LazyProxy -k L -k I18NFormat \
+		-l en -l ru \
+		./app $(locales)
 
-update:
-	@pybabel update -d $(locales) -i $(locales)/messages.pot
-
-compile:
-	@pybabel compile -d $(locales)
-
-babel: extract update
+fluent: extract
