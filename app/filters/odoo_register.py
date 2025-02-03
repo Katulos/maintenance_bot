@@ -53,13 +53,16 @@ class OdooRegisterFilter(BaseFilter):
         user_id: int,
         user_full_name: str,
     ) -> None:
-        await message.answer(
+        m = [
             _(
-                "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>!\n"
-                "We haven't met.\n"
-                "Please contact your system administrator.",
+                "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>!",
             ).format(
                 user_id=user_id,
                 user_full_name=user_full_name,
             ),
+            _("We haven't met."),
+            _("Please contact your system administrator."),
+        ]
+        await message.answer(
+            "\n".join(m),
         )

@@ -80,6 +80,10 @@ async def setup_default_commands(bot: Bot) -> None:
         commands=[
             types.BotCommand(command="start", description="Start Bot"),
             types.BotCommand(command="help", description="Get Help"),
+            types.BotCommand(
+                command="equipments",
+                description="Get My Equipments",
+            ),
         ],
     )
 

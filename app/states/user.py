@@ -4,4 +4,14 @@ from aiogram.fsm.state import State, StatesGroup
 
 
 class UserMainMenu(StatesGroup):
-    menu = State()
+    main_menu = State()
+
+    choosing_equipment = State()
+
+    choosing_equipment = State()
+
+    choosing_maintenance_request = State()
+
+    close_maintenance_request = State()
+
+    forward_maintenance_request = State()

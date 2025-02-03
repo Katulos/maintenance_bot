@@ -26,32 +26,43 @@ msgstr "Кнопка оплаты должна быть первой на кла
 msgid "Schema size not equal to buttons count"
 msgstr "Размер схемы не равен количеству кнопок"
 
-#: app/filters/odoo_register.py:24
+#: app/filters/odoo_register.py:25
 msgid "User is missing from the configuration file"
 msgstr ""
 
-#: app/filters/odoo_register.py:35
+#: app/filters/odoo_register.py:37
 msgid "Incorrect authorization data"
 msgstr ""
 
-#: app/filters/odoo_register.py:42
+#: app/filters/odoo_register.py:44
 msgid "User is not registered in Odoo"
 msgstr ""
 
-#: app/filters/odoo_register.py:55
-msgid ""
-"Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>!\n"
-"We haven't met.\n"
-"Please contact your system administrator."
-msgstr ""
-"Привет, <a href='tg://user?id={user_id}'>{user_full_name}</a>!\n"
-"Мы не знакомы.\n"
-"Пожалуйста обратитесь к своему системному администратору."
+#: app/filters/odoo_register.py:57
+msgid "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>!"
+msgstr "Привет, <a href='tg://user?id={user_id}'>{user_full_name}</a>!"
+
+#: app/filters/odoo_register.py:62
+msgid "We haven't met."
+msgstr "Мы не знакомы."
+
+#: app/filters/odoo_register.py:63
+msgid "Please contact your system administrator."
+msgstr "Пожалуйста обратитесь к своему системному администратору."
+
+#: app/handlers/user/equipments.py:35
+msgid "Equipments:"
+msgstr "Оборудование:"
+
+#: app/handlers/user/start.py:18
+msgid "Select a menu item below"
+msgstr "Выберите пункт меню ниже"
 
 #: app/keyboards/default/basic.py:13 app/keyboards/default/basic.py:25
 #: app/keyboards/default/basic.py:42 app/keyboards/default/basic.py:54
 #: app/keyboards/default/basic.py:69 app/keyboards/default/basic.py:84
 #: app/keyboards/default/basic.py:99 app/keyboards/default/basic.py:137
+#: app/keyboards/default/main_menu.py:23
 msgid "◀️Back"
 msgstr "◀️Назад"
 
@@ -77,3 +88,11 @@ msgstr "✅Да"
 #: app/keyboards/default/basic.py:81 app/keyboards/default/basic.py:96
 msgid "❌No"
 msgstr "❌Нет"
+
+#: app/keyboards/default/main_menu.py:15
+msgid "⚙️ My Equipments"
+msgstr ""
+
+#: app/keyboards/default/main_menu.py:16
+msgid "🛠 My Maintenance Requests"
+msgstr ""

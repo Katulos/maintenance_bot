@@ -5,7 +5,7 @@ from aiogram.filters import CommandStart, StateFilter
 
 from ... import states
 from ...filters import ChatTypeFilter, OdooRegisterFilter, TextFilter
-from . import help, start
+from . import equipments, help, start
 
 
 def prepare_router() -> Router:
@@ -17,10 +17,14 @@ def prepare_router() -> Router:
     user_router.message.register(
         start.start,
         TextFilter("🏠Home"),
-        StateFilter(states.user.UserMainMenu.menu),
+        StateFilter(states.user.UserMainMenu.main_menu),
     )
 
+    user_router.message.register(equipments.equipments)
+    user_router.message.register(
+        equipments.equipments,
+        TextFilter("⚙️ My Equipments"),
+    )
     user_router.message.register(help.help)
-    user_router.message.register(help.help, TextFilter("🆘Help"))
 
     return user_router
