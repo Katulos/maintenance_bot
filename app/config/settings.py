@@ -5,7 +5,6 @@ import pathlib
 import sys
 from typing import Dict, List, Tuple, Type
 
-import structlog
 from pydantic import BaseModel, Field, ValidationError
 from pydantic_settings import (
     BaseSettings,
@@ -14,7 +13,9 @@ from pydantic_settings import (
     YamlConfigSettingsSource,
 )
 
-logger = structlog.get_logger()
+from .. import utils
+
+logger = utils.logging.setup_logger().bind(type="business")
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent.parent
 
