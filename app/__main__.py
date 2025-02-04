@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-import logging
-
+from . import utils
 from .bot import main
 
-logger = logging.getLogger(__name__)
+logger = utils.logging.setup_logger().bind(type="business")
 
 if __name__ == "__main__":
     try:

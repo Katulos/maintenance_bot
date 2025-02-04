@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 import pathlib
 import sys
@@ -14,11 +13,9 @@ from pydantic_settings import (
     YamlConfigSettingsSource,
 )
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+from .. import utils
+
+logger = utils.logging.setup_logger().bind(type="business")
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent.parent
 
@@ -100,23 +97,14 @@ class OdooConfig(BaseModel):
 
 
 class Settings(AbstractSettings):
-    try:
-        app: AppConfig
-        bot: BotConfig
-        odoo: OdooConfig
-    except ValidationError as e:
-        logger.critical(e)
-        sys.exit(0)
-    except ValueError as e:
-        logger.critical("Configuration file validation error: %s", e)
-        sys.exit(0)
+    app: AppConfig
+    bot: BotConfig
+    odoo: OdooConfig
 
 
 try:
     settings = Settings()
-except ValidationError as e:
-    logger.critical(e)
-    sys.exit(0)
-except ValueError as e:
+    logger.info("Configuration loaded")
+except (ValueError, ValidationError) as e:
     logger.critical("Configuration file validation error: %s", e)
     sys.exit(0)
