@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import os
 
+import tenacity
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram_sqlite_storage.sqlitestore import SQLStorage
@@ -11,6 +12,19 @@ from fluent.runtime import FluentLocalization, FluentResourceLoader
 from .config import settings
 from .handlers.user import prepare_router
 from .middlewares import I18nMiddleware
+from .utils import connect_to_services
+
+
+async def create_odoo_connections(dp: Dispatcher) -> None:
+    try:
+        odoo = await connect_to_services.wait_odoo(
+            host=settings.odoo.host,
+            port=settings.odoo.port,
+            protocol=settings.odoo.protocol,
+        )
+    except tenacity.RetryError:
+        exit(1)
+    dp["odoo"] = odoo
 
 
 def make_i18n_middleware():
@@ -43,12 +57,37 @@ def setup_middlewares(dp: Dispatcher) -> None:
     dp.callback_query.middleware(make_i18n_middleware())
 
 
-def main():
-    dp = Dispatcher(storage=SQLStorage(settings.app.fsm_storage_path))
+async def setup_aiogram(dp: Dispatcher) -> None:
+    await create_odoo_connections(dp)
     setup_handlers(dp)
     setup_middlewares(dp)
+
+
+async def aiogram_on_startup_polling(
+    dispatcher: Dispatcher,
+    bot: Bot,
+) -> None:
+    await setup_aiogram(dispatcher)
+
+
+async def aiogram_on_shutdown_polling(
+    dispatcher: Dispatcher,
+    bot: Bot,
+) -> None:
+    await bot.session.close()
+    await dispatcher.storage.close()
+
+
+def main():
+    dp = Dispatcher(storage=SQLStorage(settings.app.fsm_storage_path))
+
     bot = Bot(
         token=settings.bot.token,
         default=DefaultBotProperties(parse_mode="HTML"),
     )
+
+    dp.startup.register(aiogram_on_startup_polling)
+
+    dp.shutdown.register(aiogram_on_shutdown_polling)
+
     asyncio.run(dp.start_polling(bot))
