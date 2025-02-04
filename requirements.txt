@@ -21,5 +21,6 @@ pydantic-core==2.20.1
 pydantic-settings==2.7.1
 python-dotenv==1.0.1
 pytz==2025.1
+tenacity==9.0.0
 typing-extensions==4.12.2
 yarl==1.15.2
