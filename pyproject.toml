@@ -12,6 +12,7 @@ dependencies = [
     "fluent.runtime==0.4.0",
     "odoorpc==0.10.1",
     "pydantic-settings==2.7.1",
+    "structlog==25.1.0",
     "tenacity==9.0.0",
 ]
 authors = [
