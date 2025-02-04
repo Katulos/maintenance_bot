@@ -2,18 +2,20 @@ from __future__ import annotations
 
 import asyncio
 import os
+import pathlib
 from typing import TYPE_CHECKING
 
 import tenacity
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram_sqlite_storage.sqlitestore import SQLStorage
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import setup_dialogs
 from fluent.runtime import FluentLocalization, FluentResourceLoader
 from orjson import orjson
 
-from . import utils
+from . import dialogs, utils
 from .config import settings
-from .handlers.user import prepare_router
+from .handlers import user
 from .middlewares import I18nMiddleware, StructLoggingMiddleware
 from .utils import connect_to_services
 
@@ -57,7 +59,7 @@ def make_i18n_middleware():
     supported_locales = settings.app.supported_locales
     loader = FluentResourceLoader(
         os.path.join(
-            os.path.dirname(__file__),
+            pathlib.Path(__file__).resolve().parent.parent,
             "locales",
             "{locale}",
         ),
@@ -74,7 +76,8 @@ def make_i18n_middleware():
 
 
 def setup_handlers(dp: Dispatcher) -> None:
-    dp.include_router(prepare_router())
+    dp.include_router(user.prepare_router())
+    dp.include_router(dialogs.dialog)
 
 
 def setup_middlewares(dp: Dispatcher) -> None:
@@ -131,7 +134,7 @@ def main():
         logger=aiogram_session_logger,
     )
 
-    dp = Dispatcher(storage=SQLStorage(settings.app.fsm_storage_path))
+    dp = Dispatcher(storage=MemoryStorage())
 
     bot = Bot(
         token=settings.bot.token,
@@ -144,5 +147,6 @@ def main():
     dp.startup.register(aiogram_on_startup_polling)
 
     dp.shutdown.register(aiogram_on_shutdown_polling)
+    setup_dialogs(dp)
 
     asyncio.run(dp.start_polling(bot))

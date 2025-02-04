@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Awaitable, Callable, Dict, Protocol, Union
+from typing import Any, Awaitable, Callable, Dict, Union
 
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.types import CallbackQuery, Message
-from aiogram_dialog.api.protocols import DialogManager
-from aiogram_dialog.widgets.common import WhenCondition
-from aiogram_dialog.widgets.text import Text
 from fluent.runtime import FluentLocalization
 
-I18N_FORMAT_KEY = "aiogd_i18n_format"
+from ..utils.i18n_format import I18N_FORMAT_KEY
 
 
 class I18nMiddleware(BaseMiddleware):
@@ -42,25 +39,3 @@ class I18nMiddleware(BaseMiddleware):
         data[I18N_FORMAT_KEY] = l10n.format_value
 
         return await handler(event, data)
-
-
-class Values(Protocol):
-    def __getitem__(self, item: Any) -> Any:
-        raise NotImplementedError
-
-
-def default_format_text(text: str, data: Values) -> str:
-    return text.format_map(data)
-
-
-class I18NFormat(Text):
-    def __init__(self, text: str, when: WhenCondition = None):
-        super().__init__(when)
-        self.text = text
-
-    async def _render_text(self, data: Dict, manager: DialogManager) -> str:
-        format_text = manager.middleware_data.get(
-            I18N_FORMAT_KEY,
-            default_format_text,
-        )
-        return format_text(self.text, data)
