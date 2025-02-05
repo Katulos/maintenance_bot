@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from operator import itemgetter
 
-from aiogram_dialog import Window
+from aiogram_dialog import ShowMode, Window
 from aiogram_dialog.widgets.kbd import (
     Cancel,
     CurrentPage,
@@ -61,7 +61,10 @@ window = Window(
         PrevPage(scroll="scroll_maintenance_requests"),
         NextPage(scroll="scroll_maintenance_requests"),
         MAIN_MENU_BTN,
-        Cancel(text=I18NFormat("close-button")),
+        Cancel(
+            text=I18NFormat("close-button"),
+            show_mode=ShowMode.DELETE_AND_SEND,
+        ),
     ),
     getter=maintenance_requests_getter,
     state=DialogSG.MAINTENANCE_PAGER,

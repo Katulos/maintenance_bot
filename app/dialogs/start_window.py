@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from aiogram_dialog import Window
+from aiogram_dialog import ShowMode, Window
 from aiogram_dialog.widgets.kbd import Cancel, SwitchTo
 
 from ..states import DialogSG
@@ -20,6 +20,9 @@ window = Window(
         id="maintenance_requests",
         state=DialogSG.MAINTENANCE_PAGER,
     ),
-    Cancel(text=I18NFormat("cancel-button")),
+    Cancel(
+        text=I18NFormat("cancel-button"),
+        show_mode=ShowMode.DELETE_AND_SEND,
+    ),
     state=DialogSG.MAIN,
 )
