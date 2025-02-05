@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import odoorpc
+import structlog
 from aiogram import html, types
 from aiogram.filters import BaseFilter
 
@@ -12,12 +13,14 @@ class OdooRegisterFilter(BaseFilter):
         self,
         message: types.Message,
         odoo: odoorpc.ODOO,
+        odoo_logger: structlog.typing.FilteringBoundLogger,
     ) -> bool:
         user = message.from_user
         user_id = user.id
         user_full_name = html.quote(user.full_name)
 
         if user_id not in settings.odoo.users:
+            odoo_logger.error("User is missing from the configuration file")
             await self._send_welcome_message(message, user_id, user_full_name)
             return False
 
@@ -28,12 +31,14 @@ class OdooRegisterFilter(BaseFilter):
                 password=settings.odoo.users[user_id].password,
             )
         except odoorpc.error.RPCError:
+            odoo_logger.error("Incorrect authorization data")
             await self._send_welcome_message(message, user_id, user_full_name)
             return False
 
         hr = odoo.env["hr.employee"]
         employee_id = hr.search([("telegram_id", "=", user_id)], limit=1)
         if not employee_id:
+            odoo_logger.error("User is not registered in Odoo")
             await self._send_welcome_message(message, user_id, user_full_name)
             return False
 
