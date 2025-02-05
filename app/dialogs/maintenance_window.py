@@ -14,14 +14,14 @@ from aiogram_dialog.widgets.kbd import (
     Row,
     ScrollingGroup,
 )
-from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog.widgets.text import Format
 
 from ..states import MAIN_MENU_BTN, DialogSG
 from ..utils.i18n_format import I18NFormat
 from .maintenance_requests_getter import maintenance_requests_getter
 
 window = Window(
-    Const("Scrolling group with external paging controls"),
+    I18NFormat("maintenance-requests-title"),
     ScrollingGroup(
         Multiselect(
             Format("✓ {item[0]}"),
@@ -61,7 +61,7 @@ window = Window(
         PrevPage(scroll="scroll_maintenance_requests"),
         NextPage(scroll="scroll_maintenance_requests"),
         MAIN_MENU_BTN,
-        Cancel(text=I18NFormat("Cancel")),
+        Cancel(text=I18NFormat("close-button")),
     ),
     getter=maintenance_requests_getter,
     state=DialogSG.MAINTENANCE_PAGER,

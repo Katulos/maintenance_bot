@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import pathlib
 import sys
-from typing import Dict, List, Tuple, Type
 
 from pydantic import BaseModel, Field, ValidationError
 from pydantic_settings import (
@@ -40,12 +39,12 @@ class AbstractSettings(BaseSettings):
     @classmethod
     def settings_customise_sources(
         cls,
-        settings_cls: Type[BaseSettings],
+        settings_cls: type[BaseSettings],
         init_settings: PydanticBaseSettingsSource,
         env_settings: PydanticBaseSettingsSource,
         dotenv_settings: PydanticBaseSettingsSource,
         file_secret_settings: PydanticBaseSettingsSource,
-    ) -> Tuple[PydanticBaseSettingsSource, ...]:
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (YamlConfigSettingsSource(settings_cls),)
 
 
@@ -56,7 +55,7 @@ class AppConfig(BaseModel):
 
     debug: bool = Field(default=False)
 
-    supported_locales: List[str] = ["en", "ru"]
+    supported_locales: list[str] = ["en", "ru"]
 
     default_locale: str = Field(default="en")
 
@@ -84,7 +83,7 @@ class OdooConfig(BaseModel):
 
     protocol: str = Field(default="jsonrpc+ssl")
 
-    users: Dict[int, OdooUserCredentials]
+    users: dict[int, OdooUserCredentials]
 
 
 class Settings(AbstractSettings):

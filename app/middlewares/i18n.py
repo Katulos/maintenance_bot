@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Awaitable, Callable, Dict, Union
+from typing import Any, Awaitable, Callable
 
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.types import CallbackQuery, Message
@@ -12,7 +12,7 @@ from ..utils.i18n_format import I18N_FORMAT_KEY
 class I18nMiddleware(BaseMiddleware):
     def __init__(
         self,
-        l10ns: Dict[str, FluentLocalization],
+        l10ns: dict[str, FluentLocalization],
         default_lang: str,
     ):
         super().__init__()
@@ -22,11 +22,11 @@ class I18nMiddleware(BaseMiddleware):
     async def __call__(
         self,
         handler: Callable[
-            [Union[Message, CallbackQuery], Dict[str, Any]],
+            [Message | CallbackQuery, dict[str, Any]],
             Awaitable[Any],
         ],
-        event: Union[Message, CallbackQuery],
-        data: Dict[str, Any],
+        event: Message | CallbackQuery,
+        data: dict[str, Any],
     ) -> Any:
         if event.from_user:
             lang = event.from_user.language_code
