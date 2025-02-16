@@ -8,14 +8,15 @@ from aiogram_dialog.widgets.kbd import (
     CurrentPage,
     FirstPage,
     LastPage,
-    Multiselect,
     NextPage,
     PrevPage,
     Row,
     ScrollingGroup,
+    Select,
 )
 from aiogram_dialog.widgets.text import Format
 
+from ..handlers.user.maintenance import maintenance_info
 from ..states import MAIN_MENU_BTN, DialogSG
 from ..utils.i18n_format import I18NFormat
 from .maintenance_requests_getter import maintenance_requests_getter
@@ -23,12 +24,12 @@ from .maintenance_requests_getter import maintenance_requests_getter
 window = Window(
     I18NFormat("maintenance-requests-title"),
     ScrollingGroup(
-        Multiselect(
-            Format("✓ {item[0]}"),
+        Select(
             Format("{item[0]}"),
-            id="ms_maintenance_requests",
+            id="s_maintenance_requests",
             items="maintenance_requests",
             item_id_getter=itemgetter(1),
+            on_click=maintenance_info,
         ),
         width=2,
         height=5,

@@ -9,7 +9,9 @@ from ..utils.i18n_format import I18NFormat
 class DialogSG(StatesGroup):
     MAIN = State()
     EQUIPMENTS_PAGER = State()
+    EQUIPMENT_INFO = State()
     MAINTENANCE_PAGER = State()
+    MAINTENANCE_INFO = State()
 
 
 MAIN_MENU_BTN = SwitchTo(

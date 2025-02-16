@@ -8,14 +8,15 @@ from aiogram_dialog.widgets.kbd import (
     CurrentPage,
     FirstPage,
     LastPage,
-    Multiselect,
     NextPage,
     PrevPage,
     Row,
     ScrollingGroup,
+    Select,
 )
 from aiogram_dialog.widgets.text import Format
 
+from ..handlers.user.equipments import equipment_info
 from ..states import MAIN_MENU_BTN, DialogSG
 from ..utils.i18n_format import I18NFormat
 from .equipments_getter import equipments_getter
@@ -23,12 +24,12 @@ from .equipments_getter import equipments_getter
 window = Window(
     I18NFormat("equipments-title"),
     ScrollingGroup(
-        Multiselect(
-            Format("✓ {item[0]}"),
+        Select(
             Format("{item[0]}"),
-            id="ms_equipments",
+            id="s_equipments",
             items="equipments",
             item_id_getter=itemgetter(1),
+            on_click=equipment_info,
         ),
         width=1,
         height=10,

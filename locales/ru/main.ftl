@@ -1,5 +1,7 @@
 equipments-title = 🧰Оборудование
+equipment-info-title = 🧰Оборудование
 maintenance-requests-title = 🛠️Запросы на обслуживание
+maintenance-info-title = 🛠️Запрос на обслуживание
 no-register-message = Привет, <a href='tg://user?id={ $user_id }'>{ $user_full_name }</a>! Мы не знакомы. Пожалуйста обратитесь к своему системному администратору.
 select-an-option-title = Пожалуйста, выберите пункт меню:
 back-button = ◀️Назад

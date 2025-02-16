@@ -35,7 +35,9 @@ class OdooRegisterFilter(BaseFilter):
             if not employee_id:
                 odoo_logger.error("User is not registered in Odoo")
                 await self._send_welcome_message(
-                    message, user_id, user_full_name
+                    message,
+                    user_id,
+                    user_full_name,
                 )
                 return False
             return True
