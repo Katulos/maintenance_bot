@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING
 import tenacity
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
+from aiogram_fsm_sqlitestorage import SQLiteStorage
 from fluent.runtime import FluentLocalization, FluentResourceLoader
 from orjson import orjson
 
@@ -133,8 +133,17 @@ def main():
         json_loads=orjson.loads,
         logger=aiogram_session_logger,
     )
-
-    dp = Dispatcher(storage=MemoryStorage())
+    db_path = os.path.join(
+        pathlib.Path(__file__).resolve().parent.parent,
+        "data",
+        "fsm_storage.db",
+    )
+    dp = Dispatcher(
+        storage=SQLiteStorage(
+            db_path=db_path,
+        ),
+    )
+    # dp = Dispatcher(storage=MemoryStorage())
 
     bot = Bot(
         token=settings.bot.token,

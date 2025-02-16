@@ -9,6 +9,7 @@ requires-python = ">= 3.8"
 dependencies = [
     "aiogram[i18n]==3.13.1",
     "aiogram-dialog==2.2.0",
+    "aiogram-fsm-sqlitestorage==1.0.0",
     "fluent.runtime==0.4.0",
     "odoorpc==0.10.1",
     "orjson==3.10.15",
@@ -94,22 +95,22 @@ select = [
 
 ignore = [
     #### specific rules
-    "D100",   # ignore missing docs
-    "D101",   # ignore missing docs
-    "D102",   # ignore missing docs
-    "D103",   # ignore missing docs
-    "D104",   # ignore missing docs
-    "D105",   # ignore missing docs
-    "D106",   # ignore missing docs
-    "D107",   # ignore missing docs
-    "D205",   # ignore missing docs
-    "D211",   # ignore missing docs
-    "D213",   # ignore missing docs
-    "D401",   # ignore missing docs
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "D205",
+    "D211",
+    "D213",
+    "D401",
     "E203",
     "E266",
     "E501",
-    # "F401", # ignore unused import
+    # "F401",
     "F403",
 ]
 fixable = ["A", "B", "C4", "E", "F", "I", "TID"]

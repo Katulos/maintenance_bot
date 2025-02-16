@@ -30,19 +30,19 @@ class OdooRegisterFilter(BaseFilter):
                 login=settings.odoo.users[user_id].username,
                 password=settings.odoo.users[user_id].password,
             )
-        except odoorpc.error.RPCError:
-            odoo_logger.error("Incorrect authorization data")
+            hr = odoo.env["hr.employee"]
+            employee_id = hr.search([("telegram_id", "=", user_id)], limit=1)
+            if not employee_id:
+                odoo_logger.error("User is not registered in Odoo")
+                await self._send_welcome_message(
+                    message, user_id, user_full_name
+                )
+                return False
+            return True
+        except odoorpc.error.RPCError as e:
+            odoo_logger.error(e)
             await self._send_welcome_message(message, user_id, user_full_name)
             return False
-
-        hr = odoo.env["hr.employee"]
-        employee_id = hr.search([("telegram_id", "=", user_id)], limit=1)
-        if not employee_id:
-            odoo_logger.error("User is not registered in Odoo")
-            await self._send_welcome_message(message, user_id, user_full_name)
-            return False
-
-        return True
 
     async def _send_welcome_message(
         self,
