@@ -17,10 +17,10 @@ from aiogram_dialog.widgets.kbd import (
 )
 from aiogram_dialog.widgets.text import Format
 
-from ..config import settings
-from ..handlers.user.equipments import equipment_info
-from ..states import MAIN_MENU_BTN, DialogSG
-from ..utils.i18n_format import I18NFormat
+from ...config import settings
+from ...handlers.user.equipments import equipment_info
+from ...states import MAIN_MENU_BTN, DialogSG
+from ...utils.i18n_format import I18NFormat
 
 
 async def _equipments_getter(

@@ -4,18 +4,14 @@ from aiogram_dialog import (
     Dialog,
 )
 
-from . import (
-    equipment_info_window,
-    equipment_window,
-    maintenance_info_window,
-    maintenance_window,
-    start_window,
-)
+from app.dialogs import start
+from app.dialogs.equipment import equipment_info, equipments
+from app.dialogs.maintenance import maintenance_info, maintenances
 
 dialog = Dialog(
-    start_window.window,
-    equipment_window.window,
-    equipment_info_window.window,
-    maintenance_window.window,
-    maintenance_info_window.window,
+    start.window,
+    equipments.window,
+    equipment_info.window,
+    maintenances.window,
+    maintenance_info.window,
 )

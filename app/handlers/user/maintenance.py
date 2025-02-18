@@ -27,4 +27,31 @@ async def maintenance_info(
     selected_item: int,
 ) -> None:
     dialog_manager.dialog_data["maintenance_id"] = selected_item
-    await dialog_manager.switch_to(DialogSG.EQUIPMENT_INFO)
+    await dialog_manager.switch_to(DialogSG.MAINTENANCE_INFO)
+
+
+async def accept_maintenance(
+    callback: CallbackQuery,
+    widget: Any,
+    dialog_manager: DialogManager,
+    selected_item: int,
+) -> None:
+    pass
+
+
+async def forward_maintenance(
+    callback: CallbackQuery,
+    widget: Any,
+    dialog_manager: DialogManager,
+    selected_item: int,
+) -> None:
+    pass
+
+
+async def close_maintenance(
+    callback: CallbackQuery,
+    widget: Any,
+    dialog_manager: DialogManager,
+    selected_item: int,
+) -> None:
+    pass

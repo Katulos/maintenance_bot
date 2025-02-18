@@ -8,9 +8,9 @@ from aiogram_dialog import DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.kbd import Back, Cancel, Row
 from aiogram_dialog.widgets.text import List
 
-from ..config import settings
-from ..states import MAIN_MENU_BTN, DialogSG
-from ..utils.i18n_format import I18NFormat, Transformer
+from ...config import settings
+from ...states import MAIN_MENU_BTN, DialogSG
+from ...utils.i18n_format import I18NFormat, Transformer
 
 
 async def _equipment_info(
@@ -46,7 +46,6 @@ async def _equipment_info(
 window = Window(
     I18NFormat("equipment-info-title"),
     List(
-        # Category: { $category }\nName: { $name}\nSerial: { $serial_no }\nEmployee: { $employee }
         Transformer(
             I18NFormat("equipment-info"),
             {
