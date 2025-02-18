@@ -24,6 +24,7 @@ async def maintenance_info(
     callback: CallbackQuery,
     widget: Any,
     dialog_manager: DialogManager,
-    selected_item: str,
+    selected_item: int,
 ) -> None:
-    await dialog_manager.start(DialogSG.MAINTENANCE_INFO)
+    dialog_manager.dialog_data["maintenance_id"] = selected_item
+    await dialog_manager.switch_to(DialogSG.EQUIPMENT_INFO)

@@ -1,4 +1,8 @@
 equipments-title = 🧰Equipments
+equipment-info = { $name }
+    Category: { $category }
+    Serial: { $serial_no }
+    Employee: { $employee }
 equipment-info-title = 🧰Equipment
 maintenance-requests-title = 🛠️Maintenance Requests
 maintenance-info-title  = 🛠️Maintenance Request

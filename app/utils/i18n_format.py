@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Protocol
 
+from aiogram import MagicFilter
 from aiogram_dialog.api.protocols import DialogManager
 from aiogram_dialog.widgets.common import WhenCondition
 from aiogram_dialog.widgets.text import Text
@@ -16,6 +17,32 @@ class Values(Protocol):
 
 def default_format_text(text: str, data: Values) -> str:
     return text.format_map(data)
+
+
+""" Thnx @Tishka17! :-D
+
+see <https://t.me/aiogram_dialog/159549> """
+
+
+class Transformer(Text):
+    def __init__(
+        self,
+        text: Text,
+        mapping: dict[str, MagicFilter],
+        when: WhenCondition = None,
+    ):
+        super().__init__(when)
+        self.text = text
+        self.mapping = mapping
+
+    def _transform(self, data: Values) -> Values:
+        return {
+            key: transformer.resolve(data)
+            for key, transformer in self.mapping.items()
+        }
+
+    async def _render_text(self, data: Values, manager: DialogManager) -> str:
+        return await self.text.render_text(self._transform(data), manager)
 
 
 class I18NFormat(Text):

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from operator import itemgetter
-
-from aiogram_dialog import ShowMode, Window
+import odoorpc
+import structlog
+from aiogram.types import User
+from aiogram_dialog import DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.kbd import (
     Cancel,
     CurrentPage,
@@ -16,19 +17,54 @@ from aiogram_dialog.widgets.kbd import (
 )
 from aiogram_dialog.widgets.text import Format
 
+from ..config import settings
 from ..handlers.user.maintenance import maintenance_info
 from ..states import MAIN_MENU_BTN, DialogSG
 from ..utils.i18n_format import I18NFormat
-from .maintenance_requests_getter import maintenance_requests_getter
+
+
+async def _maintenance_requests_getter(
+    event_from_user: User,
+    dialog_manager: DialogManager,
+    odoo_logger: structlog.typing.FilteringBoundLogger,
+    **kwargs,
+):
+    try:
+        odoo: odoorpc.ODOO = dialog_manager.middleware_data.get("odoo")
+        user_id = event_from_user.id
+
+        if user_id not in settings.odoo.users:
+            odoo_logger.error("User is missing from the configuration file")
+            return {"equipments": []}
+
+        odoo.login(
+            db=settings.odoo.database,
+            login=settings.odoo.users[user_id].username,
+            password=settings.odoo.users[user_id].password,
+        )
+
+        request = odoo.env["maintenance.request"]
+        request_ids = request.search(
+            [("equipment_id.employee_id.telegram_id", "=", user_id)],
+        )
+        requests = request.browse(request_ids)
+
+        return {"maintenance_requests": requests}
+
+    except odoorpc.error.RPCError as e:
+        odoo_logger.error(e)
+        return {"maintenance_requests": []}
+
 
 window = Window(
     I18NFormat("maintenance-requests-title"),
     ScrollingGroup(
         Select(
-            Format("{item[0]}"),
+            Format("{item[0].name}"),
             id="s_maintenance_requests",
             items="maintenance_requests",
-            item_id_getter=itemgetter(1),
+            item_id_getter=lambda x: x.id,
+            type_factory=int,
             on_click=maintenance_info,
         ),
         width=2,
@@ -67,6 +103,6 @@ window = Window(
             show_mode=ShowMode.DELETE_AND_SEND,
         ),
     ),
-    getter=maintenance_requests_getter,
+    getter=_maintenance_requests_getter,
     state=DialogSG.MAINTENANCE_PAGER,
 )
