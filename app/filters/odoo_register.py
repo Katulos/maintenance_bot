@@ -1,62 +1,41 @@
 from __future__ import annotations
 
-import odoorpc
+from typing import Any
+
 import structlog
 from aiogram import html, types
 from aiogram.filters import BaseFilter
 
-from ..config import settings
+from ..services.odoo import fetch_employee
 
 
 class OdooRegisterFilter(BaseFilter):
     async def __call__(
         self,
         message: types.Message,
-        odoo: odoorpc.ODOO,
         odoo_logger: structlog.typing.FilteringBoundLogger,
+        **kwargs: Any,
     ) -> bool:
-        user = message.from_user
-        user_id = user.id
-        user_full_name = html.quote(user.full_name)
+        employee = await fetch_employee(message.from_user)
 
-        if user_id not in settings.odoo.users:
-            odoo_logger.error("User is missing from the configuration file")
-            await self._send_welcome_message(message, user_id, user_full_name)
-            return False
-
-        try:
-            odoo.login(
-                db=settings.odoo.database,
-                login=settings.odoo.users[user_id].username,
-                password=settings.odoo.users[user_id].password,
+        if not employee:
+            odoo_logger.error("User is not registered in Odoo")
+            await self._send_welcome_message(
+                message,
             )
-            hr = odoo.env["hr.employee"]
-            employee_id = hr.search([("telegram_id", "=", user_id)], limit=1)
-            if not employee_id:
-                odoo_logger.error("User is not registered in Odoo")
-                await self._send_welcome_message(
-                    message,
-                    user_id,
-                    user_full_name,
-                )
-                return False
-            return True
-        except odoorpc.error.RPCError as e:
-            odoo_logger.error(e)
-            await self._send_welcome_message(message, user_id, user_full_name)
             return False
+        return True
 
     async def _send_welcome_message(
         self,
         message: types.Message,
-        user_id: int,
-        user_full_name: str,
     ) -> None:
+        user = message.from_user
+        user_id = user.id
+        user_full_name = html.quote(user.full_name)
+
         m = [
-            "Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>!".format(
-                user_id=user_id,
-                user_full_name=user_full_name,
-            ),
+            f"Hello, <a href='tg://user?id={user_id}'>{user_full_name}</a>!",
             "We haven't met.",
             "Please contact your system administrator.",
         ]

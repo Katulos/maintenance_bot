@@ -12,7 +12,8 @@ def orjson_dumps(
     *,
     default: typing.Callable[[typing.Any], typing.Any] | None,
 ) -> str:
-    return orjson.dumps(v, default=default).decode()
+    result = orjson.dumps(v, default=default).decode()
+    return typing.cast(str, result)
 
 
 class BaseModel(pydantic.BaseModel):

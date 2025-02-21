@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import pathlib
 import sys
 
@@ -60,8 +61,8 @@ class AppConfig(BaseModel):
     default_locale: str = Field(default="en")
 
     @property
-    def logging_level(self) -> str:
-        return "DEBUG" if self.debug else "INFO"
+    def logging_level(self) -> int:
+        return logging.INFO if self.debug else logging.INFO
 
 
 class BotConfig(BaseModel):

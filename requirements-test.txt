@@ -1,5 +1,5 @@
 aiofiles==24.1.0
-aiogram[i18n]==3.13.1
+aiogram==3.13.1
 aiogram-dialog==2.2.0
 aiogram-fsm-sqlitestorage==1.0.0
 aiohappyeyeballs==2.4.4

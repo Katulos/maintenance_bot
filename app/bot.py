@@ -54,7 +54,7 @@ async def create_odoo_connections(dp: Dispatcher) -> None:
     dp["odoo"] = odoo
 
 
-def make_i18n_middleware():
+def make_i18n_middleware() -> I18nMiddleware:
     default_locale = settings.app.default_locale
     supported_locales = settings.app.supported_locales
     loader = FluentResourceLoader(
@@ -124,7 +124,7 @@ async def aiogram_on_shutdown_polling(
     await dispatcher.storage.close()
 
 
-def main():
+def main() -> None:
     aiogram_session_logger = utils.logging.setup_logger(
         settings.app.logging_level,
     ).bind(type="aiogram_session")

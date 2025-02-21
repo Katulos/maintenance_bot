@@ -9,7 +9,7 @@ from ..models import orjson_dumps
 
 
 def setup_logger(
-    logging_level=logging.INFO,
+    logging_level: int = logging.INFO,
 ) -> structlog.typing.FilteringBoundLogger:
     logging.basicConfig(
         level=logging_level,

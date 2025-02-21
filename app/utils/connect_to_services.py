@@ -52,7 +52,7 @@ def after_log(retry_state: tenacity.RetryCallState) -> None:
     stop=tenacity.stop_after_delay(MAX_TIMEOUT),
     before_sleep=before_log,
     after=after_log,
-)
+)  # type: ignore
 async def wait_odoo(
     logger: structlog.typing.FilteringBoundLogger,
     host: str,

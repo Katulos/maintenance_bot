@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-import odoorpc
+from typing import Any
+
 import structlog
 from aiogram.types import User
 from aiogram_dialog import DialogManager, ShowMode, Window
@@ -17,8 +18,8 @@ from aiogram_dialog.widgets.kbd import (
 )
 from aiogram_dialog.widgets.text import Format
 
-from ...config import settings
 from ...handlers.user.maintenance import maintenance_info
+from ...services.odoo import fetch_maintenances
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
 
@@ -26,34 +27,11 @@ from ...utils.i18n_format import I18NFormat
 async def _maintenance_requests_getter(
     event_from_user: User,
     dialog_manager: DialogManager,
-    odoo_logger: structlog.typing.FilteringBoundLogger,
-    **kwargs,
-):
-    try:
-        odoo: odoorpc.ODOO = dialog_manager.middleware_data.get("odoo")
-        user_id = event_from_user.id
-
-        if user_id not in settings.odoo.users:
-            odoo_logger.error("User is missing from the configuration file")
-            return {"equipments": []}
-
-        odoo.login(
-            db=settings.odoo.database,
-            login=settings.odoo.users[user_id].username,
-            password=settings.odoo.users[user_id].password,
-        )
-
-        request = odoo.env["maintenance.request"]
-        request_ids = request.search(
-            [("equipment_id.employee_id.telegram_id", "=", user_id)],
-        )
-        requests = request.browse(request_ids)
-
-        return {"maintenance_requests": requests}
-
-    except odoorpc.error.RPCError as e:
-        odoo_logger.error(e)
-        return {"maintenance_requests": []}
+    aiogram_session_logger: structlog.typing.FilteringBoundLogger,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    requests = await fetch_maintenances(event_from_user)
+    return {"maintenance_requests": requests}
 
 
 window = Window(
