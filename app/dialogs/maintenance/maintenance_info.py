@@ -7,10 +7,9 @@ from aiogram import F
 from aiogram.types import User
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import Back, Row, Select
-from aiogram_dialog.widgets.text import List, Text
+from aiogram_dialog.widgets.text import List
 
 from ...handlers.user.maintenance import (
-    accept_maintenance,
     close_maintenance,
     forward_maintenance,
 )
@@ -20,10 +19,10 @@ from ...utils.i18n_format import I18NFormat, Transformer
 
 
 async def _maintenance_getter(
-        event_from_user: User,
-        dialog_manager: DialogManager,
-        aiogram_session_logger: structlog.typing.FilteringBoundLogger,
-        **kwargs: Any,
+    event_from_user: User,
+    dialog_manager: DialogManager,
+    aiogram_session_logger: structlog.typing.FilteringBoundLogger,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     maintenance_id = dialog_manager.dialog_data.get("maintenance_id")
     maintenance = await fetch_maintenance(event_from_user, maintenance_id)
@@ -64,7 +63,9 @@ window = Window(
     List(
         Transformer(
             I18NFormat("maintenance-info-when-request-date"),
-            mapping={"request_date": F["item"].create_date.replace(tzinfo=F["item"].env.context.tz)},
+            mapping={
+                "request_date": F["item"].create_date,
+            },  # TODO: use timezone F["item"].env.context.tz
         ),
         items="maintenance",
     ),

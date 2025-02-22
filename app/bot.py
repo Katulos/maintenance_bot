@@ -17,6 +17,7 @@ from . import dialogs, utils
 from .config import settings
 from .handlers import user
 from .middlewares import I18nMiddleware, StructLoggingMiddleware
+from .middlewares.odoo_register import OdooRegisterMiddleware
 from .utils import connect_to_services
 
 if TYPE_CHECKING:
@@ -81,11 +82,18 @@ def setup_handlers(dp: Dispatcher) -> None:
 
 
 def setup_middlewares(dp: Dispatcher) -> None:
+    # logger middleware
     dp.update.outer_middleware(
         StructLoggingMiddleware(logger=dp["aiogram_logger"]),
     )
+
+    # i18n middleware
     dp.message.middleware(make_i18n_middleware())
     dp.callback_query.middleware(make_i18n_middleware())
+
+    # Check odoo registration middleware
+    dp.message.middleware(OdooRegisterMiddleware())
+    dp.callback_query.middleware(OdooRegisterMiddleware())
 
 
 def setup_logging(dp: Dispatcher) -> None:

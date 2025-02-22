@@ -3,14 +3,13 @@ from __future__ import annotations
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 
-from ...filters import ChatTypeFilter, OdooRegisterFilter
+from ...filters import ChatTypeFilter
 from . import equipments, maintenance, menu, start
 
 
 def prepare_router() -> Router:
     user_router = Router()
     user_router.message.filter(ChatTypeFilter("private"))
-    user_router.message.filter(OdooRegisterFilter())
 
     user_router.message.register(start.start, CommandStart())
     user_router.message.register(

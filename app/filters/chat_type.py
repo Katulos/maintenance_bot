@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
