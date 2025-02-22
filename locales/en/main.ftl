@@ -13,6 +13,7 @@ back-button = ↩️Back
 cancel-button = 🚫Cancel
 close-button = ❌Close
 confirm-button = ✅Confirm
+complete-button = ✅Complete
 forward-button =⏩Forward
 menu-button = ☰Menu
 no-button = ❌No

@@ -11,7 +11,7 @@ maintenance-info-when-category = <b>{ $category } </b>
 maintenance-info-when-name =  { $name }
 maintenance-info-when-user = <b>Назначено:</b> { $user }
 maintenance-info-when-equipment = <b>Оборудование:</b> { $equipment }
-maintenance-info-when-request-date = <b>Дата запроса:</b> { DATETIME($request_date) }
+maintenance-info-when-request-date = <b>Дата запроса:</b> { DATETIME($request_date, dateStyle: "medium", timeStyle: "medium") }
 maintenance-info-when-created = <b>Создал:</b> { $created }
 
 
@@ -22,6 +22,7 @@ back-button = ↩️Назад
 cancel-button = 🚫Отмена
 close-button = ❌Закрыть
 confirm-button = ✅Подтвердить
+complete-button = ✅Выполнить
 forward-button =⏩Переадресовать
 menu-button = ☰Меню
 no-button = ❌Нет

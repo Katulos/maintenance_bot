@@ -7,7 +7,7 @@ from aiogram import F
 from aiogram.types import User
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import Back, Row, Select
-from aiogram_dialog.widgets.text import List
+from aiogram_dialog.widgets.text import List, Text
 
 from ...handlers.user.maintenance import (
     accept_maintenance,
@@ -20,10 +20,10 @@ from ...utils.i18n_format import I18NFormat, Transformer
 
 
 async def _maintenance_getter(
-    event_from_user: User,
-    dialog_manager: DialogManager,
-    aiogram_session_logger: structlog.typing.FilteringBoundLogger,
-    **kwargs: Any,
+        event_from_user: User,
+        dialog_manager: DialogManager,
+        aiogram_session_logger: structlog.typing.FilteringBoundLogger,
+        **kwargs: Any,
 ) -> dict[str, Any]:
     maintenance_id = dialog_manager.dialog_data.get("maintenance_id")
     maintenance = await fetch_maintenance(event_from_user, maintenance_id)
@@ -35,6 +35,7 @@ window = Window(
         Transformer(
             I18NFormat("maintenance-info-when-category"),
             mapping={"category": F["item"].category_id.name},
+            when=F["item"].category_id,
         ),
         items="maintenance",
     ),
@@ -56,13 +57,14 @@ window = Window(
         Transformer(
             I18NFormat("maintenance-info-when-created"),
             mapping={"created": F["item"].employee_id.name},
+            when=F["item"].employee_id,
         ),
         items="maintenance",
     ),
     List(
         Transformer(
             I18NFormat("maintenance-info-when-request-date"),
-            mapping={"request_date": F["item"].request_date},
+            mapping={"request_date": F["item"].create_date.replace(tzinfo=F["item"].env.context.tz)},
         ),
         items="maintenance",
     ),
@@ -70,17 +72,18 @@ window = Window(
         Transformer(
             I18NFormat("maintenance-info-when-user"),
             mapping={"user": F["item"].user_id.name},
+            when=F["item"].user_id,
         ),
         items="maintenance",
     ),
     Row(
         Select(
-            text=I18NFormat("accept-button"),
-            id="accept_maintenance",
+            text=I18NFormat("complete-button"),
+            id="close_maintenance",
             items="maintenance",
             item_id_getter=lambda x: x.id,
             type_factory=int,
-            on_click=accept_maintenance,
+            on_click=close_maintenance,
         ),
         Select(
             text=I18NFormat("forward-button"),
@@ -89,14 +92,6 @@ window = Window(
             item_id_getter=lambda x: x.id,
             type_factory=int,
             on_click=forward_maintenance,
-        ),
-        Select(
-            text=I18NFormat("close-button"),
-            id="close_maintenance",
-            items="maintenance",
-            item_id_getter=lambda x: x.id,
-            type_factory=int,
-            on_click=close_maintenance,
         ),
     ),
     Row(
