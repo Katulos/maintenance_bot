@@ -32,13 +32,30 @@ class OdooRegisterMiddleware(BaseMiddleware):
                 f"User {user_id} is not registered in Odoo",
             )
 
-            await event.answer(
-                i18n(
-                    "no-register-message",
-                    {"user_id": user_id, "user_full_name": user_full_name},
-                ),
-                parse_mode=ParseMode.HTML,
-            )
-            return False
+            if isinstance(event, Message):
+                await event.answer(
+                    i18n(
+                        "no-register-message",
+                        {
+                            "user_id": user_id,
+                            "user_full_name": user_full_name,
+                        },
+                    ),
+                    parse_mode=ParseMode.HTML,
+                )
+
+            if isinstance(event, CallbackQuery):
+                await event.answer(
+                    i18n(
+                        "no-register-callback-message",
+                        {
+                            "user_id": user_id,
+                            "user_full_name": user_full_name,
+                        },
+                    ),
+                    show_alert=True,
+                )
+
+            return
 
         return await handler(event, data)

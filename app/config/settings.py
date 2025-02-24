@@ -68,6 +68,10 @@ class AppConfig(BaseModel):
 class BotConfig(BaseModel):
     token: str
 
+    blacklist: list[int] = Field(default=[])
+
+    whitelist: list[int] = Field(default=[])
+
 
 class OdooUserCredentials(BaseModel):
     username: str

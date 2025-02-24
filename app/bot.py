@@ -16,7 +16,11 @@ from orjson import orjson
 from . import dialogs, utils
 from .config import settings
 from .handlers import user
-from .middlewares import I18nMiddleware, StructLoggingMiddleware
+from .middlewares import (
+    AntiFloodMiddleware,
+    I18nMiddleware,
+    StructLoggingMiddleware,
+)
 from .middlewares.odoo_register import OdooRegisterMiddleware
 from .utils import connect_to_services
 
@@ -86,6 +90,10 @@ def setup_middlewares(dp: Dispatcher) -> None:
     dp.update.outer_middleware(
         StructLoggingMiddleware(logger=dp["aiogram_logger"]),
     )
+
+    # Check odoo registration middleware
+    dp.message.middleware(AntiFloodMiddleware())
+    dp.callback_query.middleware(AntiFloodMiddleware())
 
     # i18n middleware
     dp.message.middleware(make_i18n_middleware())
