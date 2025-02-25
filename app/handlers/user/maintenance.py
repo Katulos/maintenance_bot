@@ -36,7 +36,8 @@ async def accept_maintenance(
     dialog_manager: DialogManager,
     selected_item: int,
 ) -> None:
-    pass
+    dialog_manager.dialog_data["maintenance_id"] = selected_item
+    await dialog_manager.switch_to(DialogSG.MAINTENANCE_ACCEPT)
 
 
 async def forward_maintenance(
@@ -45,7 +46,8 @@ async def forward_maintenance(
     dialog_manager: DialogManager,
     selected_item: int,
 ) -> None:
-    pass
+    dialog_manager.dialog_data["maintenance_id"] = selected_item
+    await dialog_manager.switch_to(DialogSG.MAINTENANCE_FORWARD)
 
 
 async def close_maintenance(
@@ -54,4 +56,5 @@ async def close_maintenance(
     dialog_manager: DialogManager,
     selected_item: int,
 ) -> None:
-    pass
+    dialog_manager.dialog_data["maintenance_id"] = selected_item
+    await dialog_manager.switch_to(DialogSG.MAINTENANCE_CLOSE)

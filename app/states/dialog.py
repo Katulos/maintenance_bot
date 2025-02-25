@@ -8,10 +8,16 @@ from ..utils.i18n_format import I18NFormat
 
 class DialogSG(StatesGroup):
     MAIN = State()
+    #
     EQUIPMENTS_PAGER = State()
     EQUIPMENT_INFO = State()
-    MAINTENANCE_PAGER = State()
+    #
+    MAINTENANCE_ACCEPT = State()
+    MAINTENANCE_CLOSE = State()
+    MAINTENANCE_FORWARD = State()
     MAINTENANCE_INFO = State()
+    MAINTENANCE_NEW = State()
+    MAINTENANCE_PAGER = State()
 
 
 MAIN_MENU_BTN = SwitchTo(

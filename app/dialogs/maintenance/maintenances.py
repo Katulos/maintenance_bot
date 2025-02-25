@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 import structlog
+from aiogram import F
 from aiogram.types import User
-from aiogram_dialog import DialogManager, ShowMode, Window
+from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import (
-    Cancel,
     CurrentPage,
     FirstPage,
     LastPage,
@@ -15,13 +15,17 @@ from aiogram_dialog.widgets.kbd import (
     Row,
     ScrollingGroup,
     Select,
+    SwitchTo,
 )
 from aiogram_dialog.widgets.text import Format
 
+from ...config import settings
 from ...handlers.user.maintenance import maintenance_info
 from ...services.odoo import fetch_maintenances
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
+
+_PAGE_SIZE = settings.app.pagination_size
 
 
 async def _maintenance_requests_getter(
@@ -31,7 +35,11 @@ async def _maintenance_requests_getter(
     **kwargs: Any,
 ) -> dict[str, Any]:
     requests = await fetch_maintenances(event_from_user)
-    return {"maintenance_requests": requests}
+    return {
+        "maintenance_requests": requests,
+        "show_scroll": len(requests) > _PAGE_SIZE,
+        "fast_scroll": len(requests) > _PAGE_SIZE * 2,
+    }
 
 
 window = Window(
@@ -45,7 +53,7 @@ window = Window(
             type_factory=int,
             on_click=maintenance_info,
         ),
-        width=2,
+        width=1,
         height=5,
         hide_pager=True,
         id="scroll_maintenance_requests",
@@ -61,7 +69,7 @@ window = Window(
         ),
         CurrentPage(
             scroll="scroll_maintenance_requests",
-            text=Format("{current_page1}"),
+            text=Format("{current_page1}/{pages}"),
         ),
         NextPage(
             scroll="scroll_maintenance_requests",
@@ -71,15 +79,15 @@ window = Window(
             scroll="scroll_maintenance_requests",
             text=Format("{target_page1} ⏭️"),
         ),
+        when=F["show_scroll"],
     ),
     Row(
-        PrevPage(scroll="scroll_maintenance_requests"),
-        NextPage(scroll="scroll_maintenance_requests"),
-        MAIN_MENU_BTN,
-        Cancel(
-            text=I18NFormat("close-button"),
-            show_mode=ShowMode.DELETE_AND_SEND,
+        SwitchTo(
+            text=I18NFormat("back-button"),
+            id="main_menu",
+            state=DialogSG.MAIN,
         ),
+        MAIN_MENU_BTN,
     ),
     getter=_maintenance_requests_getter,
     state=DialogSG.MAINTENANCE_PAGER,

@@ -91,7 +91,7 @@ def setup_middlewares(dp: Dispatcher) -> None:
         StructLoggingMiddleware(logger=dp["aiogram_logger"]),
     )
 
-    # Check odoo registration middleware
+    # Antiflood middleware
     dp.message.middleware(AntiFloodMiddleware())
     dp.callback_query.middleware(AntiFloodMiddleware())
 

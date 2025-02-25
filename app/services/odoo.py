@@ -23,6 +23,18 @@ async def fetch_employee(user: User) -> odoorpc.models.Model | None:
         return None
 
 
+async def fetch_employees(user: User) -> odoorpc.models.Model | None:
+    odoo: odoorpc.ODOO = await _login(user)
+    try:
+        hr = odoo.env["hr.employee"]
+        employee_ids = hr.search([])
+        employees = hr.browse(employee_ids)
+        return employees
+    except odoorpc.error.RPCError as e:
+        logger.error(e)
+        return None
+
+
 async def fetch_equipment(
     user: User,
     equipment_id: int,

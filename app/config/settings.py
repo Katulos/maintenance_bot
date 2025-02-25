@@ -60,6 +60,8 @@ class AppConfig(BaseModel):
 
     default_locale: str = Field(default="en")
 
+    pagination_size: int = Field(default=5)
+
     @property
     def logging_level(self) -> int:
         return logging.INFO if self.debug else logging.INFO
