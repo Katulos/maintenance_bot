@@ -11,7 +11,7 @@ from ..services.odoo import fetch_employee
 from ..utils.i18n_format import I18N_FORMAT_KEY
 
 
-class OdooRegisterMiddleware(BaseMiddleware):
+class OdooMiddleware(BaseMiddleware):
     async def __call__(
         self,
         handler: Callable[
