@@ -35,6 +35,8 @@ async def _equipments_getter(
     **kwargs: Any,
 ) -> dict[str, Any]:
     equipments = await fetch_equipments(event_from_user)
+    if equipments is None:
+        equipments = []
     return {
         "equipments": equipments,
         "show_scroll": len(equipments) > _PAGE_SIZE,

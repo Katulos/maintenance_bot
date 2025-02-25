@@ -92,8 +92,7 @@ def setup_middlewares(dp: Dispatcher) -> None:
     )
 
     # Antiflood middleware
-    dp.message.middleware(AntiFloodMiddleware())
-    dp.callback_query.middleware(AntiFloodMiddleware())
+    dp.update.outer_middleware(AntiFloodMiddleware())
 
     # i18n middleware
     dp.message.middleware(make_i18n_middleware())

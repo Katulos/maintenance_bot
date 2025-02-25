@@ -35,6 +35,8 @@ async def _maintenance_requests_getter(
     **kwargs: Any,
 ) -> dict[str, Any]:
     requests = await fetch_maintenances(event_from_user)
+    if requests is None:
+        requests = []
     return {
         "maintenance_requests": requests,
         "show_scroll": len(requests) > _PAGE_SIZE,

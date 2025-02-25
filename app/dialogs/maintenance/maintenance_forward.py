@@ -34,6 +34,8 @@ async def _employee_getter(
     **kwargs: Any,
 ) -> dict[str, Any]:
     employee = await fetch_employees(event_from_user)
+    if employee is None:
+        employee = []
     return {
         "employee": employee,
         "show_scroll": len(employee) > _PAGE_SIZE,
