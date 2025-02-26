@@ -5,9 +5,8 @@ from typing import Any
 import structlog
 from aiogram import F
 from aiogram.types import User
-from aiogram_dialog import DialogManager, ShowMode, Window
+from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import (
-    Cancel,
     CurrentPage,
     FirstPage,
     LastPage,
@@ -16,6 +15,7 @@ from aiogram_dialog.widgets.kbd import (
     Row,
     ScrollingGroup,
     Select,
+    SwitchTo,
 )
 from aiogram_dialog.widgets.text import Format
 
@@ -40,8 +40,6 @@ async def _equipments_getter(
         equipments = []
     return {
         "equipments": equipments,
-        "show_scroll": len(equipments) > _PAGE_SIZE,
-        "fast_scroll": len(equipments) > _PAGE_SIZE * 2,
     }
 
 
@@ -65,6 +63,7 @@ window = Window(
         FirstPage(
             scroll="scroll_equipments",
             text=Format("⏮️ {target_page1}"),
+            when=F["data"]["equipments"].len() > _PAGE_SIZE * 2,
         ),
         PrevPage(
             scroll="scroll_equipments",
@@ -81,15 +80,17 @@ window = Window(
         LastPage(
             scroll="scroll_equipments",
             text=Format("{target_page1} ⏭️"),
+            when=F["data"]["equipments"].len() > _PAGE_SIZE * 2,
         ),
-        when=F["show_scroll"],
+        when=F["equipments"].len() > _PAGE_SIZE,
     ),
     Row(
-        MAIN_MENU_BTN,
-        Cancel(
-            text=I18NFormat("close-button"),
-            show_mode=ShowMode.DELETE_AND_SEND,
+        SwitchTo(
+            text=I18NFormat("back-button"),
+            id="main_menu",
+            state=DialogSG.MAIN,
         ),
+        MAIN_MENU_BTN,
     ),
     getter=_equipments_getter,
     state=DialogSG.EQUIPMENTS_PAGER,

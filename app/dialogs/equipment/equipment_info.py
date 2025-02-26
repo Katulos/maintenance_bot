@@ -5,8 +5,8 @@ from typing import Any
 import structlog
 from aiogram import F
 from aiogram.types import User
-from aiogram_dialog import DialogManager, ShowMode, Window
-from aiogram_dialog.widgets.kbd import Back, Cancel, Row
+from aiogram_dialog import DialogManager, Window
+from aiogram_dialog.widgets.kbd import Row, SwitchTo
 from aiogram_dialog.widgets.text import List
 
 from ...services.odoo import OdooService
@@ -43,11 +43,13 @@ window = Window(
         items="equipment",
     ),
     Row(
-        Back(text=I18NFormat("back-button")),
-        MAIN_MENU_BTN,
-        Cancel(
-            text=I18NFormat("close-button"),
-            show_mode=ShowMode.DELETE_AND_SEND,
+        Row(
+            SwitchTo(
+                text=I18NFormat("back-button"),
+                id="equipments",
+                state=DialogSG.EQUIPMENTS_PAGER,
+            ),
+            MAIN_MENU_BTN,
         ),
     ),
     getter=_equipment_getter,

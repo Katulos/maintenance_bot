@@ -22,8 +22,6 @@ from aiogram_dialog.widgets.text import Format
 from ...config import settings
 from ...handlers.user.maintenance import maintenance_info
 from ...services.odoo import OdooService
-
-# from ...services.odoo import fetch_maintenances
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
 
@@ -42,8 +40,6 @@ async def _maintenance_requests_getter(
         requests = []
     return {
         "maintenance_requests": requests,
-        "show_scroll": len(requests) > _PAGE_SIZE,
-        "fast_scroll": len(requests) > _PAGE_SIZE * 2,
     }
 
 
@@ -59,7 +55,7 @@ window = Window(
             on_click=maintenance_info,
         ),
         width=1,
-        height=5,
+        height=_PAGE_SIZE,
         hide_pager=True,
         id="scroll_maintenance_requests",
     ),
@@ -67,6 +63,7 @@ window = Window(
         FirstPage(
             scroll="scroll_maintenance_requests",
             text=Format("⏮️ {target_page1}"),
+            when=F["data"]["maintenance_requests"].len() > _PAGE_SIZE * 2,
         ),
         PrevPage(
             scroll="scroll_maintenance_requests",
@@ -83,8 +80,9 @@ window = Window(
         LastPage(
             scroll="scroll_maintenance_requests",
             text=Format("{target_page1} ⏭️"),
+            when=F["data"]["maintenance_requests"].len() > _PAGE_SIZE * 2,
         ),
-        when=F["show_scroll"],
+        when=F["maintenance_requests"].len() > _PAGE_SIZE,
     ),
     Row(
         SwitchTo(

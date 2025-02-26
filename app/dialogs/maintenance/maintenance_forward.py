@@ -21,8 +21,6 @@ from aiogram_dialog.widgets.text import Format
 
 from ...config import settings
 from ...services.odoo import OdooService
-
-# from ...services.odoo import fetch_employees
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
 
@@ -41,8 +39,6 @@ async def _employee_getter(
         employee = []
     return {
         "employee": employee,
-        "show_scroll": len(employee) > _PAGE_SIZE,
-        "fast_scroll": len(employee) > _PAGE_SIZE * 2,
     }
 
 
@@ -50,7 +46,7 @@ window = Window(
     I18NFormat("maintenance-forward-text"),
     ScrollingGroup(
         Select(
-            Format("{item[0]}"),
+            Format("{item[0].name}"),
             id="s_employee",
             items="employee",
             item_id_getter=lambda x: x.id,
@@ -65,20 +61,20 @@ window = Window(
         FirstPage(
             scroll="scroll_employee",
             text=Format("⏮️ {target_page1}"),
-            when=F["data"]["fast_scroll"],
+            when=F["data"]["employee"].len() > _PAGE_SIZE * 2,
         ),
-        PrevPage(scroll="scroll_employee"),
+        PrevPage(scroll="scroll_employee", text=Format("◀️")),
         CurrentPage(
             scroll="scroll_employee",
             text=Format("{current_page1}/{pages}"),
         ),
-        NextPage(scroll="scroll_employee"),
+        NextPage(scroll="scroll_employee", text=Format("▶️")),
         LastPage(
             scroll="scroll_employee",
             text=Format("{target_page1} ⏭️"),
-            when=F["data"]["fast_scroll"],
+            when=F["data"]["employee"].len() > _PAGE_SIZE * 2,
         ),
-        when=F["show_scroll"],
+        when=F["employee"].len() > _PAGE_SIZE,
     ),
     Row(
         SwitchTo(
