@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-import odoorpc
 import structlog
 import tenacity
 from tenacity import _utils
+
+from app.services.odoo import OdooService
 
 TIMEOUT_BETWEEN_ATTEMPTS = 2
 MAX_TIMEOUT = 30
@@ -58,8 +59,8 @@ async def wait_odoo(
     host: str,
     port: int,
     protocol: str,
-) -> odoorpc.ODOO:
-    odoo = odoorpc.ODOO(
+) -> OdooService:
+    odoo = OdooService(
         host=host,
         port=port,
         protocol=protocol,

@@ -20,7 +20,9 @@ from aiogram_dialog.widgets.kbd import (
 from aiogram_dialog.widgets.text import Format
 
 from ...config import settings
-from ...services.odoo import fetch_employees
+from ...services.odoo import OdooService
+
+# from ...services.odoo import fetch_employees
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
 
@@ -30,10 +32,11 @@ _PAGE_SIZE = settings.app.pagination_size
 async def _employee_getter(
     event_from_user: User,
     dialog_manager: DialogManager,
+    odoo: OdooService,
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    employee = await fetch_employees(event_from_user)
+    employee = await odoo.fetch_employees()
     if employee is None:
         employee = []
     return {

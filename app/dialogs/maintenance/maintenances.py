@@ -21,7 +21,9 @@ from aiogram_dialog.widgets.text import Format
 
 from ...config import settings
 from ...handlers.user.maintenance import maintenance_info
-from ...services.odoo import fetch_maintenances
+from ...services.odoo import OdooService
+
+# from ...services.odoo import fetch_maintenances
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
 
@@ -31,10 +33,11 @@ _PAGE_SIZE = settings.app.pagination_size
 async def _maintenance_requests_getter(
     event_from_user: User,
     dialog_manager: DialogManager,
+    odoo: OdooService,
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    requests = await fetch_maintenances(event_from_user)
+    requests = await odoo.fetch_maintenances(event_from_user.id)
     if requests is None:
         requests = []
     return {

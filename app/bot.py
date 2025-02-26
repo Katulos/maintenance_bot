@@ -21,7 +21,7 @@ from .middlewares import (
     I18nMiddleware,
     StructLoggingMiddleware,
 )
-from .middlewares.odoo_register import OdooRegisterMiddleware
+from .middlewares.odoo import OdooMiddleware
 from .utils import connect_to_services
 
 if TYPE_CHECKING:
@@ -99,8 +99,8 @@ def setup_middlewares(dp: Dispatcher) -> None:
     dp.callback_query.middleware(make_i18n_middleware())
 
     # Check odoo registration middleware
-    dp.message.middleware(OdooRegisterMiddleware())
-    dp.callback_query.middleware(OdooRegisterMiddleware())
+    dp.message.middleware(OdooMiddleware())
+    dp.callback_query.middleware(OdooMiddleware())
 
 
 def setup_logging(dp: Dispatcher) -> None:

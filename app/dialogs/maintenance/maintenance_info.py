@@ -13,7 +13,9 @@ from ...handlers.user.maintenance import (
     close_maintenance,
     forward_maintenance,
 )
-from ...services.odoo import fetch_maintenance
+from ...services.odoo import OdooService
+
+# from ...services.odoo import fetch_maintenance
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat, Transformer
 
@@ -21,11 +23,12 @@ from ...utils.i18n_format import I18NFormat, Transformer
 async def _maintenance_getter(
     event_from_user: User,
     dialog_manager: DialogManager,
+    odoo: OdooService,
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
     **kwargs: Any,
 ) -> dict[str, Any]:
     maintenance_id = dialog_manager.dialog_data.get("maintenance_id")
-    maintenance = await fetch_maintenance(event_from_user, maintenance_id)
+    maintenance = await odoo.fetch_maintenance(maintenance_id)
     return {"maintenance": maintenance}
 
 

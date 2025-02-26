@@ -21,7 +21,7 @@ from aiogram_dialog.widgets.text import Format
 
 from ...config import settings
 from ...handlers.user.equipments import equipment_info
-from ...services.odoo import fetch_equipments
+from ...services.odoo import OdooService
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
 
@@ -32,9 +32,10 @@ async def _equipments_getter(
     event_from_user: User,
     dialog_manager: DialogManager,
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
+    odoo: OdooService,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    equipments = await fetch_equipments(event_from_user)
+    equipments = await odoo.fetch_equipments(event_from_user.id)
     if equipments is None:
         equipments = []
     return {

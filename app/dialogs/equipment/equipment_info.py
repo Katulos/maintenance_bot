@@ -9,7 +9,9 @@ from aiogram_dialog import DialogManager, ShowMode, Window
 from aiogram_dialog.widgets.kbd import Back, Cancel, Row
 from aiogram_dialog.widgets.text import List
 
-from ...services.odoo import fetch_equipment
+from ...services.odoo import OdooService
+
+# from ...services.odoo import fetch_equipment
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat, Transformer
 
@@ -17,11 +19,12 @@ from ...utils.i18n_format import I18NFormat, Transformer
 async def _equipment_getter(
     event_from_user: User,
     dialog_manager: DialogManager,
+    odoo: OdooService,
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
     **kwargs: Any,
 ) -> dict[str, Any]:
     equipment_id = dialog_manager.dialog_data.get("equipment_id")
-    equipment = await fetch_equipment(event_from_user, equipment_id)
+    equipment = await odoo.fetch_equipment(equipment_id)
     return {"equipment": equipment}
 
 
