@@ -11,6 +11,7 @@ from .maintenance import (
     maintenance_close,
     maintenance_forward,
     maintenance_info,
+    maintenance_new,
     maintenances,
 )
 
@@ -18,9 +19,10 @@ dialog = Dialog(
     start.window,
     equipments.window,
     equipment_info.window,
-    maintenances.window,
-    maintenance_info.window,
     maintenance_accept.window,
     maintenance_close.window,
     maintenance_forward.window,
+    maintenance_info.window,
+    maintenance_new.window,
+    maintenances.window,
 )

@@ -5,8 +5,9 @@ equipment-info = { $name }
     Назначено: { $employee }
 equipment-info-title = 🧰Оборудование
 maintenance-requests-title = 🛠️Запросы на обслуживание
+maintenance-show-button = 🛠️Показать Запросы
 maintenance-info-title = 🛠️Запрос на обслуживание
-
+maintenance-new-request-title = 🛠️Новый запрос на обслуживание
 maintenance-info-when-category = <b>{ $category } </b>
 maintenance-info-when-name =  { $name }
 maintenance-info-when-user = <b>Назначено:</b> { $user }

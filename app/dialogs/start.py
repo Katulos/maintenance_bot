@@ -20,6 +20,11 @@ window = Window(
         id="maintenance_requests",
         state=DialogSG.MAINTENANCE_PAGER,
     ),
+    SwitchTo(
+        I18NFormat("maintenance-new-request-title"),
+        id="maintenance_new_request",
+        state=DialogSG.MAINTENANCE_NEW,
+    ),
     Cancel(
         text=I18NFormat("cancel-button"),
         show_mode=ShowMode.DELETE_AND_SEND,

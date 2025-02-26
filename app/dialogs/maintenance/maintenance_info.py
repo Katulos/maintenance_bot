@@ -10,8 +10,8 @@ from aiogram_dialog.widgets.kbd import Row, Select, SwitchTo
 from aiogram_dialog.widgets.text import List
 
 from ...handlers.user.maintenance import (
-    close_maintenance,
-    forward_maintenance,
+    maintenance_close,
+    maintenance_forward,
 )
 from ...services.odoo import OdooService
 
@@ -87,7 +87,7 @@ window = Window(
             items="maintenance",
             item_id_getter=lambda x: x.id,
             type_factory=int,
-            on_click=close_maintenance,
+            on_click=maintenance_close,
         ),
         Select(
             text=I18NFormat("forward-button"),
@@ -95,7 +95,7 @@ window = Window(
             items="maintenance",
             item_id_getter=lambda x: x.id,
             type_factory=int,
-            on_click=forward_maintenance,
+            on_click=maintenance_forward,
         ),
     ),
     Row(

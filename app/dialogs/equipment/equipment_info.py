@@ -43,6 +43,13 @@ window = Window(
         items="equipment",
     ),
     Row(
+        SwitchTo(
+            text=I18NFormat("maintenance-show-button"),
+            id="info_maintenance",
+            state=DialogSG.MAINTENANCE_PAGER,
+        )
+    ),
+    Row(
         Row(
             SwitchTo(
                 text=I18NFormat("back-button"),

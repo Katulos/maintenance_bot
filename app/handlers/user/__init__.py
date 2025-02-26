@@ -20,5 +20,9 @@ def prepare_router() -> Router:
         maintenance.maintenance,
         Command(commands={"maintenance", "ma"}),
     )
+    user_router.message.register(
+        maintenance.maintenance_new,
+        Command(commands={"new", "manew"}),
+    )
     user_router.message.register(menu.menu, Command(commands={"menu"}))
     return user_router
