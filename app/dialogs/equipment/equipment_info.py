@@ -47,7 +47,7 @@ window = Window(
             text=I18NFormat("maintenance-show-button"),
             id="info_maintenance",
             state=DialogSG.MAINTENANCE_PAGER,
-        )
+        ),
     ),
     Row(
         Row(

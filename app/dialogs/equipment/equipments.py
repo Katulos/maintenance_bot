@@ -8,13 +8,12 @@ from aiogram.types import User
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import (
     CurrentPage,
-    FirstPage,
-    LastPage,
+    Group,
     NextPage,
     PrevPage,
     Row,
-    ScrollingGroup,
     Select,
+    StubScroll,
     SwitchTo,
 )
 from aiogram_dialog.widgets.text import Format
@@ -35,17 +34,37 @@ async def _equipments_getter(
     odoo: OdooService,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    equipments = await odoo.fetch_equipments(event_from_user.id)
-    if equipments is None:
+    current_page = await dialog_manager.find("scroll_equipments").get_page()
+
+    offset = current_page * _PAGE_SIZE
+
+    equipment_count = await odoo.fetch_equipments_count(event_from_user.id)
+
+    if not equipment_count:
+        equipment_count = 0
+
+    equipments = await odoo.fetch_equipments(
+        event_from_user.id,
+        limit=_PAGE_SIZE,
+        offset=offset,
+    )
+
+    if not equipments:
         equipments = []
+
+    pages = equipment_count // _PAGE_SIZE + bool(equipment_count % _PAGE_SIZE)
+
     return {
+        "pages": pages,
+        "current_page": current_page + 1,
         "equipments": equipments,
     }
 
 
 window = Window(
-    I18NFormat("equipments-title"),
-    ScrollingGroup(
+    I18NFormat("equipments-title", when=F["equipments"].len() > 0),
+    I18NFormat("no-entries-title", when=~F["equipments"].len() > 0),
+    Group(
         Select(
             Format("{item[0].name}"),
             id="s_equipments",
@@ -55,16 +74,10 @@ window = Window(
             on_click=equipment_info,
         ),
         width=1,
-        height=_PAGE_SIZE,
-        hide_pager=True,
-        id="scroll_equipments",
+        when=F["equipments"].len() > 0,
     ),
+    StubScroll(id="scroll_equipments", pages="pages"),
     Row(
-        FirstPage(
-            scroll="scroll_equipments",
-            text=Format("⏮️ {target_page1}"),
-            when=F["data"]["equipments"].len() > _PAGE_SIZE * 2,
-        ),
         PrevPage(
             scroll="scroll_equipments",
             text=Format("◀️"),
@@ -77,12 +90,7 @@ window = Window(
             scroll="scroll_equipments",
             text=Format("▶️"),
         ),
-        LastPage(
-            scroll="scroll_equipments",
-            text=Format("{target_page1} ⏭️"),
-            when=F["data"]["equipments"].len() > _PAGE_SIZE * 2,
-        ),
-        when=F["equipments"].len() > _PAGE_SIZE,
+        when=F["equipments"].len() > 0,
     ),
     Row(
         SwitchTo(

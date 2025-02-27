@@ -3,18 +3,16 @@ from __future__ import annotations
 from typing import Any
 
 import structlog
-from aiogram import F
 from aiogram.types import User
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import (
     CurrentPage,
-    FirstPage,
-    LastPage,
+    Group,
     NextPage,
     PrevPage,
     Row,
-    ScrollingGroup,
     Select,
+    StubScroll,
     SwitchTo,
 )
 from aiogram_dialog.widgets.text import Format
@@ -34,47 +32,52 @@ async def _employee_getter(
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    employee = await odoo.fetch_employees()
-    if employee is None:
-        employee = []
+    current_page = await dialog_manager.find("scroll_employee").get_page()
+
+    offset = current_page * _PAGE_SIZE
+
+    employee_count = await odoo.fetch_employees_count(event_from_user.id)
+
+    if not employee_count:
+        employee_count = 0
+
+    employees = await odoo.fetch_employees(
+        limit=_PAGE_SIZE,
+        offset=offset,
+    )
+
+    if not employees:
+        employees = []
+
+    pages = employee_count // _PAGE_SIZE + bool(employee_count % _PAGE_SIZE)
+
     return {
-        "employee": employee,
+        "pages": pages,
+        "current_page": current_page + 1,
+        "employees": employees,
     }
 
 
 window = Window(
     I18NFormat("maintenance-forward-text"),
-    ScrollingGroup(
+    Group(
         Select(
             Format("{item[0].name}"),
             id="s_employee",
-            items="employee",
+            items="employees",
             item_id_getter=lambda x: x.id,
             type_factory=int,
         ),
         width=1,
-        height=_PAGE_SIZE,
-        hide_pager=True,
-        id="scroll_employee",
     ),
+    StubScroll(id="scroll_employee", pages="pages"),
     Row(
-        FirstPage(
-            scroll="scroll_employee",
-            text=Format("⏮️ {target_page1}"),
-            when=F["data"]["employee"].len() > _PAGE_SIZE * 2,
-        ),
         PrevPage(scroll="scroll_employee", text=Format("◀️")),
         CurrentPage(
             scroll="scroll_employee",
             text=Format("{current_page1}/{pages}"),
         ),
         NextPage(scroll="scroll_employee", text=Format("▶️")),
-        LastPage(
-            scroll="scroll_employee",
-            text=Format("{target_page1} ⏭️"),
-            when=F["data"]["employee"].len() > _PAGE_SIZE * 2,
-        ),
-        when=F["employee"].len() > _PAGE_SIZE,
     ),
     Row(
         SwitchTo(

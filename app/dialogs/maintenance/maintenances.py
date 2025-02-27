@@ -8,13 +8,12 @@ from aiogram.types import User
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import (
     CurrentPage,
-    FirstPage,
-    LastPage,
+    Group,
     NextPage,
     PrevPage,
     Row,
-    ScrollingGroup,
     Select,
+    StubScroll,
     SwitchTo,
 )
 from aiogram_dialog.widgets.text import Format
@@ -35,17 +34,42 @@ async def _maintenance_requests_getter(
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    requests = await odoo.fetch_maintenances(event_from_user.id)
-    if requests is None:
+    current_page = await dialog_manager.find(
+        "scroll_maintenance_requests",
+    ).get_page()
+
+    offset = current_page * _PAGE_SIZE
+
+    request_count = await odoo.fetch_maintenances_count(event_from_user.id)
+
+    if not request_count:
+        request_count = 0
+
+    requests = await odoo.fetch_maintenances(
+        event_from_user.id,
+        limit=_PAGE_SIZE,
+        offset=offset,
+    )
+
+    if not requests:
         requests = []
+
+    pages = request_count // _PAGE_SIZE + bool(request_count % _PAGE_SIZE)
+
     return {
+        "pages": pages,
+        "current_page": current_page + 1,
         "maintenance_requests": requests,
     }
 
 
 window = Window(
-    I18NFormat("maintenance-requests-title"),
-    ScrollingGroup(
+    I18NFormat(
+        "maintenance-requests-title",
+        when=F["maintenance_requests"].len() > 0,
+    ),
+    I18NFormat("no-entries-title", when=~F["maintenance_requests"].len() > 0),
+    Group(
         Select(
             Format("{item[0].name}"),
             id="s_maintenance_requests",
@@ -55,16 +79,10 @@ window = Window(
             on_click=maintenance_info,
         ),
         width=1,
-        height=_PAGE_SIZE,
-        hide_pager=True,
-        id="scroll_maintenance_requests",
+        when=F["maintenance_requests"].len() > 0,
     ),
+    StubScroll(id="scroll_maintenance_requests", pages="pages"),
     Row(
-        FirstPage(
-            scroll="scroll_maintenance_requests",
-            text=Format("⏮️ {target_page1}"),
-            when=F["data"]["maintenance_requests"].len() > _PAGE_SIZE * 2,
-        ),
         PrevPage(
             scroll="scroll_maintenance_requests",
             text=Format("◀️"),
@@ -77,12 +95,7 @@ window = Window(
             scroll="scroll_maintenance_requests",
             text=Format("▶️"),
         ),
-        LastPage(
-            scroll="scroll_maintenance_requests",
-            text=Format("{target_page1} ⏭️"),
-            when=F["data"]["maintenance_requests"].len() > _PAGE_SIZE * 2,
-        ),
-        when=F["maintenance_requests"].len() > _PAGE_SIZE,
+        when=F["maintenance_requests"].len() > 0,
     ),
     Row(
         SwitchTo(

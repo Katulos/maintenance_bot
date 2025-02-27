@@ -26,12 +26,34 @@ class OdooService(odoorpc.ODOO):
             _logger.error(e)
             return None
 
-    async def fetch_employees(self) -> odoorpc.models.Model | None:
+    async def fetch_employees(
+        self,
+        limit: int,
+        offset: int,
+    ) -> odoorpc.models.Model | None:
         try:
             hr = self.env["hr.employee"]
-            employee_ids = hr.search([])
+            employee_ids = hr.search([], limit=limit, offset=offset)
             employees = hr.browse(employee_ids)
             return employees
+        except odoorpc.error.RPCError as e:
+            _logger.error(e)
+            return None
+
+    async def fetch_employees_count(
+        self,
+        user_id: int,
+    ) -> int | None:
+        try:
+            hr = self.env["hr.employee"]
+            count = hr.search_count([("telegram_id", "=", user_id)])
+            if isinstance(count, int):
+                return count
+            else:
+                _logger.error(
+                    f"Unexpected type returned by search_count: {type(count)}",
+                )
+                return None
         except odoorpc.error.RPCError as e:
             _logger.error(e)
             return None
@@ -50,14 +72,38 @@ class OdooService(odoorpc.ODOO):
     async def fetch_equipments(
         self,
         user_id: int,
+        limit: int,
+        offset: int,
     ) -> odoorpc.models.Model | None:
         try:
             equipment = self.env["maintenance.equipment"]
             equipment_ids = equipment.search(
                 [("employee_id.telegram_id", "=", user_id)],
+                limit=limit,
+                offset=offset,
             )
             equipments = equipment.browse(equipment_ids)
             return equipments
+        except odoorpc.error.RPCError as e:
+            _logger.error(e)
+            return None
+
+    async def fetch_equipments_count(
+        self,
+        user_id: int,
+    ) -> int | None:
+        try:
+            equipment = self.env["maintenance.equipment"]
+            count = equipment.search_count(
+                [("employee_id.telegram_id", "=", user_id)],
+            )
+            if isinstance(count, int):
+                return count
+            else:
+                _logger.error(
+                    f"Unexpected type returned by search_count: {type(count)}",
+                )
+                return None
         except odoorpc.error.RPCError as e:
             _logger.error(e)
             return None
@@ -78,14 +124,38 @@ class OdooService(odoorpc.ODOO):
     async def fetch_maintenances(
         self,
         user_id: int,
+        limit: int,
+        offset: int,
     ) -> odoorpc.models.Model | None:
         try:
             request = self.env["maintenance.request"]
             request_ids = request.search(
                 [("equipment_id.employee_id.telegram_id", "=", user_id)],
+                limit=limit,
+                offset=offset,
             )
             requests = request.browse(request_ids)
             return requests
+        except odoorpc.error.RPCError as e:
+            _logger.error(e)
+            return None
+
+    async def fetch_maintenances_count(
+        self,
+        user_id: int,
+    ) -> int | None:
+        try:
+            request = self.env["maintenance.request"]
+            count = request.search_count(
+                [("equipment_id.employee_id.telegram_id", "=", user_id)],
+            )
+            if isinstance(count, int):
+                return count
+            else:
+                _logger.error(
+                    f"Unexpected type returned by search_count: {type(count)}",
+                )
+                return None
         except odoorpc.error.RPCError as e:
             _logger.error(e)
             return None

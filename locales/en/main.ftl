@@ -5,6 +5,7 @@ equipment-info = { $name }
     <b>Employee:</b> { $employee }
 equipment-info-title = 🧰Equipment
 maintenance-requests-title = 🛠️Maintenance Requests
+no-entries-title = No Entries
 maintenance-show-button = 🛠️Show Maintenance
 maintenance-info-title  = 🛠️Maintenance Request
 maintenance-new-request-title = 🛠️New Maintenance Request
