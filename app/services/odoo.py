@@ -159,3 +159,25 @@ class OdooService(odoorpc.ODOO):
         except odoorpc.error.RPCError as e:
             _logger.error(e)
             return None
+
+    async def forward_maintenance(
+        self,
+        maintenance_id: int,
+        user_id: int,
+    ) -> bool:
+        try:
+            maintenance = self.env["maintenance.request"].browse(
+                maintenance_id,
+            )
+            user = self.env["res.users"].browse(user_id)
+            maintenance.write({"user_id": user.id})
+            if isinstance(maintenance, bool):
+                return maintenance
+            else:
+                _logger.error(
+                    f"Unexpected type returned by search_count: {type(maintenance)}",
+                )
+                return False
+        except odoorpc.error.RPCError as e:
+            _logger.error(e)
+            return False

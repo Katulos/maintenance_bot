@@ -19,7 +19,7 @@ from aiogram_dialog.widgets.kbd import (
 from aiogram_dialog.widgets.text import Format
 
 from ...config import settings
-from ...handlers.user.maintenance import maintenance_info
+from ...handlers.user.maintenance import maintenance_info_switch
 from ...services.odoo import OdooService
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
@@ -76,7 +76,7 @@ window = Window(
             items="maintenance_requests",
             item_id_getter=lambda x: x.id,
             type_factory=int,
-            on_click=maintenance_info,
+            on_click=maintenance_info_switch,
         ),
         width=1,
         when=F["maintenance_requests"].len() > 0,

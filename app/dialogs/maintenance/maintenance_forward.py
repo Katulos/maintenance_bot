@@ -18,6 +18,7 @@ from aiogram_dialog.widgets.kbd import (
 from aiogram_dialog.widgets.text import Format
 
 from ...config import settings
+from ...handlers.user.maintenance import maintenance_forward_done
 from ...services.odoo import OdooService
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat
@@ -67,6 +68,7 @@ window = Window(
             items="employees",
             item_id_getter=lambda x: x.id,
             type_factory=int,
+            on_click=maintenance_forward_done,
         ),
         width=1,
     ),

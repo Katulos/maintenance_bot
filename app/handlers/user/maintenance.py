@@ -4,8 +4,9 @@ from typing import Any
 
 from aiogram import Bot, types
 from aiogram.types import CallbackQuery
-from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog import DialogManager, ShowMode, StartMode
 
+from ...services.odoo import OdooService
 from ...states import DialogSG
 
 
@@ -31,7 +32,7 @@ async def maintenance_new(
     )
 
 
-async def maintenance_info(
+async def maintenance_info_switch(
     callback: CallbackQuery,
     widget: Any,
     dialog_manager: DialogManager,
@@ -41,7 +42,7 @@ async def maintenance_info(
     await dialog_manager.switch_to(DialogSG.MAINTENANCE_INFO)
 
 
-async def maintenance_accept(
+async def maintenance_accept_switch(
     callback: CallbackQuery,
     widget: Any,
     dialog_manager: DialogManager,
@@ -51,7 +52,7 @@ async def maintenance_accept(
     await dialog_manager.switch_to(DialogSG.MAINTENANCE_ACCEPT)
 
 
-async def maintenance_forward(
+async def maintenance_forward_switch(
     callback: CallbackQuery,
     widget: Any,
     dialog_manager: DialogManager,
@@ -61,7 +62,24 @@ async def maintenance_forward(
     await dialog_manager.switch_to(DialogSG.MAINTENANCE_FORWARD)
 
 
-async def maintenance_close(
+async def maintenance_forward_done(
+    callback: CallbackQuery,
+    widget: Any,
+    dialog_manager: DialogManager,
+    selected_item: int,
+) -> None:
+    maintenance_id = dialog_manager.dialog_data["maintenance_id"]
+    user_id = selected_item
+    odoo: OdooService = dialog_manager.middleware_data["odoo"]
+    maintenance_result = await odoo.forward_maintenance(
+        maintenance_id, user_id
+    )
+    if maintenance_result:
+        await dialog_manager.done(show_mode=ShowMode.DELETE_AND_SEND)
+    # await dialog_manager.done()
+
+
+async def maintenance_close_switch(
     callback: CallbackQuery,
     widget: Any,
     dialog_manager: DialogManager,
