@@ -37,7 +37,7 @@ window = Window(
                 "category": F["item"].category_id.name,
                 "name": F["item"].name,
                 "serial_no": F["item"].serial_no,
-                "employee": F["item"].employee_id.name,
+                "user": F["item"].technician_user_id.name,
             },
         ),
         items="equipment",

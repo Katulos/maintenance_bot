@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 import structlog
+from aiogram import F
 from aiogram.types import User
 from aiogram_dialog import DialogManager, Window
 from aiogram_dialog.widgets.kbd import (
@@ -26,36 +27,36 @@ from ...utils.i18n_format import I18NFormat
 _PAGE_SIZE = settings.app.pagination_size
 
 
-async def _employee_getter(
+async def _users_getter(
     event_from_user: User,
     dialog_manager: DialogManager,
     odoo: OdooService,
     aiogram_session_logger: structlog.typing.FilteringBoundLogger,
     **kwargs: Any,
 ) -> dict[str, Any]:
-    current_page = await dialog_manager.find("scroll_employee").get_page()
+    current_page = await dialog_manager.find("scroll_users").get_page()
 
     offset = current_page * _PAGE_SIZE
 
-    employee_count = await odoo.fetch_employees_count(event_from_user.id)
+    users_count = await odoo.fetch_users_count()
 
-    if not employee_count:
-        employee_count = 0
+    if not users_count:
+        users_count = 0
 
-    employees = await odoo.fetch_employees(
+    users = await odoo.fetch_users(
         limit=_PAGE_SIZE,
         offset=offset,
     )
 
-    if not employees:
-        employees = []
+    if not users:
+        users = []
 
-    pages = employee_count // _PAGE_SIZE + bool(employee_count % _PAGE_SIZE)
+    pages = users_count // _PAGE_SIZE + bool(users_count % _PAGE_SIZE)
 
     return {
         "pages": pages,
         "current_page": current_page + 1,
-        "employees": employees,
+        "users": users,
     }
 
 
@@ -63,23 +64,24 @@ window = Window(
     I18NFormat("maintenance-forward-text"),
     Group(
         Select(
-            Format("{item[0].name}"),
-            id="s_employee",
-            items="employees",
-            item_id_getter=lambda x: x.id,
+            Format("{item[name]}"),
+            id="s_user",
+            items="users",
+            item_id_getter=lambda x: x["id"],
             type_factory=int,
             on_click=maintenance_forward_done,
         ),
         width=1,
     ),
-    StubScroll(id="scroll_employee", pages="pages"),
+    StubScroll(id="scroll_users", pages="pages"),
     Row(
-        PrevPage(scroll="scroll_employee", text=Format("◀️")),
+        PrevPage(scroll="scroll_users", text=Format("◀️")),
         CurrentPage(
-            scroll="scroll_employee",
+            scroll="scroll_users",
             text=Format("{current_page1}/{pages}"),
         ),
-        NextPage(scroll="scroll_employee", text=Format("▶️")),
+        NextPage(scroll="scroll_users", text=Format("▶️")),
+        when=F["users"].len() > _PAGE_SIZE,
     ),
     Row(
         SwitchTo(
@@ -89,6 +91,6 @@ window = Window(
         ),
         MAIN_MENU_BTN,
     ),
-    getter=_employee_getter,
+    getter=_users_getter,
     state=DialogSG.MAINTENANCE_FORWARD,
 )

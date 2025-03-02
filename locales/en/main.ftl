@@ -2,7 +2,7 @@ equipments-title = 🧰Equipments
 equipment-info = { $name }
     <b>Category:</b> { $category }
     <b>Serial:</b> { $serial_no }
-    <b>Employee:</b> { $employee }
+    <b>Employee:</b> { $user }
 equipment-info-title = 🧰Equipment
 maintenance-requests-title = 🛠️Maintenance Requests
 no-entries-title = No Entries

@@ -71,12 +71,8 @@ async def maintenance_forward_done(
     maintenance_id = dialog_manager.dialog_data["maintenance_id"]
     user_id = selected_item
     odoo: OdooService = dialog_manager.middleware_data["odoo"]
-    maintenance_result = await odoo.forward_maintenance(
-        maintenance_id, user_id
-    )
-    if maintenance_result:
-        await dialog_manager.done(show_mode=ShowMode.DELETE_AND_SEND)
-    # await dialog_manager.done()
+    await odoo.forward_maintenance(maintenance_id, user_id)
+    await dialog_manager.done(show_mode=ShowMode.DELETE_AND_SEND)
 
 
 async def maintenance_close_switch(

@@ -38,12 +38,14 @@ async def _equipments_getter(
 
     offset = current_page * _PAGE_SIZE
 
-    equipment_count = await odoo.fetch_equipments_count(event_from_user.id)
+    equipment_count = await odoo.fetch_user_equipments_count(
+        event_from_user.id,
+    )
 
     if not equipment_count:
         equipment_count = 0
 
-    equipments = await odoo.fetch_equipments(
+    equipments = await odoo.fetch_user_equipments(
         event_from_user.id,
         limit=_PAGE_SIZE,
         offset=offset,
@@ -90,7 +92,7 @@ window = Window(
             scroll="scroll_equipments",
             text=Format("▶️"),
         ),
-        when=F["equipments"].len() > 0,
+        when=F["equipments"].len() > _PAGE_SIZE,
     ),
     Row(
         SwitchTo(

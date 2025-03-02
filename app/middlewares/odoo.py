@@ -49,9 +49,9 @@ class OdooMiddleware(BaseMiddleware):
 
         data["odoo"] = odoo
 
-        employee = await odoo.fetch_employee(event.from_user.id)
+        odoo_user = await odoo.fetch_user(event.from_user.id)
 
-        if not employee:
+        if not odoo_user:
             user_id = event.from_user.id
             user_full_name = html.quote(event.from_user.full_name)
             i18n = data[I18N_FORMAT_KEY]

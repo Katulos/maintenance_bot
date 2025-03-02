@@ -2,7 +2,7 @@ equipments-title = 🧰Оборудование
 equipment-info = { $name }
     Категория: { $category }
     Зав. ном.: { $serial_no }
-    Назначено: { $employee }
+    Назначено: { $user }
 equipment-info-title = 🧰Оборудование
 maintenance-requests-title = 🛠️Запросы на обслуживание
 no-entries-title = Нет Записей

@@ -58,8 +58,8 @@ window = Window(
     List(
         Transformer(
             I18NFormat("maintenance-info-when-created"),
-            mapping={"created": F["item"].employee_id.name},
-            when=F["item"].employee_id,
+            mapping={"created": F["item"].odoo_user.name},
+            when=F["item"].user_id,
         ),
         items="maintenance",
     ),

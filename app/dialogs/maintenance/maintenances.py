@@ -40,12 +40,14 @@ async def _maintenance_requests_getter(
 
     offset = current_page * _PAGE_SIZE
 
-    request_count = await odoo.fetch_maintenances_count(event_from_user.id)
+    request_count = await odoo.fetch_user_maintenances_count(
+        event_from_user.id,
+    )
 
     if not request_count:
         request_count = 0
 
-    requests = await odoo.fetch_maintenances(
+    requests = await odoo.fetch_user_maintenances(
         event_from_user.id,
         limit=_PAGE_SIZE,
         offset=offset,
@@ -95,7 +97,7 @@ window = Window(
             scroll="scroll_maintenance_requests",
             text=Format("▶️"),
         ),
-        when=F["maintenance_requests"].len() > 0,
+        when=F["maintenance_requests"].len() > _PAGE_SIZE,
     ),
     Row(
         SwitchTo(
