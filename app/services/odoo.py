@@ -36,7 +36,7 @@ class OdooService(odoorpc.ODOO):
         self,
         limit: int,
         offset: int,
-    ) -> list | None:
+    ) -> list[dict[str, Any]] | None:
         try:
             model = self.env["res.users"]
             res_users = model.search_read(
@@ -45,8 +45,13 @@ class OdooService(odoorpc.ODOO):
                 limit=limit,
                 offset=offset,
             )
-            # res_users = model.read(res_users_ids)
-            return res_users
+            if isinstance(res_users, list) and all(
+                isinstance(item, dict) for item in res_users
+            ):
+                return res_users
+            else:
+                _logger.error("Unexpected return type from search_read")
+                return None
         except odoorpc.error.RPCError as e:
             _logger.error(e)
             return None

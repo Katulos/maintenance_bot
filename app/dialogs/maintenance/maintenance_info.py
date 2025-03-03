@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytz
 import structlog
 from aiogram import F
 from aiogram.types import User
@@ -14,8 +15,6 @@ from ...handlers.user.maintenance import (
     maintenance_forward_switch,
 )
 from ...services.odoo import OdooService
-
-# from ...services.odoo import fetch_maintenance
 from ...states import MAIN_MENU_BTN, DialogSG
 from ...utils.i18n_format import I18NFormat, Transformer
 
@@ -28,7 +27,14 @@ async def _maintenance_getter(
     **kwargs: Any,
 ) -> dict[str, Any]:
     maintenance_id = dialog_manager.dialog_data.get("maintenance_id")
+    if not maintenance_id:
+        return {"maintenance": None}
     maintenance = await odoo.fetch_maintenance(maintenance_id)
+    if maintenance and maintenance.create_date:
+        tz = maintenance.env.context.get("tz", "UTC")
+        maintenance.create_date = maintenance.create_date.replace(
+            tzinfo=pytz.utc,
+        ).astimezone(pytz.timezone(tz))
     return {"maintenance": maintenance}
 
 
@@ -53,22 +59,20 @@ window = Window(
             I18NFormat("maintenance-info-when-equipment"),
             mapping={"equipment": F["item"].equipment_id.name},
         ),
+        when=F["item"].equipment_id,
         items="maintenance",
     ),
     List(
         Transformer(
             I18NFormat("maintenance-info-when-created"),
-            mapping={"created": F["item"].odoo_user.name},
-            when=F["item"].user_id,
+            mapping={"created": F["item"].create_uid.name},
         ),
         items="maintenance",
     ),
     List(
         Transformer(
             I18NFormat("maintenance-info-when-request-date"),
-            mapping={
-                "request_date": F["item"].create_date,
-            },  # TODO: use timezone F["item"].env.context.tz
+            mapping={"request_date": F["item"].create_date},
         ),
         items="maintenance",
     ),

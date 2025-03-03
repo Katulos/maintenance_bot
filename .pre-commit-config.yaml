@@ -104,6 +104,7 @@ repos:
       - id: mypy
         additional_dependencies:
           - "pydantic>=2.8.2"
+          - "types-pytz"
         args: ["--ignore-missing-imports"]
 
   - repo: https://github.com/asottile/add-trailing-comma
