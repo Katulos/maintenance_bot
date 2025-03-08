@@ -5,7 +5,7 @@ from typing import Any
 import structlog
 from aiogram import F
 from aiogram.types import User
-from aiogram_dialog import DialogManager, Window
+from aiogram_dialog import DialogManager, StartMode, Window
 from aiogram_dialog.widgets.kbd import (
     CurrentPage,
     Group,
@@ -13,15 +13,16 @@ from aiogram_dialog.widgets.kbd import (
     PrevPage,
     Row,
     Select,
+    Start,
     StubScroll,
-    SwitchTo,
 )
 from aiogram_dialog.widgets.text import Format
 
 from ...config import settings
 from ...handlers.user.maintenance import maintenance_info_switch
 from ...services.odoo import OdooService
-from ...states import MAIN_MENU_BTN, DialogSG
+from ...states import MAIN_MENU_BTN
+from ...states.dialog import MaintenanceSG, MenuSG
 from ...utils.i18n_format import I18NFormat
 
 _PAGE_SIZE = settings.app.pagination_size
@@ -100,13 +101,14 @@ window = Window(
         when=F["maintenance_requests"].len() > _PAGE_SIZE,
     ),
     Row(
-        SwitchTo(
+        Start(
             text=I18NFormat("back-button"),
             id="main_menu",
-            state=DialogSG.MAIN,
+            state=MenuSG.MAIN,
+            mode=StartMode.RESET_STACK,
         ),
         MAIN_MENU_BTN,
     ),
     getter=_maintenance_requests_getter,
-    state=DialogSG.MAINTENANCE_PAGER,
+    state=MaintenanceSG.MAINTENANCE_PAGER,
 )

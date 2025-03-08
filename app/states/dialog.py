@@ -1,17 +1,13 @@
 from __future__ import annotations
 
 from aiogram.fsm.state import State, StatesGroup
-from aiogram_dialog.widgets.kbd import SwitchTo
+from aiogram_dialog import StartMode
+from aiogram_dialog.widgets.kbd import Start
 
 from ..utils.i18n_format import I18NFormat
 
 
-class DialogSG(StatesGroup):
-    MAIN = State()
-    #
-    EQUIPMENTS_PAGER = State()
-    EQUIPMENT_INFO = State()
-    #
+class MaintenanceSG(StatesGroup):
     MAINTENANCE_ACCEPT = State()
     MAINTENANCE_CLOSE = State()
     MAINTENANCE_FORWARD = State()
@@ -20,8 +16,18 @@ class DialogSG(StatesGroup):
     MAINTENANCE_PAGER = State()
 
 
-MAIN_MENU_BTN = SwitchTo(
+class EquipmentsSG(StatesGroup):
+    EQUIPMENTS_PAGER = State()
+    EQUIPMENT_INFO = State()
+
+
+class MenuSG(StatesGroup):
+    MAIN = State()
+
+
+MAIN_MENU_BTN = Start(
     I18NFormat("menu-button"),
     id="main",
-    state=DialogSG.MAIN,
+    state=MenuSG.MAIN,
+    mode=StartMode.RESET_STACK,
 )

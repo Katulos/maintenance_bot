@@ -21,7 +21,8 @@ from aiogram_dialog.widgets.text import Format
 from ...config import settings
 from ...handlers.user.maintenance import maintenance_forward_done
 from ...services.odoo import OdooService
-from ...states import MAIN_MENU_BTN, DialogSG
+from ...states import MAIN_MENU_BTN
+from ...states.dialog import MaintenanceSG
 from ...utils.i18n_format import I18NFormat
 
 _PAGE_SIZE = settings.app.pagination_size
@@ -87,10 +88,10 @@ window = Window(
         SwitchTo(
             text=I18NFormat("back-button"),
             id="info_maintenance",
-            state=DialogSG.MAINTENANCE_INFO,
+            state=MaintenanceSG.MAINTENANCE_INFO,
         ),
         MAIN_MENU_BTN,
     ),
     getter=_users_getter,
-    state=DialogSG.MAINTENANCE_FORWARD,
+    state=MaintenanceSG.MAINTENANCE_FORWARD,
 )

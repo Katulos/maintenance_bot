@@ -15,7 +15,8 @@ from ...handlers.user.maintenance import (
     maintenance_forward_switch,
 )
 from ...services.odoo import OdooService
-from ...states import MAIN_MENU_BTN, DialogSG
+from ...states import MAIN_MENU_BTN
+from ...states.dialog import MaintenanceSG
 from ...utils.i18n_format import I18NFormat, Transformer
 
 
@@ -106,10 +107,10 @@ window = Window(
         SwitchTo(
             text=I18NFormat("back-button"),
             id="info_maintenance",
-            state=DialogSG.MAINTENANCE_PAGER,
+            state=MaintenanceSG.MAINTENANCE_PAGER,
         ),
         MAIN_MENU_BTN,
     ),
     getter=_maintenance_getter,
-    state=DialogSG.MAINTENANCE_INFO,
+    state=MaintenanceSG.MAINTENANCE_INFO,
 )

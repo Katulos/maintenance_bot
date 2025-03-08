@@ -1,33 +1,36 @@
 from __future__ import annotations
 
-from aiogram_dialog import ShowMode, Window
-from aiogram_dialog.widgets.kbd import Cancel, SwitchTo
+from aiogram_dialog import ShowMode, StartMode, Window
+from aiogram_dialog.widgets.kbd import Cancel, Start
 
-from ..states import DialogSG
+from ..states.dialog import EquipmentsSG, MaintenanceSG, MenuSG
 from ..utils.i18n_format import I18NFormat
 
 window = Window(
     # Menu title
     I18NFormat("select-an-option-title"),
     # Menu buttons
-    SwitchTo(
+    Start(
         I18NFormat("equipments-title"),
         id="equipments",
-        state=DialogSG.EQUIPMENTS_PAGER,
+        state=EquipmentsSG.EQUIPMENTS_PAGER,
+        mode=StartMode.RESET_STACK,
     ),
-    SwitchTo(
+    Start(
         I18NFormat("maintenance-requests-title"),
         id="maintenance_requests",
-        state=DialogSG.MAINTENANCE_PAGER,
+        state=MaintenanceSG.MAINTENANCE_PAGER,
+        mode=StartMode.RESET_STACK,
     ),
-    SwitchTo(
+    Start(
         I18NFormat("maintenance-new-request-title"),
         id="maintenance_new_request",
-        state=DialogSG.MAINTENANCE_NEW,
+        state=MaintenanceSG.MAINTENANCE_NEW,
+        mode=StartMode.RESET_STACK,
     ),
     Cancel(
         text=I18NFormat("cancel-button"),
         show_mode=ShowMode.DELETE_AND_SEND,
     ),
-    state=DialogSG.MAIN,
+    state=MenuSG.MAIN,
 )

@@ -7,7 +7,7 @@ from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager, ShowMode, StartMode
 
 from ...services.odoo import OdooService
-from ...states import DialogSG
+from ...states.dialog import MaintenanceSG
 
 
 async def maintenance(
@@ -16,7 +16,7 @@ async def maintenance(
     bot: Bot,
 ) -> None:
     await dialog_manager.start(
-        DialogSG.MAINTENANCE_PAGER,
+        MaintenanceSG.MAINTENANCE_PAGER,
         mode=StartMode.RESET_STACK,
     )
 
@@ -27,7 +27,7 @@ async def maintenance_new(
     bot: Bot,
 ) -> None:
     await dialog_manager.start(
-        DialogSG.MAINTENANCE_NEW,
+        MaintenanceSG.MAINTENANCE_NEW,
         mode=StartMode.RESET_STACK,
     )
 
@@ -39,7 +39,7 @@ async def maintenance_info_switch(
     selected_item: int,
 ) -> None:
     dialog_manager.dialog_data["maintenance_id"] = selected_item
-    await dialog_manager.switch_to(DialogSG.MAINTENANCE_INFO)
+    await dialog_manager.switch_to(MaintenanceSG.MAINTENANCE_INFO)
 
 
 async def maintenance_accept_switch(
@@ -49,7 +49,7 @@ async def maintenance_accept_switch(
     selected_item: int,
 ) -> None:
     dialog_manager.dialog_data["maintenance_id"] = selected_item
-    await dialog_manager.switch_to(DialogSG.MAINTENANCE_ACCEPT)
+    await dialog_manager.switch_to(MaintenanceSG.MAINTENANCE_ACCEPT)
 
 
 async def maintenance_forward_switch(
@@ -59,7 +59,7 @@ async def maintenance_forward_switch(
     selected_item: int,
 ) -> None:
     dialog_manager.dialog_data["maintenance_id"] = selected_item
-    await dialog_manager.switch_to(DialogSG.MAINTENANCE_FORWARD)
+    await dialog_manager.switch_to(MaintenanceSG.MAINTENANCE_FORWARD)
 
 
 async def maintenance_forward_done(
@@ -82,4 +82,4 @@ async def maintenance_close_switch(
     selected_item: int,
 ) -> None:
     dialog_manager.dialog_data["maintenance_id"] = selected_item
-    await dialog_manager.switch_to(DialogSG.MAINTENANCE_CLOSE)
+    await dialog_manager.switch_to(MaintenanceSG.MAINTENANCE_CLOSE)

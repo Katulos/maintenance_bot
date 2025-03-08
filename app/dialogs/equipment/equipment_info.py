@@ -10,9 +10,8 @@ from aiogram_dialog.widgets.kbd import Row, SwitchTo
 from aiogram_dialog.widgets.text import List
 
 from ...services.odoo import OdooService
-
-# from ...services.odoo import fetch_equipment
-from ...states import MAIN_MENU_BTN, DialogSG
+from ...states import MAIN_MENU_BTN
+from ...states.dialog import EquipmentsSG, MaintenanceSG
 from ...utils.i18n_format import I18NFormat, Transformer
 
 
@@ -46,7 +45,7 @@ window = Window(
         SwitchTo(
             text=I18NFormat("maintenance-show-button"),
             id="info_maintenance",
-            state=DialogSG.MAINTENANCE_PAGER,
+            state=MaintenanceSG.MAINTENANCE_PAGER,
         ),
     ),
     Row(
@@ -54,11 +53,11 @@ window = Window(
             SwitchTo(
                 text=I18NFormat("back-button"),
                 id="equipments",
-                state=DialogSG.EQUIPMENTS_PAGER,
+                state=EquipmentsSG.EQUIPMENTS_PAGER,
             ),
             MAIN_MENU_BTN,
         ),
     ),
     getter=_equipment_getter,
-    state=DialogSG.EQUIPMENT_INFO,
+    state=EquipmentsSG.EQUIPMENT_INFO,
 )

@@ -82,7 +82,9 @@ def make_i18n_middleware() -> I18nMiddleware:
 
 def setup_handlers(dp: Dispatcher) -> None:
     dp.include_router(user.prepare_router())
-    dp.include_router(dialogs.dialog)
+    dp.include_router(dialogs.menu_dialog)
+    dp.include_router(dialogs.equipment_dialog)
+    dp.include_router(dialogs.maintenance_dialog)
 
 
 def setup_middlewares(dp: Dispatcher) -> None:

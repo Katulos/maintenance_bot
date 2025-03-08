@@ -15,14 +15,22 @@ from .maintenance import (
     maintenances,
 )
 
-dialog = Dialog(
-    start.window,
+equipment_dialog = Dialog(
     equipments.window,
     equipment_info.window,
+)
+
+maintenance_dialog = Dialog(
+    maintenances.window,
     maintenance_accept.window,
     maintenance_close.window,
     maintenance_forward.window,
     maintenance_info.window,
     maintenance_new.window,
-    maintenances.window,
+)
+
+menu_dialog = Dialog(
+    start.window,
+    # equipments.window,
+    # maintenances.window,
 )
