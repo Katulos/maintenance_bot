@@ -18,13 +18,19 @@ classifiers = [
 ]
 requires-python = ">= 3.10"
 dependencies = [
+    "adaptix>=3.0.0b11",
+    "aiogram>=3.21.0",
+    "aiogram-dialog>=2.4.0",
+    "asyncclick>=8.1.8",
+    "dishka>=1.6.0",
+    "pyyaml>=6.0.2",
 ]
 
 [tool.setuptools.dynamic]
 version = {attr = "app.__version__"}
 
 [project.scripts]
-lrm = "app.cli.commands:cli"
+mnt = "app.cli.commands:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]
