@@ -10,7 +10,7 @@ exclude: |
 ci:
   autoupdate_commit_msg: "chore: update pre-commit hooks"
   autofix_commit_msg: "style: pre-commit fixes"
-default_stages: [commit]
+
 repos:
   - repo: https://github.com/jazzband/pip-tools
     rev: 6.14.0

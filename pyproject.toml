@@ -1,123 +1,37 @@
-[build-system]
-requires = ["setuptools>=61.0.0,<69.3.0"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "maintenance-bot"
-dynamic = ["version"]
-requires-python = ">= 3.9"
-dependencies = [
-    "aiogram==3.13.1",
-    "aiogram-dialog==2.2.0",
-    "aiogram-fsm-sqlitestorage==1.0.0",
-    "fluent.runtime==0.4.0",
-    "odoorpc==0.10.1",
-    "orjson==3.10.15",
-    "pydantic-settings==2.7.1",
-    "structlog==25.1.0",
-    "tenacity==9.0.0",
-]
+name = "maintenance"
+dynamic = [ "version" ]
 authors = [
-    { name = "Katulos", email = "katulos@protonmail.com" },
+    { name = "Katulos", email = "123748719+Katulos@users.noreply.github.com" }
 ]
-description = ""
+maintainers = [
+    { name = "Katulos", email = "123748719+Katulos@users.noreply.github.com"}
+]
 readme = "README.md"
-license = {text = "BSD-3-Clause"}
-
-[project.optional-dependencies]
-dev = [
-    "ftl-extract==0.5.0",
-    "mypy==1.13.0",
-    "pip-tools==6.14.0",
-    "pre-commit==3.5.0",
-    "python-semantic-release==9.19.1",
-    "ruff==0.7.2",
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: PyPy",
 ]
-test = [
-    "pytest==8.3.4",
+requires-python = ">= 3.10"
+dependencies = [
 ]
-
-[tool.setuptools]
-packages = ['app']
 
 [tool.setuptools.dynamic]
 version = {attr = "app.__version__"}
 
+[project.scripts]
+lrm = "app.cli.commands:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.setuptools.package-data]
 app= ['locales/*']
 
-[tool.semantic_release]
-version_variables = [
-    "app/__init__.py:__version__"
-]
-assets = []
-build_command_env = []
-commit_message = "chore(release): v{version} [skip ci]"
-commit_parser = "conventional"
-logging_use_named_masks = false
-major_on_zero = true
-allow_zero_version = true
-no_git_verify = false
-tag_format = "v{version}"
-upload_to_repository  = true
-upload_to_release = true
-
-[tool.semantic_release.branches.main]
-match = "(main|master)"
-prerelease_token = "rc"
-prerelease = false
-
-[tool.semantic_release.changelog]
-mode = "init"
-insertion_flag = "<!-- version list -->"
-exclude_commit_patterns = [
-  '''chore(?:\([^)]*?\))?: .+''',
-  '''ci(?:\([^)]*?\))?: .+''',
-  '''refactor(?:\([^)]*?\))?: .+''',
-  '''style(?:\([^)]*?\))?: .+''',
-  '''test(?:\([^)]*?\))?: .+''',
-  '''build\((?!deps\): .+)''',
-  '''Merged? .*''',
-]
-
-[tool.semantic_release.changelog.default_templates]
-changelog_file = "CHANGELOG.md"
-output_format = "md"
-mask_initial_release = false
-
-[tool.semantic_release.changelog.environment]
-block_start_string = "{%"
-block_end_string = "%}"
-variable_start_string = "{{"
-variable_end_string = "}}"
-comment_start_string = "{#"
-comment_end_string = "#}"
-trim_blocks = false
-lstrip_blocks = false
-newline_sequence = "\n"
-keep_trailing_newline = false
-extensions = []
-autoescape = false
-
-[tool.semantic_release.commit_author]
-env = "GIT_COMMIT_AUTHOR"
-default = "Katulos <katulos@protonmail.com>"
-
-[tool.semantic_release.commit_parser_options]
-minor_tags = ["feat"]
-patch_tags = ["fix", "perf"]
-other_allowed_tags = ["build", "chore", "ci", "docs", "style", "refactor", "test"]
-allowed_tags = ["feat", "fix", "perf", "build", "chore", "ci", "docs", "style", "refactor", "test"]
-default_bump_level = 0
-parse_squash_commits = false
-ignore_merge_commits = false
-
-[tool.semantic_release.remote]
-name = "origin"
-type = "github"
-ignore_token_for_push = false
-insecure = false
-
-[tool.semantic_release.publish]
-dist_glob_patterns = ["dist/*"]
-upload_to_vcs_release = true
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
