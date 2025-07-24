@@ -179,4 +179,5 @@ cython_debug/
 data/*
 !data/.gitkeep
 /config.yaml
+/config.yml
 /old_code

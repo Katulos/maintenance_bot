@@ -5,6 +5,11 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
+from aiogram.fsm.storage.base import (
+    BaseEventIsolation,
+    BaseStorage,
+)
+from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog.api.protocols import MessageManagerProtocol
 from aiogram_dialog.manager.message_manager import MessageManager
 from dishka import (
@@ -15,6 +20,7 @@ from dishka import (
 )
 from dishka.integrations.aiogram import setup_dishka
 
+from app.bot import handlers, middlewares
 from app.core.config.bot import BotConfig
 
 
@@ -44,13 +50,28 @@ class DispatcherProvider(Provider):
     @provide
     def provide_dispatcher(
         self,
-        container: AsyncContainer,
         config: BotConfig,
+        container: AsyncContainer,
+        event_isolation: BaseEventIsolation,
+        fsm_storage: BaseStorage,
         message_manager: MessageManagerProtocol,
     ) -> Dispatcher:
-        dp = Dispatcher()
+        dp = Dispatcher(
+            storage=fsm_storage,
+            events_isolation=event_isolation,
+        )
         setup_dishka(container=container, router=dp)
+        bg_manager_factory = handlers.setup(dp, config, message_manager)
+        middlewares.setup(dp, bg_manager_factory)
         return dp
+
+    @provide
+    def provide_fsm_storage(self) -> BaseStorage:
+        return MemoryStorage()
+
+    @provide
+    def provide_event_isolation(self) -> BaseEventIsolation:
+        pass
 
 
 class DialogManagerProvider(Provider):

@@ -2,4 +2,16 @@ core:
   debug: False
 
 bot:
-  token: 5883281213:AAHSCye3lzJDGOLXtx8PtKb5PrP8vVJyL9k
+  token: 5883281213:AAGxc0qD82CLTgUkFMZpxQSidECHOsJ_hPM
+
+odoo:
+  host: "10.0.101.8"
+  port: 8069
+  database: "demo"
+  protocol: "jsonrpc"
+  users: {
+    295921769: {
+      'username': 'demo',
+      'password': 'demo'
+    }
+  }

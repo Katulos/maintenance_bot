@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from app.core.config.bot import BotConfig
 from app.core.config.core import CoreConfig
+from app.core.config.odoo import OdooConfig
 
 
 @dataclass
@@ -10,3 +11,6 @@ class Config:
 
     #
     bot: BotConfig = field(default_factory=BotConfig)
+
+    #
+    odoo: OdooConfig = field(default_factory=OdooConfig)
