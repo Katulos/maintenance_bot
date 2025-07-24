@@ -1,0 +1,6 @@
+services:
+  bot:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    command: sleep infinity
