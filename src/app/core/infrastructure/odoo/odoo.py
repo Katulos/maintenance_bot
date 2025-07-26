@@ -1,9 +1,11 @@
-from typing import Protocol, Any
+from typing import Any, Protocol
 
 import odoorpc
 
 
 class Odoo(Protocol):
+    def login(self, login: str, password: str, db: str):
+        raise NotImplementedError
 
     async def fetch_user(
         self,

@@ -54,7 +54,7 @@ ignore  = [
     # 'F401',
     'F403',
 ]
-fixable = ['A', 'B', 'C4', 'E', 'F', 'I', 'TID', 'UP', 'D400', 'D415']
+fixable = ['A', 'B', 'C4', 'E', 'F', 'I', 'TID', 'UP', 'D400', 'D415', 'F401']
 unfixable = []
 flake8-quotes = {inline-quotes = 'single', multiline-quotes = 'double', docstring-quotes = 'double'}
 dummy-variable-rgx = '^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$'

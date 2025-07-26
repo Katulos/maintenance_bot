@@ -1,4 +1,4 @@
-from dishka import Provider, Scope, provide, AsyncContainer
+from dishka import AsyncContainer, Provider, Scope, provide
 
 from app.core.config.main import Config
 from app.core.infrastructure.odoo.odoo import Odoo
@@ -9,8 +9,9 @@ class OdooProvider(Provider):
     scope = Scope.APP
 
     @provide
-    def provide_odoo(self,
+    def provide_odoo(
+        self,
         container: AsyncContainer,
-        config: Config,) -> Odoo:
+        config: Config,
+    ) -> Odoo:
         return OdooRPC(container, config)
-

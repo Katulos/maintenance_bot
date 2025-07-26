@@ -8,6 +8,7 @@ class OdooUserCredentials:
 
     password: str
 
+
 @dataclass
 class OdooConfig:
     host: str
