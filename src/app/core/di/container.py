@@ -5,7 +5,6 @@ from dishka.integrations.aiogram import AiogramProvider
 
 from app.core.di.providers.bot_provider import (
     BotProvider,
-    DialogManagerProvider,
     DispatcherProvider,
 )
 from app.core.di.providers.config_provider import ConfigProvider
@@ -19,7 +18,6 @@ def get_async_container(config_path: pathlib.Path) -> AsyncContainer:
         AiogramProvider(),
         BotProvider(),
         DispatcherProvider(),
-        DialogManagerProvider(),
         #
         OdooProvider(),
     ]

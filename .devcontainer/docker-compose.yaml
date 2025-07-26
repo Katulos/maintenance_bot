@@ -4,3 +4,33 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     command: sleep infinity
+
+  local-bot-api:
+    # image: aiogram/telegram-bot-api:latest
+    image: ghcr.io/lukaszraczylo/tdlib-telegram-bot-api-docker/telegram-api-server:latest
+    volumes:
+      - telegram-bot-api-data:/var/lib/telegram-bot-api
+    ports:
+      - "8081:8081"
+    networks:
+      - default
+    command: >
+      --local
+      --dir /var/lib/telegram-bot-api
+    environment:
+      - TELEGRAM_API_ID=${TELEGRAM_API_ID}
+      - TELEGRAM_API_HASH=${TELEGRAM_API_HASH}
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+
+volumes:
+  telegram-bot-api-data:
+
+networks:
+  default:

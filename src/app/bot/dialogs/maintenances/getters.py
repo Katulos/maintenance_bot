@@ -9,6 +9,7 @@ from dishka.integrations.aiogram_dialog import inject
 from app.core.config.main import Config
 from app.core.infrastructure.odoo import Odoo
 
+
 @inject
 async def users_getter(
     event_from_user: User,

@@ -21,10 +21,12 @@ dependencies = [
     "adaptix>=3.0.0b11",
     "aiogram>=3.21.0",
     "aiogram-dialog>=2.4.0",
+    "aiojobs>=1.4.0",
     "asyncclick>=8.1.8",
     "dishka>=1.6.0",
     "fluent-runtime>=0.4.0",
     "odoorpc>=0.10.1",
+    "orjson>=3.11.1",
     "pyyaml>=6.0.2",
 ]
 

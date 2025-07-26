@@ -18,7 +18,7 @@ from app.bot.handlers.maintenances import maintenance_forward_done
 from app.bot.states.dialog import MainMenuSG, MaintenancesMenuSG
 from app.bot.utils.i18n_format import I18NFormat
 
-_PAGE_SIZE=5
+_PAGE_SIZE = 5
 
 window = Window(
     I18NFormat("maintenances-forward-text"),

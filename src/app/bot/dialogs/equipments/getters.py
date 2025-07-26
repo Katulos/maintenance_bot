@@ -17,9 +17,6 @@ async def equipment_getter(
     config: FromDishka[Config],
     **kwargs: Any,
 ) -> dict[str, Any]:
-
-
-
     equipment_id = dialog_manager.dialog_data.get("equipment_id")
 
     user_credentials = config.odoo.users[event_from_user.id]
@@ -41,7 +38,6 @@ async def equipments_getter(
     config: FromDishka[Config],
     **kwargs: Any,
 ) -> dict[str, Any]:
-
     page_size = config.bot.page_size
 
     current_page = await dialog_manager.find("scroll_equipments").get_page()

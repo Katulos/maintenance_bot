@@ -3,15 +3,13 @@ from collections.abc import AsyncIterable
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
-from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.client.telegram import TelegramAPIServer
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.base import (
     BaseEventIsolation,
     BaseStorage,
 )
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram_dialog.api.protocols import MessageManagerProtocol
-from aiogram_dialog.manager.message_manager import MessageManager
 from dishka import (
     AsyncContainer,
     Provider,
@@ -19,8 +17,10 @@ from dishka import (
     provide,
 )
 from dishka.integrations.aiogram import setup_dishka
+from orjson import orjson
 
 from app.bot import handlers, middlewares
+from app.bot.sessions.session import SmartSession
 from app.core.config.bot import BotConfig
 from app.core.config.main import Config
 
@@ -31,7 +31,19 @@ class BotProvider(Provider):
     @provide
     async def provide_bot(self, config: BotConfig) -> AsyncIterable[Bot]:
         try:
-            session = AiohttpSession()
+            if config.use_local_server:
+                session = SmartSession(
+                    api=TelegramAPIServer.from_base(
+                        base=config.api_server_base,
+                        is_local=config.is_local,
+                    ),
+                    json_loads=orjson.loads,
+                )
+            else:
+                session = SmartSession(
+                    json_loads=orjson.loads,
+                )
+
             async with Bot(
                 token=config.token,
                 session=session,
@@ -72,11 +84,3 @@ class DispatcherProvider(Provider):
     @provide
     def provide_event_isolation(self) -> BaseEventIsolation:
         pass
-
-
-class DialogManagerProvider(Provider):
-    scope = Scope.APP
-
-    @provide
-    def provide_manager(self) -> MessageManagerProtocol:
-        return MessageManager()

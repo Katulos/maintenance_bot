@@ -17,7 +17,7 @@ from app.bot.handlers.equipments import equipment_info
 from app.bot.states.dialog import EquipmentsMenuSG, MainMenuSG
 from app.bot.utils.i18n_format import I18NFormat
 
-_PAGE_SIZE=5
+_PAGE_SIZE = 5
 
 
 window = Window(

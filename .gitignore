@@ -180,4 +180,5 @@ data/*
 !data/.gitkeep
 /config.yaml
 /config.yml
-/old_code
+!.devcontainer/.env
+old_code
