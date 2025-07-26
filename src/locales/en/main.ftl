@@ -1,20 +1,20 @@
 equipments-title = 🧰Equipments
-equipment-info = { $name }
+equipments-info = { $name }
     <b>Category:</b> { $category }
     <b>Serial:</b> { $serial_no }
     <b>Employee:</b> { $user }
-equipment-info-title = 🧰Equipment
-maintenance-requests-title = 🛠️Maintenance Requests
+equipments-info-title = 🧰Equipment
+maintenances-requests-title = 🛠️Maintenance Requests
 no-entries-title = No Entries
-maintenance-show-button = 🛠️Show Maintenance
-maintenance-info-title  = 🛠️Maintenance Request
-maintenance-new-request-title = 🛠️New Maintenance Request
-maintenance-info-when-category = <b>{ $category } </b>
-maintenance-info-when-name =  { $name }
-maintenance-info-when-user = <b>User:</b> { $user }
-maintenance-info-when-equipment = <b>Equipment:</b> { $equipment }
-maintenance-info-when-request-date = <b>Request Date:</b> { DATETIME($request_date, dateStyle: "medium", timeStyle: "medium") }
-maintenance-info-when-created = <b>Created:</b> { $created }
+maintenances-show-button = 🛠️Show Maintenance
+maintenances-info-title  = 🛠️Maintenance Request
+maintenances-new-request-title = 🛠️New Maintenance Request
+maintenances-info-when-category = <b>{ $category } </b>
+maintenances-info-when-name =  { $name }
+maintenances-info-when-user = <b>User:</b> { $user }
+maintenances-info-when-equipment = <b>Equipment:</b> { $equipment }
+maintenances-info-when-request-date = <b>Request Date:</b> { DATETIME($request_date, dateStyle: "medium", timeStyle: "medium") }
+maintenances-info-when-created = <b>Created:</b> { $created }
 no-register-callback-message = Hello, { $user_full_name }! We haven't met. Please contact your system administrator.
 no-register-message = Hello, <a href='tg://user?id={ NUMBER($user_id, useGrouping: 0) }'>{ $user_full_name }</a>! We haven't met. Please contact your system administrator.
 select-an-option-title = Please, select an option:

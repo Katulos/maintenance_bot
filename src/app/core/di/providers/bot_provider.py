@@ -20,6 +20,7 @@ from dishka import (
 )
 from dishka.integrations.aiogram import setup_dishka
 
+from app.bot import handlers, middlewares
 from app.core.config.bot import BotConfig
 from app.core.config.main import Config
 
@@ -54,15 +55,14 @@ class DispatcherProvider(Provider):
         container: AsyncContainer,
         event_isolation: BaseEventIsolation,
         fsm_storage: BaseStorage,
-        message_manager: MessageManagerProtocol,
     ) -> Dispatcher:
         dp = Dispatcher(
             storage=fsm_storage,
             events_isolation=event_isolation,
         )
         setup_dishka(container=container, router=dp)
-        # bg_manager_factory = handlers.setup(dp, config, message_manager)
-        # middlewares.setup(dp, bg_manager_factory)
+        middlewares.setup(dp)
+        handlers.setup(dp)
         return dp
 
     @provide

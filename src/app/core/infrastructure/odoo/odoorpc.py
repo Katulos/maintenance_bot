@@ -21,7 +21,7 @@ class OdooRPC(Odoo):
             port=config.odoo.port,
         )
 
-    def login(self, login: str, password: str, db: str):
+    def login(self, login: str, password: str, db: str) -> None:
         return self._odoo.login(
             db=db,
             login=login,

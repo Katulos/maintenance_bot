@@ -87,6 +87,7 @@ repos:
           - "asyncclick>=8.1.8"
           - "dishka>=1.6.0"
           - "types-pyyaml"
+          - "types-pytz"
 
   - repo: https://github.com/asottile/add-trailing-comma
     rev: v3.0.1
