@@ -32,7 +32,7 @@ class Session(AiohttpSession):
             res = await super().make_request(bot, method, timeout)
         except Exception as e:
             logging.exception(
-                f"API error {e} time_spent_ms={(time.monotonic() - st) * 1000}"
+                f"API error {e} time_spent_ms={(time.monotonic() - st) * 1000}",
             )
             raise
         response = (
@@ -41,7 +41,7 @@ class Session(AiohttpSession):
             else res
         )
         logging.debug(
-            f"API response:{response} time_spent_ms={(time.monotonic() - st) * 1000}"
+            f"API response:{response} time_spent_ms={(time.monotonic() - st) * 1000}",
         )
         return res
 

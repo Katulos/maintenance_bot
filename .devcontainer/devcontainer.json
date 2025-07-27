@@ -3,6 +3,7 @@
     "dockerComposeFile": "docker-compose.yaml",
     "service": "bot",
     "remoteUser": "vscode",
+    "workspaceFolder": "/workspace",
     "customizations": {
         "vscode": {
             "settings": {
@@ -51,7 +52,7 @@
     },
     "remoteEnv": {
         "PATH": "${containerWorkspaceFolder}/.venv/bin:${containerEnv:PATH}",
-        "WORKSPACE": "${containerWorkspaceFolder}",
+        "WORKSPACE": "/workspace",
         "UV_LINK_MODE": "copy"
     },
     "features": {

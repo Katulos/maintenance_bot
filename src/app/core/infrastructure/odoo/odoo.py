@@ -4,7 +4,7 @@ import odoorpc
 
 
 class Odoo(Protocol):
-    def login(self, login: str, password: str, db: str):
+    def login(self, login: str, password: str, db: str) -> None:
         raise NotImplementedError
 
     async def fetch_user(

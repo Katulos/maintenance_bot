@@ -1,9 +1,21 @@
 services:
   bot:
+    env_file:
+      - .env
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
+      args:
+        - WORKSPACE=${WORKSPACE}
     command: sleep infinity
+    ports:
+      - "8000:8000"
+    networks:
+      - default
+    volumes:
+      - ..:${WORKSPACE}:cached
+    depends_on:
+      - local-bot-api
 
   local-bot-api:
     # image: aiogram/telegram-bot-api:latest

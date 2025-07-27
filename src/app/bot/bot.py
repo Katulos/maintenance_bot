@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import pathlib
+import signal
 from functools import partial
 
 import aiojobs
@@ -141,21 +142,21 @@ async def run(config_path: pathlib.Path) -> None:
             host=config.bot.webhook_listening_host,
             port=config.bot.webhook_listening_port,
         )
-        try:
-            await site.start()
-        finally:
-            await runner.cleanup()
-
-        # loop = asyncio.get_running_loop()
-        # stop_event = asyncio.Event()
-        #
-        # for sig in (signal.SIGTERM, signal.SIGINT):
-        #     loop.add_signal_handler(sig, lambda: stop_event.set())
-        #
         # try:
-        #     await stop_event.wait()
+        await site.start()
         # finally:
         #     await runner.cleanup()
+
+        loop = asyncio.get_running_loop()
+        stop_event = asyncio.Event()
+
+        for sig in (signal.SIGTERM, signal.SIGINT):
+            loop.add_signal_handler(sig, lambda: stop_event.set())
+
+        try:
+            await stop_event.wait()
+        finally:
+            await runner.cleanup()
     else:
         dp.startup.register(
             partial(_aiogram_on_startup_polling, dp, bot, config),

@@ -16,6 +16,9 @@ RUN if [ "${POETRY_VERSION}" != "none" ]; then su vscode -c "umask 0002 && pip i
 ARG NOX_VERSION="none"
 RUN if [ "${NOX_VERSION}" != "none" ]; then su vscode -c "umask 0002 && pip install nox-poetry nox==${NOX_VERSION}"; fi
 
+ARG WORKSPACE=$WORKSPACE
+
+
 # [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
 # COPY requirements.txt /tmp/pip-tmp/
 # RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
