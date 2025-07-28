@@ -8,8 +8,10 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.base import (
     BaseEventIsolation,
     BaseStorage,
+    DefaultKeyBuilder,
 )
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.fsm.storage.redis import RedisStorage
 from dishka import (
     AsyncContainer,
     Provider,
@@ -18,10 +20,11 @@ from dishka import (
 )
 from dishka.integrations.aiogram import setup_dishka
 from orjson import orjson
+from redis.asyncio import Redis
 
 from app.bot import handlers, middlewares
 from app.bot.sessions.session import SmartSession
-from app.core.config.bot import BotConfig
+from app.core.config.bot import BotConfig, BotFsmType
 from app.core.config.main import Config
 
 
@@ -78,9 +81,26 @@ class DispatcherProvider(Provider):
         return dp
 
     @provide
-    def provide_fsm_storage(self) -> BaseStorage:
-        return MemoryStorage()
+    def provide_fsm_storage(self, config: Config) -> BaseStorage:
+        match config.bot.fsm_type:
+            case BotFsmType.MEMORY:
+                return MemoryStorage()
+            case BotFsmType.REDIS:
+                redis = Redis(
+                    host=config.redis.host,
+                    port=config.redis.port,
+                    db=config.redis.db,
+                    password=config.redis.password,
+                )
+                return RedisStorage(
+                    redis,
+                    json_loads=orjson.loads,
+                    json_dumps=orjson.dumps,
+                    key_builder=DefaultKeyBuilder(with_destiny=True),
+                )
+            case _:
+                return MemoryStorage()
 
     @provide
     def provide_event_isolation(self) -> BaseEventIsolation:
-        pass
+        return BaseEventIsolation()

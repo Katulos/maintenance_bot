@@ -41,6 +41,7 @@ extract: ## Extract i18n
 	@ftl_extract --default-ftl-file main.ftl \
 		-k i18n -k I18N -k i18n -k LF -k LazyProxy -k L -k I18NFormat \
 		-l en -l ru \
+		--ignore-kwargs when \
 		./src $(locales)
 
 .PHONY: fluent ## Extract i18n

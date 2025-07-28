@@ -9,6 +9,7 @@ from app.core.di.providers.bot_provider import (
 )
 from app.core.di.providers.config_provider import ConfigProvider
 from app.core.di.providers.odoo_provider import OdooProvider
+from app.core.di.providers.redis_provider import RedisProvider
 
 
 def get_async_container(config_path: pathlib.Path) -> AsyncContainer:
@@ -20,6 +21,8 @@ def get_async_container(config_path: pathlib.Path) -> AsyncContainer:
         DispatcherProvider(),
         #
         OdooProvider(),
+        #
+        RedisProvider(),
     ]
     container = make_async_container(*providers)
     return container

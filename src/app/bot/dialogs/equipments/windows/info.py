@@ -26,7 +26,7 @@ window = Window(
         items="equipment",
     ),
     Row(
-        SwitchTo(
+        Start(
             text=I18NFormat("maintenances-show-button"),
             id="info_maintenance",
             state=MaintenancesMenuSG.MAINTENANCE_PAGER,

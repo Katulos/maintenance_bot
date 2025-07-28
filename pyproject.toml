@@ -28,6 +28,7 @@ dependencies = [
     "odoorpc>=0.10.1",
     "orjson>=3.11.1",
     "pyyaml>=6.0.2",
+    "redis>=6.2.0",
 ]
 
 [tool.setuptools.dynamic]

@@ -1,10 +1,17 @@
 from dataclasses import dataclass, field
+from enum import Enum
 
 
 @dataclass
-class BotApiType:
-    official = "official"
-    local = "local"
+class BotApiType(Enum):
+    OFFICIAL = "official"
+    LOCAL = "local"
+
+
+@dataclass
+class BotFsmType(Enum):
+    MEMORY = "memory"
+    REDIS = "redis"
 
 
 @dataclass
@@ -15,23 +22,25 @@ class BotConfig:
 
     drop_previous_updates: bool = field(default=False)
 
-    type: BotApiType = field(default=BotApiType.official)
+    api_type: BotApiType = field(default=BotApiType.OFFICIAL)
 
     api_server_base: str = field(default="http://local-bot-api:8081")
 
     @property
     def is_local(self) -> bool:
-        match self.type:
-            case BotApiType.official:
+        match self.api_type:
+            case BotApiType.OFFICIAL:
                 return False
-            case BotApiType.local:
+            case BotApiType.LOCAL:
                 return True
             case _:
-                raise ValueError(f"Invalid bot api type: {self.type}")
+                raise ValueError(f"Invalid bot api type: {self.api_type}")
 
     @property
     def bot_id(self) -> int:
         return int(self.token.split(":")[0])
+
+    fsm_type: BotFsmType = field(default=BotFsmType.REDIS)
 
     use_webhook: bool = field(default=False)
 
