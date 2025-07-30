@@ -1,24 +1,23 @@
 import logging
 from typing import Any
 
-import odoorpc
-from dishka import AsyncContainer
+from odoorpc import ODOO
+from odoorpc.error import RPCError
+from odoorpc.models import Model
 
-from app.core.config.main import Config
+from app.core.config.odoo import OdooConfig
 from app.core.infrastructure.odoo.odoo import Odoo
 
 
 class OdooRPC(Odoo):
     def __init__(
         self,
-        container: AsyncContainer,
-        config: Config,
+        config: OdooConfig,
     ) -> None:
-        self.container = container
-        self._odoo = odoorpc.ODOO(
-            host=config.odoo.host,
-            protocol=config.odoo.protocol,
-            port=config.odoo.port,
+        self._odoo = ODOO(
+            host=config.host,
+            protocol=config.protocol,
+            port=config.port,
         )
 
     def login(self, login: str, password: str, db: str) -> None:
@@ -28,12 +27,46 @@ class OdooRPC(Odoo):
             password=password,
         )
 
+    async def accept_maintenance(self,maintenance_id: int) -> bool:
+        try:
+            record: Model = self._odoo.env["maintenance.request"].browse(
+                maintenance_id,
+            )
+            next_stage = self._odoo.env['maintenance.stage'].search(
+                [('sequence', '>', record.stage_id.sequence)],
+                order='sequence asc',
+                limit=1
+            )
+            if next_stage:
+                record.with_context().write({'stage_id': next_stage.id, "kanban_state": "done",})
+            return True
+        except RPCError as e:
+            logging.error(e)
+            return False
+
+    async def close_maintenance(self,maintenance_id: int) -> bool:
+        try:
+            record: Model = self._odoo.env["maintenance.request"].browse(
+                maintenance_id,
+            )
+            next_stage = self._odoo.env['maintenance.stage'].search(
+                [('sequence', '>', record.stage_id.sequence)],
+                order='sequence asc',
+                limit=1
+            )
+            if next_stage:
+                record.with_context().write({'stage_id': next_stage[0], "kanban_state": "done",})
+            return True
+        except RPCError as e:
+            logging.error(e)
+            return False
+
     async def fetch_user(
         self,
         user_id: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         try:
-            model = self._odoo.env["res.users"]
+            model: Model = self._odoo.env["res.users"]
             res_users_id = model.search(
                 [
                     ("telegram_id", "=", user_id),
@@ -43,7 +76,7 @@ class OdooRPC(Odoo):
             )
             res_users = model.browse(res_users_id)
             return res_users
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
@@ -53,7 +86,7 @@ class OdooRPC(Odoo):
         offset: int,
     ) -> list[dict[str, Any]] | None:
         try:
-            model = self._odoo.env["res.users"]
+            model: Model = self._odoo.env["res.users"]
             res_users = model.search_read(
                 [("employee_type", "=", "employee")],
                 fields=["id", "telegram_id", "name"],
@@ -67,7 +100,7 @@ class OdooRPC(Odoo):
             else:
                 logging.error("Unexpected return type from search_read")
                 return None
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
@@ -75,7 +108,7 @@ class OdooRPC(Odoo):
         self,
     ) -> int | None:
         try:
-            model = self._odoo.env["res.users"]
+            model: Model = self._odoo.env["res.users"]
             count = model.search_count([("employee_type", "=", "employee")])
             if isinstance(count, int):
                 return count
@@ -84,20 +117,20 @@ class OdooRPC(Odoo):
                     f"Unexpected type returned by search_count: {type(count)}",
                 )
                 return None
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
     async def fetch_equipment(
         self,
         equipment_id: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         try:
-            equipment = self._odoo.env["maintenance.equipment"].browse(
+            equipment: Model = self._odoo.env["maintenance.equipment"].browse(
                 equipment_id,
             )
             return equipment
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
@@ -106,9 +139,9 @@ class OdooRPC(Odoo):
         user_id: int,
         limit: int,
         offset: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         try:
-            model = self._odoo.env["maintenance.equipment"]
+            model: Model = self._odoo.env["maintenance.equipment"]
             equipment_ids = model.search(
                 [("technician_user_id.telegram_id", "=", user_id)],
                 limit=limit,
@@ -116,7 +149,7 @@ class OdooRPC(Odoo):
             )
             equipments = model.browse(equipment_ids)
             return equipments
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
@@ -125,7 +158,7 @@ class OdooRPC(Odoo):
         user_id: int,
     ) -> int | None:
         try:
-            model = self._odoo.env["maintenance.equipment"]
+            model: Model = self._odoo.env["maintenance.equipment"]
             count = model.search_count(
                 [("technician_user_id.telegram_id", "=", user_id)],
             )
@@ -136,20 +169,20 @@ class OdooRPC(Odoo):
                     f"Unexpected type returned by search_count: {type(count)}",
                 )
                 return None
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
     async def fetch_maintenance(
         self,
         maintenance_id: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         try:
-            maintenance = self._odoo.env["maintenance.request"].browse(
+            record: Model = self._odoo.env["maintenance.request"].browse(
                 maintenance_id,
             )
-            return maintenance
-        except odoorpc.error.RPCError as e:
+            return record
+        except RPCError as e:
             logging.error(e)
             return None
 
@@ -158,17 +191,20 @@ class OdooRPC(Odoo):
         user_id: int,
         limit: int,
         offset: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         try:
-            model = self._odoo.env["maintenance.request"]
+            model: Model = self._odoo.env["maintenance.request"]
             request_ids = model.search(
-                [("user_id.telegram_id", "=", user_id)],
+                [
+                    ("user_id.telegram_id", "=", user_id),
+                    ("archive", "=", False),
+                ],
                 limit=limit,
                 offset=offset,
             )
             requests = model.browse(request_ids)
             return requests
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
@@ -177,9 +213,12 @@ class OdooRPC(Odoo):
         user_id: int,
     ) -> int | None:
         try:
-            model = self._odoo.env["maintenance.request"]
+            model: Model = self._odoo.env["maintenance.request"]
             count = model.search_count(
-                [("user_id.telegram_id", "=", user_id)],
+                [
+                    ("user_id.telegram_id", "=", user_id),
+                    ("archive", "=", False)
+                ],
             )
             if isinstance(count, int):
                 return count
@@ -188,7 +227,7 @@ class OdooRPC(Odoo):
                     f"Unexpected type returned by search_count: {type(count)}",
                 )
                 return None
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return None
 
@@ -198,11 +237,11 @@ class OdooRPC(Odoo):
         user_id: int,
     ) -> bool:
         try:
-            maintenance = self._odoo.env["maintenance.request"].browse(
+            maintenance: Model = self._odoo.env["maintenance.request"].browse(
                 maintenance_id,
             )
             maintenance.write({"user_id": user_id})
             return True
-        except odoorpc.error.RPCError as e:
+        except RPCError as e:
             logging.error(e)
             return False

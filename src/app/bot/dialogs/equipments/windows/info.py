@@ -12,10 +12,10 @@ from app.bot.states.dialog import (
 from app.bot.utils.i18n_format import I18NFormat, Transformer
 
 window = Window(
-    I18NFormat("equipment-info-title"),
+    I18NFormat("equipments-info-title"),
     List(
         Transformer(
-            I18NFormat("equipment-info"),
+            I18NFormat("equipments-info"),
             {
                 "category": F["item"].category_id.name,
                 "name": F["item"].name,

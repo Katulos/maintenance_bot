@@ -9,8 +9,8 @@ window = Window(
     Row(
         SwitchTo(
             text=I18NFormat("back-button"),
-            id="info_maintenance",
-            state=MaintenancesMenuSG.MAINTENANCE_INFO,
+            id="maintenance_requests",
+            state=MaintenancesMenuSG.MAINTENANCE_PAGER,
         ),
         Start(
             I18NFormat("menu-button"),

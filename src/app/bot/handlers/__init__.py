@@ -14,37 +14,37 @@ def setup(dp: Dispatcher) -> Router:
     router.message.register(
         start.start_command,
         CommandStart(),
-        F.chat.api_type == ChatType.PRIVATE,
+        F.chat.type == ChatType.PRIVATE,
     )
 
     router.message.register(
         cancel.cancel_command,
         Command(commands=["cancel"]),
-        F.chat.api_type == ChatType.PRIVATE,
+        F.chat.type == ChatType.PRIVATE,
     )
 
     router.message.register(
         equipments.equipments_list_command,
         Command(commands=["equipments", "eq"]),
-        F.chat.api_type == ChatType.PRIVATE,
+        F.chat.type == ChatType.PRIVATE,
     )
 
     router.message.register(
         maintenances.maintenances_list_command,
         Command(commands=["maintenances", "ma"]),
-        F.chat.api_type == ChatType.PRIVATE,
+        F.chat.type == ChatType.PRIVATE,
     )
 
     router.message.register(
         maintenances.maintenance_new_command,
         Command(commands=["new", "manew"]),
-        F.chat.api_type == ChatType.PRIVATE,
+        F.chat.type == ChatType.PRIVATE,
     )
 
     router.message.register(
         menu.menu_command,
         Command(commands=["menu"]),
-        F.chat.api_type == ChatType.PRIVATE,
+        F.chat.type == ChatType.PRIVATE,
     )
 
     # Register error handlers

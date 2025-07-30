@@ -1,16 +1,22 @@
 from typing import Any, Protocol
 
-import odoorpc
+from odoorpc.models import Model
 
 
 class Odoo(Protocol):
     def login(self, login: str, password: str, db: str) -> None:
         raise NotImplementedError
 
+    async def accept_maintenance(self,maintenance_id: int) -> bool:
+        raise NotImplementedError
+
+    async def close_maintenance(self,maintenance_id: int) -> bool:
+        raise NotImplementedError
+
     async def fetch_user(
         self,
         user_id: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         raise NotImplementedError
 
     async def fetch_users(
@@ -28,7 +34,7 @@ class Odoo(Protocol):
     async def fetch_equipment(
         self,
         equipment_id: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         raise NotImplementedError
 
     async def fetch_user_equipments(
@@ -36,7 +42,7 @@ class Odoo(Protocol):
         user_id: int,
         limit: int,
         offset: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         raise NotImplementedError
 
     async def fetch_user_equipments_count(
@@ -48,7 +54,7 @@ class Odoo(Protocol):
     async def fetch_maintenance(
         self,
         maintenance_id: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         raise NotImplementedError
 
     async def fetch_user_maintenances(
@@ -56,7 +62,7 @@ class Odoo(Protocol):
         user_id: int,
         limit: int,
         offset: int,
-    ) -> odoorpc.models.Model | None:
+    ) -> Model | None:
         raise NotImplementedError
 
     async def fetch_user_maintenances_count(

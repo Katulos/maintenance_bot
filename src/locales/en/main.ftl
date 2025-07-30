@@ -6,6 +6,7 @@ equipments-info = { $name }
 equipments-info-title = 🧰Equipment
 maintenances-requests-title = 🛠️Maintenance Requests
 no-entries-title = No Entries
+maintenances-close-text = ✅Done
 maintenances-show-button = 🛠️Show Maintenance
 maintenances-info-title  = 🛠️Maintenance Request
 maintenances-new-request-title = 🛠️New Maintenance Request

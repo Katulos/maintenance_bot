@@ -2,13 +2,11 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 
-@dataclass
 class BotApiType(Enum):
     OFFICIAL = "official"
     LOCAL = "local"
 
 
-@dataclass
 class BotFsmType(Enum):
     MEMORY = "memory"
     REDIS = "redis"
@@ -47,13 +45,17 @@ class BotConfig:
     use_local_server: bool = field(default=False)
 
     webhook_path: str = field(
-        default="/tg/webhooks/bot/{bot_id} ",
+        default="/tg/webhooks/bot/{bot_id}",
     )
 
     @property
     def webhook_address(self) -> str:
+        if self.use_local_server:
+            schema = "http://"
+        else:
+            schema = "https://"
         return (
-            "http://"
+            schema
             + self.webhook_listening_host
             + ":"
             + str(self.webhook_listening_port)
