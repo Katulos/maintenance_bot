@@ -3,6 +3,7 @@ from collections.abc import AsyncIterable
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.base import (
@@ -23,7 +24,6 @@ from orjson import orjson
 from redis.asyncio import Redis
 
 from app.bot import handlers, middlewares
-from app.bot.sessions.session import SmartSession
 from app.core.config.bot import BotConfig, BotFsmType
 from app.core.config.main import Config
 
@@ -35,7 +35,7 @@ class BotProvider(Provider):
     async def provide_bot(self, config: BotConfig) -> AsyncIterable[Bot]:
         try:
             if config.use_local_server:
-                session = SmartSession(
+                session = AiohttpSession(
                     api=TelegramAPIServer.from_base(
                         base=config.api_server_base,
                         is_local=config.is_local,
@@ -43,9 +43,7 @@ class BotProvider(Provider):
                     json_loads=orjson.loads,
                 )
             else:
-                session = SmartSession(
-                    json_loads=orjson.loads,
-                )
+                session = AiohttpSession()
 
             async with Bot(
                 token=config.token,
@@ -103,4 +101,4 @@ class DispatcherProvider(Provider):
 
     @provide
     def provide_event_isolation(self) -> BaseEventIsolation:
-        return BaseEventIsolation()
+        pass
