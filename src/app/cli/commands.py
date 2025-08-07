@@ -5,6 +5,7 @@ from typing import Any
 
 import asyncclick as click
 
+from app.api import api as _api
 from app.bot import bot as _tgbot
 
 
@@ -34,7 +35,10 @@ async def run() -> None:
 @common_command_options
 async def api(ctx: click.Context, config: pathlib.Path) -> None:
     """Run API server."""
-    pass
+    try:
+        await _api.run(config)
+    except asyncio.exceptions.CancelledError:
+        pass
 
 
 @run.command()

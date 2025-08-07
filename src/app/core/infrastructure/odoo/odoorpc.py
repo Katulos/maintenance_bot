@@ -27,35 +27,39 @@ class OdooRPC(Odoo):
             password=password,
         )
 
-    async def accept_maintenance(self,maintenance_id: int) -> bool:
+    async def accept_maintenance(self, maintenance_id: int) -> bool:
         try:
             record: Model = self._odoo.env["maintenance.request"].browse(
                 maintenance_id,
             )
-            next_stage = self._odoo.env['maintenance.stage'].search(
-                [('sequence', '>', record.stage_id.sequence)],
-                order='sequence asc',
-                limit=1
+            next_stage = self._odoo.env["maintenance.stage"].search(
+                [("sequence", ">", record.stage_id.sequence)],
+                order="sequence asc",
+                limit=1,
             )
             if next_stage:
-                record.with_context().write({'stage_id': next_stage.id, "kanban_state": "done",})
+                record.with_context().write(
+                    {"stage_id": next_stage.id, "kanban_state": "done"},
+                )
             return True
         except RPCError as e:
             logging.error(e)
             return False
 
-    async def close_maintenance(self,maintenance_id: int) -> bool:
+    async def close_maintenance(self, maintenance_id: int) -> bool:
         try:
             record: Model = self._odoo.env["maintenance.request"].browse(
                 maintenance_id,
             )
-            next_stage = self._odoo.env['maintenance.stage'].search(
-                [('sequence', '>', record.stage_id.sequence)],
-                order='sequence asc',
-                limit=1
+            next_stage = self._odoo.env["maintenance.stage"].search(
+                [("sequence", ">", record.stage_id.sequence)],
+                order="sequence asc",
+                limit=1,
             )
             if next_stage:
-                record.with_context().write({'stage_id': next_stage[0], "kanban_state": "done",})
+                record.with_context().write(
+                    {"stage_id": next_stage[0], "kanban_state": "done"},
+                )
             return True
         except RPCError as e:
             logging.error(e)
@@ -217,7 +221,7 @@ class OdooRPC(Odoo):
             count = model.search_count(
                 [
                     ("user_id.telegram_id", "=", user_id),
-                    ("archive", "=", False)
+                    ("archive", "=", False),
                 ],
             )
             if isinstance(count, int):

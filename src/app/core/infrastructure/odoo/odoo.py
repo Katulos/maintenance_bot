@@ -7,10 +7,10 @@ class Odoo(Protocol):
     def login(self, login: str, password: str, db: str) -> None:
         raise NotImplementedError
 
-    async def accept_maintenance(self,maintenance_id: int) -> bool:
+    async def accept_maintenance(self, maintenance_id: int) -> bool:
         raise NotImplementedError
 
-    async def close_maintenance(self,maintenance_id: int) -> bool:
+    async def close_maintenance(self, maintenance_id: int) -> bool:
         raise NotImplementedError
 
     async def fetch_user(

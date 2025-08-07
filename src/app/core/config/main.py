@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 
+from app.core.config.api import ApiConfig
 from app.core.config.bot import BotConfig
 from app.core.config.core import CoreConfig
 from app.core.config.odoo import OdooConfig
@@ -8,6 +9,10 @@ from app.core.config.redis import RedisConfig
 
 @dataclass
 class Config:
+    #
+    api: ApiConfig = field(default_factory=ApiConfig)
+
+    #
     core: CoreConfig = field(default_factory=CoreConfig)
 
     #

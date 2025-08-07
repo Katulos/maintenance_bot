@@ -82,7 +82,7 @@ async def maintenance_close_switch(
     widget: Any,
     dialog_manager: DialogManager,
     selected_item: int,
-    odoo: FromDishka[Odoo]
+    odoo: FromDishka[Odoo],
 ) -> None:
     dialog_manager.dialog_data["maintenance_id"] = selected_item
     await odoo.close_maintenance(selected_item)
