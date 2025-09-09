@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: app",
+            "name": "Python: Run bot",
             "type": "python",
             "request": "launch",
             "noDebug": true,
@@ -13,7 +13,7 @@
             "cwd": "${workspaceRoot}"
         },
         {
-            "name": "Python: Debug app",
+            "name": "Python: Debug bot",
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
@@ -23,6 +23,56 @@
             "internalConsoleOptions": "openOnSessionStart",
             "module": "app",
             "args": ["run", "bot"],
+            "cwd": "${workspaceRoot}",
+            "debugOptions": ["RedirectOutput"]
+        },
+        {
+            "name": "Python: Run api",
+            "type": "python",
+            "request": "launch",
+            "noDebug": true,
+            "python": "${command:python.interpreterPath}",
+            "console": "integratedTerminal",
+            "module": "app",
+            "args": ["run", "api"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Python: Debug api",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "stopOnPoints": true,
+            "python": "${command:python.interpreterPath}",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "module": "app",
+            "args": ["run", "api"],
+            "cwd": "${workspaceRoot}",
+            "debugOptions": ["RedirectOutput"]
+        },
+        {
+            "name": "Python: Run scheduler",
+            "type": "python",
+            "request": "launch",
+            "noDebug": true,
+            "python": "${command:python.interpreterPath}",
+            "console": "integratedTerminal",
+            "module": "app",
+            "args": ["run", "scheduler"],
+            "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Python: Debug scheduler",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "stopOnPoints": true,
+            "python": "${command:python.interpreterPath}",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "module": "app",
+            "args": ["run", "scheduler"],
             "cwd": "${workspaceRoot}",
             "debugOptions": ["RedirectOutput"]
         },

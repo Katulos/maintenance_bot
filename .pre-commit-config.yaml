@@ -84,10 +84,11 @@ repos:
           - "adaptix>=3.0.0b11"
           - "aiogram>=3.21.0"
           - "aiogram-dialog>=2.4.0"
-          - "asyncclick>=8.1.8"
           - "dishka>=1.6.0"
+          - "sqlalchemy[mypy]>=2.0.42"
           - "types-pyyaml"
           - "types-pytz"
+          - "types-click"
 
   - repo: https://github.com/asottile/add-trailing-comma
     rev: v3.0.1

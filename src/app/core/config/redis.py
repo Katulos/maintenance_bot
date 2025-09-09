@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 
-@dataclass
+@dataclass(kw_only=True, frozen=True, slots=True)
 class RedisConfig:
     host: str = field(default="redis")
 

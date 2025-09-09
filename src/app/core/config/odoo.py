@@ -2,20 +2,15 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 
-@dataclass
-class OdooUserCredentials:
-    username: str
-
-    password: str
-
-
-@dataclass
+@dataclass(kw_only=True, frozen=True, slots=True)
 class OdooConfig:
     host: str
 
     database: str
 
-    users: dict[int, OdooUserCredentials]
+    username: str
+
+    password: str
 
     port: int = field(default=8069)
 

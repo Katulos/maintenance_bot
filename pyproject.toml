@@ -22,14 +22,17 @@ dependencies = [
     "aiogram>=3.21.0",
     "aiogram-dialog>=2.4.0",
     "aiojobs>=1.4.0",
-    "asyncclick>=8.1.8",
+    "alembic>=1.16.4",
+    "arq>=0.25.0",
+    "click>=8.2.1",
+    "cryptography>=45.0.6",
     "dishka>=1.6.0",
     "fastapi>=0.116.1",
     "fluent-runtime>=0.4.0",
     "odoorpc>=0.10.1",
     "orjson>=3.11.1",
     "pyyaml>=6.0.2",
-    "redis>=6.2.0",
+    "sqlalchemy[postgresql-asyncpg]>=2.0.42",
     "uvicorn>=0.35.0",
 ]
 
@@ -44,6 +47,11 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 app= ['locales/*']
+
+[tool.uv.workspace]
+members = [
+    "123/app_name",
+]
 
 [build-system]
 requires = ["setuptools"]

@@ -4,6 +4,7 @@ from dishka import Provider, Scope, provide
 
 from app.core.config.api import ApiConfig
 from app.core.config.bot import BotConfig
+from app.core.config.db import DbConfig
 from app.core.config.loader import ConfigLoader
 from app.core.config.main import Config
 from app.core.config.odoo import OdooConfig
@@ -18,21 +19,25 @@ class ConfigProvider(Provider):
         super().__init__()
 
     @provide
-    def provide_config(self) -> Config:
+    async def provide_config(self) -> Config:
         return ConfigLoader.load_config(self.config_path)
 
     @provide
-    def provide_api_config(self, config: Config) -> ApiConfig:
+    async def provide_api_config(self, config: Config) -> ApiConfig:
         return config.api
 
     @provide
-    def provide_bot_config(self, config: Config) -> BotConfig:
+    async def provide_bot_config(self, config: Config) -> BotConfig:
         return config.bot
 
     @provide
-    def provide_odoo_config(self, config: Config) -> OdooConfig:
+    async def provide_db_config(self, config: Config) -> DbConfig:
+        return config.db
+
+    @provide
+    async def provide_odoo_config(self, config: Config) -> OdooConfig:
         return config.odoo
 
     @provide
-    def provide_redis_config(self, config: Config) -> RedisConfig:
+    async def provide_redis_config(self, config: Config) -> RedisConfig:
         return config.redis

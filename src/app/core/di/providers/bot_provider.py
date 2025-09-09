@@ -12,7 +12,8 @@ from aiogram.fsm.storage.base import (
     DefaultKeyBuilder,
 )
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.fsm.storage.redis import RedisStorage
+from aiogram.fsm.storage.redis import RedisEventIsolation, RedisStorage
+from aiogram.types import TelegramObject
 from dishka import (
     AsyncContainer,
     Provider,
@@ -26,6 +27,7 @@ from redis.asyncio import Redis
 from app.bot import handlers, middlewares
 from app.core.config.bot import BotConfig, BotFsmType
 from app.core.config.main import Config
+from app.core.types import TelegramId
 
 
 class BotProvider(Provider):
@@ -62,7 +64,7 @@ class DispatcherProvider(Provider):
     scope = Scope.APP
 
     @provide
-    def provide_dispatcher(
+    async def provide_dispatcher(
         self,
         config: Config,
         container: AsyncContainer,
@@ -79,7 +81,7 @@ class DispatcherProvider(Provider):
         return dp
 
     @provide
-    def provide_fsm_storage(self, config: Config) -> BaseStorage:
+    async def provide_fsm_storage(self, config: Config) -> BaseStorage:
         match config.bot.fsm_type:
             case BotFsmType.MEMORY:
                 return MemoryStorage()
@@ -100,5 +102,21 @@ class DispatcherProvider(Provider):
                 return MemoryStorage()
 
     @provide
-    def provide_event_isolation(self) -> BaseEventIsolation:
-        pass
+    async def provide_event_isolation(
+        self,
+        redis: Redis,
+    ) -> BaseEventIsolation:
+        return RedisEventIsolation(redis)
+
+
+class TelegramIdProvider(Provider):
+    scope = Scope.REQUEST
+
+    @provide
+    async def provide_telegram_id(
+        self,
+        request: TelegramObject,
+    ) -> TelegramId:
+        if hasattr(request, "from_user") and request.from_user:
+            return request.from_user.id
+        raise ValueError("Telegram user ID not found in request")

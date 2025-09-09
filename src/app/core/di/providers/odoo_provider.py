@@ -1,16 +1,30 @@
+import logging
+
 from dishka import Provider, Scope, provide
+from odoorpc import ODOO
 
 from app.core.config.odoo import OdooConfig
-from app.core.infrastructure.odoo.odoo import Odoo
-from app.core.infrastructure.odoo.odoorpc import OdooRPC
 
 
 class OdooProvider(Provider):
-    scope = Scope.APP
+    scope = Scope.REQUEST
 
     @provide
-    def provide_odoo(
+    async def provide_odoo(
         self,
         config: OdooConfig,
-    ) -> Odoo:
-        return OdooRPC(config)
+    ) -> ODOO:
+        try:
+            client = ODOO(
+                host=config.host,
+                port=config.port,
+                protocol=config.protocol,
+            )
+            client.login(
+                db=config.database,
+                login=config.username,
+                password=config.password,
+            )
+            return client
+        except Exception as e:
+            logging.error(e)

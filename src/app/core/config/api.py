@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 
-@dataclass
+@dataclass(kw_only=True, frozen=True, slots=True)
 class ApiConfig:
     bind: str = field(default="0.0.0.0")
 

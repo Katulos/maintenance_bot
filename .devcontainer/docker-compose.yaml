@@ -15,7 +15,28 @@ services:
     volumes:
       - ..:${WORKSPACE}:cached
     depends_on:
+      - db
       - local-bot-api
+      - redis
+
+  db:
+    env_file:
+      - .env
+    image: postgres:15-alpine
+    volumes:
+      - db:/var/lib/postgresql/data:z
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    networks:
+      - default
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.50"
+    #       memory: 512M
+    #     reservations:
+    #       cpus: "0.25"
+    #       memory: 256M
 
   local-bot-api:
     # image: aiogram/telegram-bot-api:latest
@@ -32,17 +53,35 @@ services:
     environment:
       - TELEGRAM_API_ID=${TELEGRAM_API_ID}
       - TELEGRAM_API_HASH=${TELEGRAM_API_HASH}
-    deploy:
-      resources:
-        limits:
-          cpus: "0.50"
-          memory: 512M
-        reservations:
-          cpus: "0.25"
-          memory: 256M
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.50"
+    #       memory: 512M
+    #     reservations:
+    #       cpus: "0.25"
+    #       memory: 256M
+
+  redis:
+    env_file:
+      - .env
+    image: redis:8-alpine
+    ports:
+      - "${REDIS_PORT}:5432"
+    networks:
+      - default
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "0.50"
+    #       memory: 512M
+    #     reservations:
+    #       cpus: "0.25"
+    #       memory: 256M
 
 volumes:
   telegram-bot-api-data:
+  db:
 
 networks:
   default:

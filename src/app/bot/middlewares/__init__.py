@@ -39,5 +39,6 @@ def setup(dp: Dispatcher) -> None:
     dp.callback_query.middleware(_make_i18n_middleware())
 
     # Check odoo registration middleware
-    dp.message.middleware(OdooMiddleware())
-    dp.callback_query.middleware(OdooMiddleware())
+    # dp.update.outer_middleware(OdooMiddleware())
+    # dp.message.middleware(OdooMiddleware())
+    # dp.callback_query.middleware(OdooMiddleware())

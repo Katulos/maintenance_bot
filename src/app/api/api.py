@@ -1,3 +1,4 @@
+import asyncio
 import pathlib
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -30,20 +31,20 @@ fast_app = FastAPI(
 )
 
 
-async def run(config_path: pathlib.Path) -> None:
+def run(config_path: pathlib.Path) -> None:
     _container = get_async_container(config_path)
+
     setup_dishka(container=_container, app=fast_app)
-    config = await _container.get(Config)
+
+    config = asyncio.run(_container.get(Config))
 
     include_routers(fast_app)
     include_exception_handlers(fast_app)
 
-    config = uvicorn.Config(
+    uvicorn.run(
         fast_app,
         port=config.api.port,
         host=config.api.bind,
         access_log=config.api.enable_access_log,
-        log_config=None,
+        # log_config=None,
     )
-    server = uvicorn.Server(config)
-    await server.serve()

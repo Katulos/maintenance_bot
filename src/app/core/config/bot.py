@@ -1,18 +1,9 @@
 from dataclasses import dataclass, field
-from enum import Enum
+
+from app.core.infrastructure.dto.enums import BotApiType, BotFsmType
 
 
-class BotApiType(Enum):
-    OFFICIAL = "official"
-    LOCAL = "local"
-
-
-class BotFsmType(Enum):
-    MEMORY = "memory"
-    REDIS = "redis"
-
-
-@dataclass
+@dataclass(kw_only=True, frozen=True, slots=True)
 class BotConfig:
     token: str
 

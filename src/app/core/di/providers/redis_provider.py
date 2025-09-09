@@ -25,4 +25,4 @@ class RedisProvider(Provider):
             ) as redis:
                 yield redis
         except Exception as e:
-            logging.exception(e)
+            logging.error(e)
