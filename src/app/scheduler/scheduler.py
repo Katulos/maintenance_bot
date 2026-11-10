@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import pathlib
 import sys
 
 from arq import Worker
@@ -10,7 +9,7 @@ from app.core.di.container import get_async_container
 _logger = logging.getLogger("app.scheduler")
 
 
-async def run(config_path: pathlib.Path) -> None:
+async def run() -> None:
     _container = get_async_container()
 
     worker = await _container.get(Worker)

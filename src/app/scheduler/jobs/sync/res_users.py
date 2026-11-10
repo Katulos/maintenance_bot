@@ -6,6 +6,7 @@ from arq import ArqRedis
 from dishka import AsyncContainer, FromDishka
 from dishka.integrations.arq import inject
 from odoorpc import ODOO
+from odoorpc.error import RPCError
 from odoorpc.models import Model
 
 from app.core.infrastructure import dto
@@ -29,30 +30,29 @@ async def sync_res_users(
     odoo: FromDishka[ODOO],
     scheduler: FromDishka[ArqRedis],
 ) -> None:
-    # try:
-    model: Model = odoo.env["res.users"]
-    records = model.search_read(
-        [("share", "=", False)],
-        fields=[
-            "id",
-            "telegram_id",
-            "name",
-            "create_date",
-            "write_date",
-        ],
-    )
+    try:
+        model: Model = odoo.env["res.users"]
+        records = model.search_read(
+            [("share", "=", False)],
+            fields=[
+                "id",
+                "telegram_id",
+                "name",
+                "create_date",
+                "write_date",
+            ],
+        )
 
-    vals = _retort.load(records, list[dto.ResUser])
-    pprint(vals)
-    # for val in vals:
-    #     await scheduler.enqueue_job("upsert_res_user", val)
+        vals = _retort.load(records, list[dto.ResUser])
+        pprint(vals)
+        # for val in vals:
+        #     await scheduler.enqueue_job("upsert_res_user", val)
 
-
-# except RPCError as e:
-#     # TODO: disable sync
-#     logging.getLogger("odoorpc").error(e)
-# except Exception as e:
-#     _logger.error(e)
+    except RPCError as e:
+        # TODO: disable sync
+        logging.getLogger("odoorpc").error(e)
+    except Exception as e:
+        _logger.error(e)
 
 
 @inject
