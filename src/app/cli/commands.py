@@ -56,23 +56,26 @@ def migrations() -> None:
 
 
 @run.command()
-def api(ctx: click.Context) -> None:
+def api() -> None:
     """Run API server."""
+    ctx = click.get_current_context()
     ctx.invoke(upgrade)
     logging.info("Running API server")
     _api.run()
 
 
 @run.command()
-def bot(ctx: click.Context) -> None:
+def bot() -> None:
     """Run bot application."""
+    ctx = click.get_current_context()
     ctx.invoke(upgrade)
     asyncio.run(_tgbot.run())
 
 
 @run.command()
-def scheduler(ctx: click.Context) -> None:
+def scheduler() -> None:
     """Run scheduler."""
+    ctx = click.get_current_context()
     ctx.invoke(upgrade)
     asyncio.run(_scheduler.run())
 
