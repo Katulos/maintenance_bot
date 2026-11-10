@@ -1,6 +1,6 @@
 import typing
 
-from aiogram import MagicFilter
+from aiogram.filters.magic_data import MagicFilter
 from aiogram_dialog.api.protocols import DialogManager
 from aiogram_dialog.widgets.common import WhenCondition
 from aiogram_dialog.widgets.text import Text

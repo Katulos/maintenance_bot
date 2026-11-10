@@ -9,10 +9,10 @@ import orjson
 from aiogram import Bot, Dispatcher, types
 from aiohttp import web
 
-from app.core.config.bot import BotConfig
+from ....core.config import settings
 
 
-def create_tg_updates_app(config: BotConfig) -> web.Application:
+def create_tg_updates_app() -> web.Application:
     tg_updates_app = web.Application()
 
     async def process_update(
@@ -24,20 +24,20 @@ def create_tg_updates_app(config: BotConfig) -> web.Application:
         await dp.feed_webhook_update(bot, upd, **workflow_data)
 
     async def execute(req: web.Request) -> web.Response:
-        if config.webhook_secret_token is NoneType:
+        if settings.get("bot.webhook_secret_token") is NoneType:
             logging.critical("webhook_secret_token is not defined")
             raise aiohttp.web.HTTPNotFound
         else:
             if not secrets.compare_digest(
                 req.headers.get("X-Telegram-Bot-Api-Secret-Token", ""),
-                config.webhook_secret_token,
+                settings.get("bot.webhook_secret_token"),
             ):
                 logging.error("X-Telegram-Bot-Api-Secret-Token not matched")
                 raise aiohttp.web.HTTPNotFound
 
         if not secrets.compare_digest(
             req.match_info["bot_id"],
-            str(config.bot_id),
+            str(settings.get("bot.bot_id")),
         ):
             logging.error("bot_id not matched")
             raise aiohttp.web.HTTPNotFound
@@ -45,7 +45,9 @@ def create_tg_updates_app(config: BotConfig) -> web.Application:
         dp: Dispatcher = req.app["dp"]
         scheduler: aiojobs.Scheduler = req.app["scheduler"]
 
-        if scheduler.pending_count > config.webhook_max_updates_in_queue:
+        if scheduler.pending_count > settings.get(
+            "bot.webhook_max_updates_in_queue"
+        ):
             raise web.HTTPTooManyRequests
         if scheduler.closed:
             raise web.HTTPServiceUnavailable(reason="Closed queue")

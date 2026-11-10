@@ -9,7 +9,8 @@ from aiogram.types import CallbackQuery, Message, TelegramObject, User
 from dishka import AsyncContainer
 
 from app.bot.utils.i18n_format import I18N_FORMAT_KEY
-from app.core.config.main import Config
+
+from ...core.config import settings
 
 
 class OdooMiddleware(BaseMiddleware):
@@ -26,10 +27,9 @@ class OdooMiddleware(BaseMiddleware):
         try:
             container: AsyncContainer = data["dishka_container"]
             dao: OdooDao = await container.get(OdooDao)
-            config = await container.get(Config)
             i18n = data[I18N_FORMAT_KEY]
 
-            if user.id not in config.odoo.users:
+            if user.id not in settings.get("odoo.users"):
                 logging.warning(
                     f"User {user.id} is missing from the configuration file",
                 )

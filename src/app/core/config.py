@@ -37,11 +37,57 @@ settings = Dynaconf(
 )
 settings.validators.register(
     # core
-    Validator("core.debug", default=False, is_type_of=bool),
+    Validator(
+        "core.debug",
+        is_type_of=bool,
+        default=False,
+    ),
+    # db
+    Validator(
+        "db.database_url",
+        is_type_of=str,
+        default="postgresql+asyncpg://devel:devel@db:5432/devel",
+    ),
+    Validator("db.echo", is_type_of=bool, default=False),
     # API
     Validator("api.bind", is_type_of=str, default="127.0.0.1"),
     Validator("api.port", is_type_of=int, default=8000),
     Validator("api.enable_access_log", is_type_of=bool, default=False),
+    # bot
+    Validator("bot.token", is_type_of=str),
+    Validator("bot.page_size", is_type_of=int, default=5),
+    Validator(
+        "bot.api_type",
+        is_type_of=str,
+        is_in=["local", "official"],
+        default="official",
+    ),
+    Validator(
+        "bot.api_server_base",
+        is_type_of=str,
+        default="http://local-bot-api:8081",
+    ),
+    Validator(
+        "bot.fsm_type",
+        is_type_of=str,
+        is_in=["memory", "redis"],
+        default="memory",
+    ),
+    Validator("bot.use_webhook", is_type_of=bool, default=False),
+    Validator("bot.use_local_server", is_type_of=bool, default=False),
+    Validator(
+        "bot.webhook_path",
+        is_type_of=str,
+        default="/tg/webhooks/bot/{bot_id}",
+    ),
+    Validator("bot.webhook_listening_host", is_type_of=str, default="bot"),
+    Validator("bot.webhook_listening_port", is_type_of=int, default=88),
+    Validator(
+        "bot.webhook_max_updates_in_queue", is_type_of=int, default=100
+    ),
+    Validator(
+        "bot.webhook_secret_token", is_type_of=str | None, default=None
+    ),
 )
 
 try:
