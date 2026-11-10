@@ -68,6 +68,11 @@ settings.validators.register(
         default="http://local-bot-api:8081",
     ),
     Validator(
+        "bot.is_local",
+        is_type_of=bool,
+        default=False,
+    ),
+    Validator(
         "bot.fsm_type",
         is_type_of=str,
         is_in=["memory", "redis"],

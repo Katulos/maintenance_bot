@@ -47,9 +47,21 @@ async def _aiogram_on_startup_webhook(
         drop_pending_updates=settings.get("bot.drop_previous_updates"),
     )
     try:
+        if settings.get("bot.use_local_server"):
+            schema = "http://"
+        else:
+            schema = "https://"
+        webhook_address = (
+            schema
+            + settings.get("bot.webhook_listening_host")
+            + ":"
+            + str(settings.get("bot.webhook_listening_port"))
+            + settings.get("bot.webhook_path")
+        )
+
         await bot.set_webhook(
-            url=settings.get("bot.webhook_address").format(
-                bot_id=settings.get("bot.bot_id"),
+            url=webhook_address.format(
+                bot_id=settings.get("bot.token").split(":")[0],
             ),
             allowed_updates=dispatcher.resolve_used_update_types(),
             secret_token=settings.get("bot.webhook_secret_token"),

@@ -37,7 +37,7 @@ def create_tg_updates_app() -> web.Application:
 
         if not secrets.compare_digest(
             req.match_info["bot_id"],
-            str(settings.get("bot.bot_id")),
+            str(settings.get("bot.token").split(":")[0]),
         ):
             logging.error("bot_id not matched")
             raise aiohttp.web.HTTPNotFound
