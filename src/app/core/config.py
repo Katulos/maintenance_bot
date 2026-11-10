@@ -81,12 +81,24 @@ settings.validators.register(
         default="/tg/webhooks/bot/{bot_id}",
     ),
     Validator("bot.webhook_listening_host", is_type_of=str, default="bot"),
-    Validator("bot.webhook_listening_port", is_type_of=int, default=88),
+    Validator("odoo.bot.webhook_listening_port", is_type_of=int, default=88),
     Validator(
         "bot.webhook_max_updates_in_queue", is_type_of=int, default=100
     ),
     Validator(
         "bot.webhook_secret_token", is_type_of=str | None, default=None
+    ),
+    # Odoo
+    Validator("odoo.host", is_type_of=str),
+    Validator("odoo.database", is_type_of=str),
+    Validator("odoo.username", is_type_of=str),
+    Validator("odoo.password", is_type_of=str),
+    Validator("odoo.port", is_type_of=int, default=8069),
+    Validator(
+        "odoo.protocol",
+        is_type_of=str,
+        is_in=["jsonrpc", "jsonrpc+ssl"],
+        default="jsonrpc+ssl",
     ),
 )
 
