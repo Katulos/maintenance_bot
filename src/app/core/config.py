@@ -4,6 +4,8 @@ import sys
 
 from dynaconf import Dynaconf, ValidationError, Validator
 
+from .logging import setup_logger
+
 _BASE_DIR = os.getcwd()
 
 
@@ -125,5 +127,6 @@ settings.validators.register(
 try:
     settings.validators.validate_all()
 except ValidationError as e:
+    setup_logger(loglevel=logging.DEBUG)
     logging.error(e.message)
     sys.exit(1)

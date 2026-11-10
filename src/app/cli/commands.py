@@ -12,6 +12,7 @@ from app.core.infrastructure.db.alembic.config import get_alembic_config_path
 from app.scheduler import scheduler as _scheduler
 
 from ..core.config import settings
+from ..core.logging import setup_logger
 
 
 def with_alembic_config(
@@ -34,13 +35,12 @@ def with_alembic_config(
 
 @click.group()
 def cli() -> None:
-    """Main CLI group."""
     debug = settings.get("core.debug")
 
     if debug:
-        logging.basicConfig(level=logging.DEBUG)
+        setup_logger(loglevel=logging.DEBUG)
     else:
-        logging.basicConfig(level=logging.INFO)
+        setup_logger(loglevel=logging.INFO)
 
 
 @cli.group()

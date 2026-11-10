@@ -1,5 +1,4 @@
 import logging
-from pprint import pprint
 
 from adaptix import Retort, name_mapping
 from arq import ArqRedis
@@ -11,8 +10,6 @@ from odoorpc.models import Model
 
 from app.core.infrastructure import dto
 from app.core.infrastructure.db.dao import DAO
-
-_logger = logging.getLogger(__name__)
 
 _retort = Retort(
     recipe=[
@@ -44,15 +41,15 @@ async def sync_res_users(
         )
 
         vals = _retort.load(records, list[dto.ResUser])
-        pprint(vals)
+        logging.info(vals)
         # for val in vals:
         #     await scheduler.enqueue_job("upsert_res_user", val)
 
     except RPCError as e:
         # TODO: disable sync
-        logging.getLogger("odoorpc").error(e)
+        logging.error(e)
     except Exception as e:
-        _logger.error(e)
+        logging.error(e)
 
 
 @inject

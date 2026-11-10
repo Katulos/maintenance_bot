@@ -11,7 +11,6 @@ repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.12.9
     hooks:
-      - id: uv-lock
       - id: uv-export
         args:
           - --format=requirements.txt
@@ -98,11 +97,21 @@ repos:
           - "adaptix>=3.0.0b11"
           - "aiogram>=3.21.0"
           - "aiogram-dialog>=2.4.0"
+          - "aiojobs>=1.4.0"
+          - "alembic>=1.16.4"
+          - "arq>=0.25.0"
+          - "click>=8.2.1"
+          - "cryptography>=45.0.6"
           - "dishka>=1.6.0"
-          - "sqlalchemy[mypy]>=2.0.42"
-          - "types-pyyaml"
-          - "types-pytz"
-          - "types-click"
+          - "dynaconf>=3.3.5"
+          - "fastapi>=0.116.1"
+          - "fluent-runtime>=0.4.0"
+          - "odoorpc>=0.10.1"
+          - "orjson>=3.11.1"
+          - "pyyaml>=6.0.2"
+          - "sqlalchemy[postgresql-asyncpg]>=2.0.42"
+          - "structlog>=26.1.0"
+          - "uvicorn>=0.35.0"
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.5
     hooks:

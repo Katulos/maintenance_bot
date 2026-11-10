@@ -43,5 +43,5 @@ def run() -> None:
         port=settings.get("api.port"),
         host=settings.get("api.bind"),
         access_log=settings.get("api.enable_access_log"),
-        # log_config=None,
+        log_config=None,
     )

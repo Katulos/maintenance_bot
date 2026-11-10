@@ -5,8 +5,6 @@ from odoorpc import ODOO
 
 from ...config import settings
 
-_logger = logging.getLogger("odoorpc")
-
 
 class OdooProvider(Provider):
     scope = Scope.REQUEST
@@ -26,4 +24,4 @@ class OdooProvider(Provider):
             )
             return client
         except Exception as e:
-            _logger.error(e)
+            logging.error(e)
