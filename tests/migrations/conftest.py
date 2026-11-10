@@ -4,12 +4,12 @@ import uuid
 import pytest
 import pytest_asyncio
 from alembic.config import Config
-from dishka import AsyncContainer
 from yarl import URL
 
-from app.core.config.db import DbConfig
-from app.core.di.container import get_async_container
-from app.core.infrastructure.db.alembic.config import get_alembic_config_path
+from app.core.config import settings
+from app.core.infrastructure.db.alembic.config import (
+    get_alembic_config_path,
+)
 from tests.utils.sqlachemy_utils import (
     create_database,
     database_exists,
@@ -19,11 +19,8 @@ from tests.utils.sqlachemy_utils import (
 
 @pytest_asyncio.fixture(scope="session")
 async def db_url():
-    container: AsyncContainer = get_async_container(
-        config_path=pathlib.Path("config.yml"),
-    )
-    db_config = await container.get(DbConfig)
-    original_dsn = db_config.dsn
+
+    original_dsn = settings.get("db.database_url")
 
     url = URL(original_dsn)
     is_sqlite = "sqlite" in url.scheme
@@ -46,7 +43,6 @@ async def db_url():
         yield test_dsn
     finally:
         await drop_database(test_dsn)
-        await container.close()
 
 
 @pytest.fixture(scope="session")

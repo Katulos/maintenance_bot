@@ -3,7 +3,7 @@ import logging
 from dishka import Provider, Scope, provide
 from odoorpc import ODOO
 
-from app.core.config.odoo import OdooConfig
+from ...config import settings
 
 _logger = logging.getLogger("odoorpc")
 
@@ -12,17 +12,17 @@ class OdooProvider(Provider):
     scope = Scope.REQUEST
 
     @provide
-    async def provide_odoo(self, config: OdooConfig) -> ODOO:
+    async def provide_odoo(self) -> ODOO:
         try:
             client = ODOO(
-                host=config.host,
-                port=config.port,
-                protocol=config.protocol,
+                host=settings.get("odoo.host"),
+                port=settings.get("odoo.port"),
+                protocol=settings.get("odoo.protocol"),
             )
             client.login(
-                db=config.database,
-                login=config.username,
-                password=config.password,
+                db=settings.get("odoo.database"),
+                login=settings.get("odoo.username"),
+                password=settings.get("odoo.password"),
             )
             return client
         except Exception as e:

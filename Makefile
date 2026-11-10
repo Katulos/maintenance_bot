@@ -8,7 +8,7 @@ help: ## Display this help screen
 	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: clean
-clean: clean-build clean-test clean-pyc ## Clean project
+clean: clean-build clean-test clean-pyc clean-cache ## Clean project
 
 .PHONY: clean-build
 clean-build:
@@ -35,6 +35,11 @@ clean-test:
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
+.PHONY: clean-cache
+clean-cache:
+	rm -fr data/cache/
+
+
 # i18n
 .PHONY: extract
 extract: ## Extract i18n
@@ -48,8 +53,7 @@ extract: ## Extract i18n
 fluent: extract
 
 .PHONY: test
-test:  ## Run tests
-	pytest tests/
+test: clean nox ## Run tests
 
 .PHONY: nox
 nox: clean  ## Run nox tests

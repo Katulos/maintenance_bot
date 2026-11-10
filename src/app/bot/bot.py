@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import pathlib
 import signal
 from functools import partial
 
@@ -10,8 +9,9 @@ from aiogram.exceptions import TelegramBadRequest
 from aiohttp import web
 
 from app.bot.handlers.web.tg_updates import create_tg_updates_app
-from app.core.config.main import Config
 from app.core.di.container import get_async_container
+
+from ..core.config import settings
 
 
 async def _aiohttp_on_startup(app: web.Application) -> None:
@@ -42,18 +42,29 @@ async def _aiohttp_on_shutdown(app: web.Application) -> None:
 async def _aiogram_on_startup_webhook(
     dispatcher: Dispatcher,
     bot: Bot,
-    config: Config,
 ) -> None:
     await bot.delete_webhook(
-        drop_pending_updates=config.bot.drop_previous_updates,
+        drop_pending_updates=settings.get("bot.drop_previous_updates"),
     )
     try:
+        if settings.get("bot.use_local_server"):
+            schema = "http://"
+        else:
+            schema = "https://"
+        webhook_address = (
+            schema
+            + settings.get("bot.webhook_listening_host")
+            + ":"
+            + str(settings.get("bot.webhook_listening_port"))
+            + settings.get("bot.webhook_path")
+        )
+
         await bot.set_webhook(
-            url=config.bot.webhook_address.format(
-                bot_id=config.bot.bot_id,
+            url=webhook_address.format(
+                bot_id=settings.get("bot.token").split(":")[0],
             ),
             allowed_updates=dispatcher.resolve_used_update_types(),
-            secret_token=config.bot.webhook_secret_token,
+            secret_token=settings.get("bot.webhook_secret_token"),
         )
 
     except TelegramBadRequest as e:
@@ -65,7 +76,6 @@ async def _aiogram_on_startup_webhook(
 async def _aiogram_on_shutdown_webhook(
     dispatcher: Dispatcher,
     bot: Bot,
-    config: Config,
 ) -> None:
     await bot.session.close()
     await dispatcher.storage.close()
@@ -74,17 +84,15 @@ async def _aiogram_on_shutdown_webhook(
 async def _aiogram_on_startup_polling(
     dispatcher: Dispatcher,
     bot: Bot,
-    config: Config,
 ) -> None:
     await bot.delete_webhook(
-        drop_pending_updates=config.bot.drop_previous_updates,
+        drop_pending_updates=settings.get("bot.drop_previous_updates"),
     )
 
 
 async def _aiogram_on_shutdown_polling(
     dispatcher: Dispatcher,
     bot: Bot,
-    config: Config,
 ) -> None:
     await bot.session.close()
     await dispatcher.storage.close()
@@ -93,12 +101,11 @@ async def _aiogram_on_shutdown_polling(
 async def _setup_aiohttp_app(
     bot: Bot,
     dp: Dispatcher,
-    config: Config,
 ) -> web.Application:
     scheduler = aiojobs.Scheduler()
     app = web.Application()
     subapps: list[tuple[str, web.Application]] = [
-        ("/tg/webhooks/", create_tg_updates_app(config.bot)),
+        ("/tg/webhooks/", create_tg_updates_app()),
     ]
     for prefix, subapp in subapps:
         subapp["bot"] = bot
@@ -113,34 +120,27 @@ async def _setup_aiohttp_app(
     return app
 
 
-async def run(config_path: pathlib.Path) -> None:
-    _container = get_async_container(config_path)
-
-    config = await _container.get(Config)
-
-    if config.core.debug:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
+async def run() -> None:
+    _container = get_async_container()
 
     bot = await _container.get(Bot)
 
     dp = await _container.get(Dispatcher)
 
-    if config.bot.use_webhook:
+    if settings.get("bot.use_webhook"):
         dp.startup.register(
-            partial(_aiogram_on_startup_webhook, dp, bot, config),
+            partial(_aiogram_on_startup_webhook, dp, bot),
         )
         dp.shutdown.register(
-            partial(_aiogram_on_shutdown_webhook, dp, bot, config),
+            partial(_aiogram_on_shutdown_webhook, dp, bot),
         )
-        app = await _setup_aiohttp_app(bot, dp, config)
+        app = await _setup_aiohttp_app(bot, dp)
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(
             runner,
-            host=config.bot.webhook_listening_host,
-            port=config.bot.webhook_listening_port,
+            host=settings.get("bot.webhook_listening_host"),
+            port=settings.get("bot.webhook_listening_port"),
         )
         # try:
         await site.start()
@@ -159,9 +159,9 @@ async def run(config_path: pathlib.Path) -> None:
             await runner.cleanup()
     else:
         dp.startup.register(
-            partial(_aiogram_on_startup_polling, dp, bot, config),
+            partial(_aiogram_on_startup_polling, dp, bot),
         )
         dp.shutdown.register(
-            partial(_aiogram_on_shutdown_polling, dp, bot, config),
+            partial(_aiogram_on_shutdown_polling, dp, bot),
         )
         await dp.start_polling(bot)

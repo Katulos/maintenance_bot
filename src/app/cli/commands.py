@@ -1,8 +1,6 @@
 import asyncio
 import logging
-import pathlib
 from collections.abc import Callable
-from typing import Any
 
 import click
 from alembic import command
@@ -10,21 +8,13 @@ from alembic.config import Config
 
 from app.api import api as _api
 from app.bot import bot as _tgbot
-from app.core.config.db import DbConfig
-from app.core.config.loader import ConfigLoader
 from app.core.infrastructure.db.alembic.config import get_alembic_config_path
 from app.scheduler import scheduler as _scheduler
 
-
-def load_config_or_exit(config_path: pathlib.Path) -> DbConfig:
-    if not config_path.exists():
-        logging.critical("Config file not found")
-        raise click.FileError(str(config_path), "Config file not found")
-    return ConfigLoader.load_config(config_path).db
+from ..core.config import settings
 
 
 def with_alembic_config(
-    config: DbConfig,
     callback: Callable[[Config], None],
 ) -> None:
     alembic_path_gen = get_alembic_config_path()
@@ -35,14 +25,22 @@ def with_alembic_config(
         return
 
     alembic_cfg = Config(str(alembic_path))
-    alembic_cfg.set_main_option("sqlalchemy.url", config.dsn)
+    alembic_cfg.set_main_option(
+        "sqlalchemy.url",
+        settings.get("db.database_url"),
+    )
     callback(alembic_cfg)
 
 
 @click.group()
 def cli() -> None:
     """Main CLI group."""
-    pass
+    debug = settings.get("core.debug")
+
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
 
 @cli.group()
@@ -57,81 +55,55 @@ def migrations() -> None:
     pass
 
 
-def common_command_options(func: Callable[..., Any]) -> Callable[..., Any]:
-    func = click.option(
-        "--config",
-        "-c",
-        type=click.Path(dir_okay=False, path_type=pathlib.Path),
-        default="config.yml",
-        help="Path to config file. Defaults to config.yml.",
-    )(func)
-    return click.pass_context(func)
-
-
 @run.command()
-@common_command_options
-def api(ctx: click.Context, config: pathlib.Path) -> None:
+def api() -> None:
     """Run API server."""
-    ctx.invoke(upgrade, config=config)
+    ctx = click.get_current_context()
+    ctx.invoke(upgrade)
     logging.info("Running API server")
-    _api.run(config)
+    _api.run()
 
 
 @run.command()
-@common_command_options
-def bot(ctx: click.Context, config: pathlib.Path) -> None:
+def bot() -> None:
     """Run bot application."""
-    ctx.invoke(upgrade, config=config)
-    asyncio.run(_tgbot.run(config))
+    ctx = click.get_current_context()
+    ctx.invoke(upgrade)
+    asyncio.run(_tgbot.run())
 
 
 @run.command()
-@common_command_options
-def scheduler(ctx: click.Context, config: pathlib.Path) -> None:
+def scheduler() -> None:
     """Run scheduler."""
-    ctx.invoke(upgrade, config=config)
-    asyncio.run(_scheduler.run(config))
+    ctx = click.get_current_context()
+    ctx.invoke(upgrade)
+    asyncio.run(_scheduler.run())
 
 
 @migrations.command()
-@common_command_options
 @click.argument("message", required=True)
 def autogenerate(
-    ctx: click.Context,
-    config: pathlib.Path,
     message: str,
 ) -> None:
     """Autogenerate new migration."""
-    db_config = load_config_or_exit(config)
     with_alembic_config(
-        db_config,
         lambda cfg: command.revision(cfg, autogenerate=True, message=message),
     )
 
 
 @migrations.command()
-@common_command_options
 @click.argument("revision", default="head")
-def upgrade(ctx: click.Context, config: pathlib.Path, revision: str) -> None:
+def upgrade(revision: str) -> None:
     """Upgrade database to specified revision."""
-    db_config = load_config_or_exit(config)
-    try:
-        with_alembic_config(db_config, lambda cfg: command.upgrade(cfg, revision))
-    except Exception as e:
-        logging.error(e)
+    with_alembic_config(lambda cfg: command.upgrade(cfg, revision))
 
 
 @migrations.command()
-@common_command_options
 @click.argument("revision", default="head")
 def downgrade(
-    ctx: click.Context,
-    config: pathlib.Path,
     revision: str,
 ) -> None:
     """Downgrade database to specified revision."""
-    db_config = load_config_or_exit(config)
     with_alembic_config(
-        db_config,
         lambda cfg: command.downgrade(cfg, revision),
     )

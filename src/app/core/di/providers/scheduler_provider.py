@@ -12,8 +12,9 @@ from dishka import (
 )
 from dishka.integrations.arq import setup_dishka
 
-from app.core.config.redis import RedisConfig
 from app.scheduler.jobs import sync_res_users
+
+from ...config import settings
 
 
 def at_every_x_minutes(x: int, start: int = 0, end: int = 59):
@@ -57,15 +58,14 @@ class SchedulerProvider(Provider):
     @provide
     async def provide_pool(
         self,
-        config: RedisConfig,
     ) -> AsyncIterable[ArqRedis]:
         pool = await create_pool(
             RedisSettings(
-                host=config.host,
-                port=config.port,
-                database=config.db,
-                username=config.username,
-                password=config.password,
+                host=settings.get("redis.host"),
+                port=settings.get("redis.port"),
+                database=settings.get("redis.db"),
+                username=settings.get("redis.username"),
+                password=settings.get("redis.password"),
             ),
         )
         yield pool

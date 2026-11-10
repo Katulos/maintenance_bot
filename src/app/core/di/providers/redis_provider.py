@@ -4,7 +4,7 @@ from collections.abc import AsyncIterable
 from dishka import Provider, Scope, provide
 from redis.asyncio.client import Redis
 
-from app.core.config.redis import RedisConfig
+from ...config import settings
 
 
 class RedisProvider(Provider):
@@ -13,15 +13,14 @@ class RedisProvider(Provider):
     @provide
     async def provide_redis(
         self,
-        config: RedisConfig,
     ) -> AsyncIterable[Redis]:
         try:
             async with Redis(
-                host=config.host,
-                port=config.port,
-                db=config.db,
-                username=config.username,
-                password=config.password,
+                host=settings.get("redis.host"),
+                port=settings.get("redis.port"),
+                db=settings.get("redis.db"),
+                username=settings.get("redis.username"),
+                password=settings.get("redis.password"),
             ) as redis:
                 yield redis
         except Exception as e:

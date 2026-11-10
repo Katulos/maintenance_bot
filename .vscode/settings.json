@@ -1,3 +1,4 @@
+{
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
     "editor.rulers": [78, 100, 120],
@@ -37,11 +38,5 @@
     "python.testing.pytestEnabled": true,
     "remote.autoForwardPortsFallback": 0,
     "search.followSymlinks": false,
-    "search.useIgnoreFiles": true,
-    "cursorpyright.analysis.autoImportCompletions": true,
-    "cursorpyright.analysis.diagnosticMode": "openFilesOnly",
-    "cursorpyright.analysis.extraPaths": [],
-    "cursorpyright.analysis.inlayHints.functionReturnTypes": true,
-    "cursorpyright.analysis.inlayHints.variableTypes": true,
-    "cursorpyright.analysis.typeCheckingMode": "standard"
+    "search.useIgnoreFiles": true
 }
