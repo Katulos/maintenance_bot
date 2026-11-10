@@ -5,7 +5,7 @@ from datetime import datetime
 @dataclass
 class ResUser:
     odoo_id: int
-    telegram_id: int
+    telegram_id: int | None
     name: str
     create_date: datetime
     write_date: datetime

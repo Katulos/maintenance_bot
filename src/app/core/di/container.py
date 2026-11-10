@@ -2,23 +2,22 @@ from dishka import AsyncContainer, make_async_container
 from dishka.integrations.aiogram import AiogramProvider
 from dishka.integrations.fastapi import FastapiProvider
 
-from app.core.di.providers.bot_provider import (
+from .providers.bot_provider import (
     BotProvider,
     DispatcherProvider,
     TelegramIdProvider,
 )
-from app.core.di.providers.db_provider import DbProvider
-from app.core.di.providers.fastapi_command_provider import (
+from .providers.db_provider import DbProvider
+from .providers.fastapi_command_provider import (
     FastAPICommandProvider,
 )
-from app.core.di.providers.odoo_provider import OdooProvider
-from app.core.di.providers.redis_provider import RedisProvider
-from app.core.di.providers.scheduler_provider import SchedulerProvider
+from .providers.odoo_provider import OdooProvider
+from .providers.redis_provider import RedisProvider
+from .providers.scheduler_provider import SchedulerProvider
 
 
 def get_async_container() -> AsyncContainer:
     providers = [
-        # ConfigProvider(config_path),
         #
         AiogramProvider(),
         BotProvider(),

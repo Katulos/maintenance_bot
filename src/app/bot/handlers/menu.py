@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram_dialog import DialogManager, StartMode
 
-from app.bot.states import MainMenuSG
+from ..states import MainMenuSG
 
 
 async def menu_command(

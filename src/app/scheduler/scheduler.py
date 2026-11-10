@@ -4,7 +4,7 @@ import sys
 
 from arq import Worker
 
-from app.core.di.container import get_async_container
+from ..core.di.container import get_async_container
 
 
 async def run() -> None:

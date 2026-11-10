@@ -1,7 +1,7 @@
 from aiogram import Dispatcher
 from aiogram_dialog import setup_dialogs
 
-from app.bot.dialogs import start
+from ..dialogs import start
 
 
 def setup(dp: Dispatcher) -> None:

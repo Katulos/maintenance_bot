@@ -12,8 +12,7 @@ from dishka import (
 )
 from dishka.integrations.arq import setup_dishka
 
-from app.scheduler.jobs import sync_res_users
-
+from ....scheduler.jobs import sync_res_users
 from ...config import settings
 
 

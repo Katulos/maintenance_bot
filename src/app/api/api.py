@@ -5,12 +5,10 @@ import uvicorn
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
-import app
-from app.api.exceptions import include_exception_handlers
-from app.api.v1.routes import include_routers
-from app.core.di.container import get_async_container
-
 from ..core.config import settings
+from ..core.di.container import get_async_container
+from .exceptions import include_exception_handlers
+from .v1.routes import include_routers
 
 
 @asynccontextmanager
@@ -26,7 +24,7 @@ fast_app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
-    version=app.__version__,
+    # version=app.__version__,
 )
 
 

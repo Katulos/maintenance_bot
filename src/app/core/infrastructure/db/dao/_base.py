@@ -1,7 +1,7 @@
 from typing import Generic, TypeVar
 
-from app.core.infrastructure.db.models import Base
-from app.core.infrastructure.db.session import AsyncSession
+from ..models import Base
+from ..session import AsyncSession
 
 _T = TypeVar(
     "_T",

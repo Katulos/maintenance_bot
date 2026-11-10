@@ -6,13 +6,12 @@ import click
 from alembic import command
 from alembic.config import Config
 
-from app.api import api as _api
-from app.bot import bot as _tgbot
-from app.core.infrastructure.db.alembic.config import get_alembic_config_path
-from app.scheduler import scheduler as _scheduler
-
+from ..api import api as _api
+from ..bot import bot as _tgbot
 from ..core.config import settings
+from ..core.infrastructure.db.alembic.config import get_alembic_config_path
 from ..core.logging import setup_logger
+from ..scheduler import scheduler as _scheduler
 
 
 def with_alembic_config(

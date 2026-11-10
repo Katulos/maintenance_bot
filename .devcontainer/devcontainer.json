@@ -17,10 +17,12 @@
             },
             "extensions": [
                 "charliermarsh.ruff",
+                "christian-kohler.path-intellisense",
                 "EditorConfig.EditorConfig",
                 "redhat.vscode-yaml",
-                "mohsen1.prettify-json",
-                "ms-python.python"
+                "ms-python.python",
+                "streetsidesoftware.code-spell-checker-russian",
+                "cweijan.vscode-database-client2"
             ]
         }
     },

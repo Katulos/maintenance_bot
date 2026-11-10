@@ -3,9 +3,9 @@ from aiogram.enums import ChatType
 from aiogram.filters import Command, CommandStart, ExceptionTypeFilter
 from aiogram_dialog.api.exceptions import UnknownIntent
 
-from app.bot import dialogs
-from app.bot.handlers import cancel, menu, start
-from app.bot.handlers.errors import clear_unknown_intent, errors_handler
+from .. import dialogs
+from ..handlers import cancel, menu, start
+from ..handlers.errors import clear_unknown_intent, errors_handler
 
 
 def setup(dp: Dispatcher) -> Router:

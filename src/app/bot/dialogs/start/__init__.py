@@ -4,7 +4,7 @@ from aiogram_dialog import (
     Dialog,
 )
 
-from app.bot.dialogs.start.windows import list
+from .windows import list
 
 
 def setup(dp: Dispatcher) -> None:

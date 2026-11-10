@@ -1,7 +1,12 @@
+import typing as t
+
 import sqlalchemy as sa
 import sqlalchemy.schema as sh
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm.decl_api import DeclarativeBase
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    InstrumentedAttribute,
+)
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -26,6 +31,26 @@ class Base(AsyncAttrs, DeclarativeBase):
     }
 
     metadata = sa.MetaData(naming_convention=__naming_convention)
+
+    def to_dict(self) -> dict[str, t.Any]:
+        return {
+            f"{self.__tablename__}_{col.name}": getattr(self, col.name)
+            for col in t.cast(list[sa.Column[t.Any]], self.__table__.columns)
+        }
+
+    @staticmethod
+    def _get_column(
+        model: type["Base"],
+        col: InstrumentedAttribute[t.Any],
+    ) -> t.Any:
+        name = col.name
+        if name not in model.__table__.columns:
+            raise ValueError(f"Column {name} not found in {model.__name__}")
+        return name
+
+    @classmethod
+    def _get_primary_key(cls) -> t.Any:
+        return list(cls.__table__.primary_key)[0].name
 
 
 @sa.event.listens_for(sa.engine.Engine, "connect")

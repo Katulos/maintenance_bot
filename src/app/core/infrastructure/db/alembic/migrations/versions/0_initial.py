@@ -1,9 +1,7 @@
 """Initial.
 
-Revision ID: 607612a75041
+Revision ID: 0
 Revises:
-Create Date: 2025-09-08 16:29:28.119837
-
 """
 
 import typing as t
@@ -12,7 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "607612a75041"
+revision: str = "0"
 down_revision: str | None = None
 branch_labels: str | t.Sequence[str] | None = None
 depends_on: str | t.Sequence[str] | None = None

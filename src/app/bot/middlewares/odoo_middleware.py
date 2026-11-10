@@ -8,9 +8,8 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, Message, TelegramObject, User
 from dishka import AsyncContainer
 
-from app.bot.utils.i18n_format import I18N_FORMAT_KEY
-
 from ...core.config import settings
+from ..utils.i18n_format import I18N_FORMAT_KEY
 
 
 class OdooMiddleware(BaseMiddleware):

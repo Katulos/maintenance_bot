@@ -9,8 +9,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from app.core.infrastructure.db.dao import DAO
-
+from ....core.infrastructure.db.dao import DAO
 from ...config import settings
 from ...infrastructure.db.session import AsyncSession
 

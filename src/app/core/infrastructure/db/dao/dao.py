@@ -1,5 +1,5 @@
-from app.core.infrastructure.db import dao
-from app.core.infrastructure.db.session import AsyncSession
+from ..session import AsyncSession
+from . import dao
 
 
 class DAO:

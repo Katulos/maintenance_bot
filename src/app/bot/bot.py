@@ -8,10 +8,9 @@ from aiogram import Bot, Dispatcher
 from aiogram.exceptions import TelegramBadRequest
 from aiohttp import web
 
-from app.bot.handlers.web.tg_updates import create_tg_updates_app
-from app.core.di.container import get_async_container
-
 from ..core.config import settings
+from ..core.di.container import get_async_container
+from .handlers.web.tg_updates import create_tg_updates_app
 
 
 async def _aiohttp_on_startup(app: web.Application) -> None:

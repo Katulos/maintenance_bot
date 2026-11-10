@@ -3,13 +3,13 @@ from __future__ import annotations
 from aiogram_dialog import StartMode, Window
 from aiogram_dialog.widgets.kbd import Button, Start
 
-from app.bot.handlers.cancel import close_button_handler
-from app.bot.states.dialog import (
+from ....handlers.cancel import close_button_handler
+from ....states.dialog import (
     EquipmentsMenuSG,
     MainMenuSG,
     MaintenancesMenuSG,
 )
-from app.bot.utils.i18n_format import I18NFormat
+from ....utils.i18n_format import I18NFormat
 
 window = Window(
     # Menu title

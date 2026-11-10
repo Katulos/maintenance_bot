@@ -24,9 +24,8 @@ from dishka.integrations.aiogram import setup_dishka
 from orjson import orjson
 from redis.asyncio import Redis
 
-from app.bot import handlers, middlewares
-from app.core.types import TelegramId
-
+from ....bot import handlers, middlewares
+from ....core.types import TelegramId
 from ...config import settings
 
 

@@ -5,7 +5,7 @@ from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.types import CallbackQuery, Message
 from fluent.runtime import FluentLocalization
 
-from app.bot.utils.i18n_format import I18N_FORMAT_KEY
+from ..utils.i18n_format import I18N_FORMAT_KEY
 
 
 class I18nMiddleware(BaseMiddleware):

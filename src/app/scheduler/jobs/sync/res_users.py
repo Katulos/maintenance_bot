@@ -8,8 +8,8 @@ from odoorpc import ODOO
 from odoorpc.error import RPCError
 from odoorpc.models import Model
 
-from app.core.infrastructure import dto
-from app.core.infrastructure.db.dao import DAO
+from ....core.infrastructure import dto
+from ....core.infrastructure.db.dao import DAO
 
 _retort = Retort(
     recipe=[

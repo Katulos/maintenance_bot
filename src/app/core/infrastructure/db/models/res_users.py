@@ -3,8 +3,9 @@ from datetime import datetime
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from app.core.infrastructure import dto
-from app.core.infrastructure.db.models import Base, ExternalSyncMixin
+from ... import dto
+from ._base import Base
+from ._mixins import ExternalSyncMixin
 
 
 class ResUser(Base, ExternalSyncMixin):
@@ -50,9 +51,11 @@ class ResUser(Base, ExternalSyncMixin):
 
     def to_dto(self) -> dto.ResUser:
         return dto.ResUser(
-            id=self.id,
+            # id=self.id,
             odoo_id=self.odoo_id,
             telegram_id=self.telegram_id,
             name=self.name,
-            employee_type=self.employee_type,
+            # employee_type=self.employee_type,
+            create_date=self.create_date,
+            write_date=self.write_date,
         )
