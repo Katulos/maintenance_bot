@@ -46,7 +46,7 @@ def create_tg_updates_app() -> web.Application:
         scheduler: aiojobs.Scheduler = req.app["scheduler"]
 
         if scheduler.pending_count > settings.get(
-            "bot.webhook_max_updates_in_queue"
+            "bot.webhook_max_updates_in_queue",
         ):
             raise web.HTTPTooManyRequests
         if scheduler.closed:

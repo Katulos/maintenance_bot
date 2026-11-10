@@ -88,10 +88,14 @@ settings.validators.register(
     Validator("bot.webhook_listening_host", is_type_of=str, default="bot"),
     Validator("odoo.bot.webhook_listening_port", is_type_of=int, default=88),
     Validator(
-        "bot.webhook_max_updates_in_queue", is_type_of=int, default=100
+        "bot.webhook_max_updates_in_queue",
+        is_type_of=int,
+        default=100,
     ),
     Validator(
-        "bot.webhook_secret_token", is_type_of=str | None, default=None
+        "bot.webhook_secret_token",
+        is_type_of=str | None,
+        default=None,
     ),
     # Odoo
     Validator("odoo.host", is_type_of=str),
