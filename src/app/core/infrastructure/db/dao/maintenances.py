@@ -3,7 +3,6 @@
 
 # from sqlalchemy import select
 # from sqlalchemy.dialects.postgresql import insert
-# from sqlalchemy.ext.asyncio import AsyncSession
 
 # from app.core.infrastructure import dto
 # from app.core.infrastructure.db import models

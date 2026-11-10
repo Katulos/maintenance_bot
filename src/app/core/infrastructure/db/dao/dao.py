@@ -1,6 +1,5 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.core.infrastructure.db import dao
+from app.core.infrastructure.db.session import AsyncSession
 
 
 class DAO:

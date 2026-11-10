@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.infrastructure import dto
 from app.core.infrastructure.db import models
 from app.core.infrastructure.db.dao import BaseDao
+from app.core.infrastructure.db.session import AsyncSession
 
 
 class ResUser(BaseDao[models.ResUser]):

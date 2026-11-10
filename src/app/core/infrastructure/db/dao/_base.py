@@ -1,8 +1,7 @@
 from typing import Generic, TypeVar
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.core.infrastructure.db.models import Base
+from app.core.infrastructure.db.session import AsyncSession
 
 _T = TypeVar(
     "_T",

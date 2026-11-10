@@ -6,13 +6,13 @@ class EncryptedString(TypeDecorator):
     impl = String
     cache_ok = True
 
-    def process_bind_param(self, value, dialect):
+    def process_bind_param(self, value, dialect):  # -> Any | None:
         if value is None:
             return None
         session = async_object_session(self)
         return session.cipher_suite.encrypt(value.encode()).decode()
 
-    def process_result_value(self, value, dialect):
+    def process_result_value(self, value, dialect):  # -> Any | None:
         if value is None:
             return None
         session = async_object_session(self)
