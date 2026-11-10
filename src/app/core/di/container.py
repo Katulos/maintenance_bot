@@ -1,5 +1,3 @@
-import pathlib
-
 from dishka import AsyncContainer, make_async_container
 from dishka.integrations.aiogram import AiogramProvider
 from dishka.integrations.fastapi import FastapiProvider
@@ -9,7 +7,6 @@ from app.core.di.providers.bot_provider import (
     DispatcherProvider,
     TelegramIdProvider,
 )
-from app.core.di.providers.config_provider import ConfigProvider
 from app.core.di.providers.db_provider import DbProvider
 from app.core.di.providers.fastapi_command_provider import (
     FastAPICommandProvider,
@@ -19,9 +16,9 @@ from app.core.di.providers.redis_provider import RedisProvider
 from app.core.di.providers.scheduler_provider import SchedulerProvider
 
 
-def get_async_container(config_path: pathlib.Path) -> AsyncContainer:
+def get_async_container() -> AsyncContainer:
     providers = [
-        ConfigProvider(config_path),
+        # ConfigProvider(config_path),
         #
         AiogramProvider(),
         BotProvider(),
