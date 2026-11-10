@@ -1,6 +1,6 @@
 import asyncio
 import pathlib
-from collections.abc import AsyncGenerator, AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 import uvicorn

@@ -116,7 +116,10 @@ def upgrade(ctx: click.Context, config: pathlib.Path, revision: str) -> None:
     """Upgrade database to specified revision."""
     db_config = load_config_or_exit(config)
     try:
-        with_alembic_config(db_config, lambda cfg: command.upgrade(cfg, revision))
+        with_alembic_config(
+            db_config,
+            lambda cfg: command.upgrade(cfg, revision),
+        )
     except Exception as e:
         logging.error(e)
 

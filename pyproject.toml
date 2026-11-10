@@ -27,6 +27,7 @@ dependencies = [
     "click>=8.2.1",
     "cryptography>=45.0.6",
     "dishka>=1.6.0",
+    "dynaconf>=3.3.5",
     "fastapi>=0.116.1",
     "fluent-runtime>=0.4.0",
     "odoorpc>=0.10.1",
