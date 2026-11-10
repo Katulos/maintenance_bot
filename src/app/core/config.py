@@ -101,11 +101,11 @@ settings.validators.register(
         default="jsonrpc+ssl",
     ),
     # Redis
-    Validator("redis.host", is_typeof=str, default="redis"),
-    Validator("redis.port", is_typeof=int, default=6379),
-    Validator("redis.db", is_typeof=int, default=0),
-    Validator("redis.username", is_typeof=str | None, default=None),
-    Validator("redis.password", is_typeof=str | None, default=None),
+    Validator("redis.host", is_type_of=str, default="redis"),
+    Validator("redis.port", is_type_of=int, default=6379),
+    Validator("redis.db", is_type_of=int, default=0),
+    Validator("redis.username", is_type_of=str | None, default=None),
+    Validator("redis.password", is_type_of=str | None, default=None),
 )
 
 try:
