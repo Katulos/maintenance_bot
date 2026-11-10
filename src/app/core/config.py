@@ -42,6 +42,11 @@ settings.validators.register(
         is_type_of=bool,
         default=False,
     ),
+    Validator(
+        "core.secret_key",
+        is_type_of=str,
+        must_exist=True,
+    ),
     # db
     Validator(
         "db.database_url",
