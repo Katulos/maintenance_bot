@@ -1,20 +1,14 @@
-from dataclasses import dataclass
-
-from app.core.infrastructure.dto.enums import EmployeeType
-
-
-@dataclass
-class ResUsers:
-    odoo_id: int
-    telegram_id: int
-    name: str
-    employee_type: EmployeeType
+from dataclasses import dataclass, field
+from datetime import datetime
 
 
 @dataclass
-class ResUsersResponse:
-    id: int
+class ResUser:
     odoo_id: int
     telegram_id: int
     name: str
-    employee_type: EmployeeType
+    create_date: datetime
+    write_date: datetime
+    last_sync_time: datetime = field(
+        default_factory=lambda: datetime.now().replace(microsecond=0),
+    )

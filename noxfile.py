@@ -25,12 +25,11 @@ def add_uv_to_environ() -> None:
 add_uv_to_environ()
 
 
-@nox.session(python=["3.10", "3.11", "3.12", "3.13"])  # type: ignore
+@nox.session()  # type: ignore
 def tests(session: nox.Session) -> None:
     """Run pytest with coverage on the source code."""
     session.install("-r", "tests/requirements.txt", ".")
     session.run(
         "pytest",
-        "--cov=src",
         *session.posargs,
     )

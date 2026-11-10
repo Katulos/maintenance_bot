@@ -1,6 +1,6 @@
 import asyncio
 import pathlib
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator, AsyncIterator
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -15,7 +15,7 @@ from app.core.di.container import get_async_container
 
 
 @asynccontextmanager
-async def lifespan(fast_app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(fast_app: FastAPI) -> AsyncGenerator[None]:
     yield
     await fast_app.state.dishka_container.close()
 

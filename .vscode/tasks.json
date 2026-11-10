@@ -1,5 +1,55 @@
 {
     "version": "2.0.0",
-    "inputs": [],
-    "tasks": []
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "dbName",
+            "description": "Name your new db",
+            "default": "devel"
+        },
+        {
+            "type": "promptString",
+            "id": "init_db",
+            "description": "Names of modules for init",
+            "default": "base"
+        },
+        {
+            "type": "promptString",
+            "id": "update_db",
+            "description": "Names of modules for update",
+            "default": "base"
+        }
+    ],
+    "tasks": [
+        {
+            "label": "CreateDB",
+            "command": "createdb ${input:dbName}",
+            "args": [],
+            "type": "shell",
+            "problemMatcher": [],
+            "presentation": {
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "DropDB",
+            "command": "dropdb ${input:dbName} && rm -rf /home/${env:USER}/.local/share/Odoo/filestore/${input:dbName}",
+            "args": [],
+            "type": "shell",
+            "problemMatcher": [],
+            "presentation": {
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "PSQL",
+            "command": "psql ${input:dbName}",
+            "args": [],
+            "type": "shell",
+            "problemMatcher": [],
+            "presentation": {
+                "panel": "dedicated"
+            }
+        }
+    ]
 }

@@ -1,12 +1,13 @@
+from datetime import datetime
+
 import sqlalchemy as sa
 from sqlalchemy import orm
 
 from app.core.infrastructure import dto
-from app.core.infrastructure.db.models import Base, CreatedUpdatedAtMixin
-from app.core.infrastructure.dto.enums import EmployeeType
+from app.core.infrastructure.db.models import Base, ExternalSyncMixin
 
 
-class ResUsers(Base, CreatedUpdatedAtMixin):
+class ResUser(Base, ExternalSyncMixin):
     __tablename__ = "res_users"
 
     id: orm.Mapped[int] = orm.mapped_column(
@@ -20,7 +21,7 @@ class ResUsers(Base, CreatedUpdatedAtMixin):
         unique=True,
     )
 
-    telegram_id: orm.Mapped[int] = orm.mapped_column(
+    telegram_id: orm.Mapped[int | None] = orm.mapped_column(
         sa.Integer(),
         nullable=True,
     )
@@ -29,27 +30,26 @@ class ResUsers(Base, CreatedUpdatedAtMixin):
         sa.String(),
     )
 
-    employee_type: orm.Mapped[EmployeeType] = orm.mapped_column(
-        default=EmployeeType.EMPLOYEE,
-        nullable=True,
-    )
+    create_date: orm.Mapped[datetime] = orm.mapped_column(sa.DateTime())
 
-    maintenance_equipments_technician: orm.Mapped["MaintenanceEquipment"] = (
-        orm.relationship(
-            foreign_keys="MaintenanceEquipment.technician_user_id",
-            back_populates="technician_user",
-        )
-    )
+    write_date: orm.Mapped[datetime] = orm.mapped_column(sa.DateTime())
 
-    maintenance_equipments_owner: orm.Mapped["MaintenanceEquipment"] = (
-        orm.relationship(
-            foreign_keys="MaintenanceEquipment.owner_user_id",
-            back_populates="owner_user",
-        )
-    )
+    # maintenance_equipments_technician: orm.Mapped["MaintenanceEquipment"] = (
+    #     orm.relationship(
+    #         foreign_keys="MaintenanceEquipment.technician_user_id",
+    #         back_populates="technician_user",
+    #     )
+    # )
 
-    def to_dto(self) -> dto.ResUsersResponse:
-        return dto.ResUsersResponse(
+    # maintenance_equipments_owner: orm.Mapped["MaintenanceEquipment"] = (
+    #     orm.relationship(
+    #         foreign_keys="MaintenanceEquipment.owner_user_id",
+    #         back_populates="owner_user",
+    #     )
+    # )
+
+    def to_dto(self) -> dto.ResUser:
+        return dto.ResUser(
             id=self.id,
             odoo_id=self.odoo_id,
             telegram_id=self.telegram_id,

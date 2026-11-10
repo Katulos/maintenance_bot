@@ -5,15 +5,14 @@ from odoorpc import ODOO
 
 from app.core.config.odoo import OdooConfig
 
+_logger = logging.getLogger("odoorpc")
+
 
 class OdooProvider(Provider):
     scope = Scope.REQUEST
 
     @provide
-    async def provide_odoo(
-        self,
-        config: OdooConfig,
-    ) -> ODOO:
+    async def provide_odoo(self, config: OdooConfig) -> ODOO:
         try:
             client = ODOO(
                 host=config.host,
@@ -27,4 +26,4 @@ class OdooProvider(Provider):
             )
             return client
         except Exception as e:
-            logging.error(e)
+            _logger.error(e)

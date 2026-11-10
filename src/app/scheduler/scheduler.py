@@ -1,13 +1,14 @@
 import asyncio
 import logging
 import pathlib
+import sys
 
 from arq import Worker
 
 from app.core.config.main import Config
 from app.core.di.container import get_async_container
 
-logger = logging.getLogger("app.scheduler")
+_logger = logging.getLogger("app.scheduler")
 
 
 async def run(config_path: pathlib.Path) -> None:
@@ -26,7 +27,8 @@ async def run(config_path: pathlib.Path) -> None:
     except (KeyboardInterrupt, asyncio.exceptions.CancelledError):
         pass
     except Exception as e:
-        logger.error(e)
+        _logger.error(e)
+        sys.exit(1)
     finally:
         await _container.close()
         await worker.close()

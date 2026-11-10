@@ -8,16 +8,16 @@ from app.core.infrastructure.db import models
 from app.core.infrastructure.db.dao import BaseDao
 
 
-class ResUsers(BaseDao[models.ResUsers]):
+class ResUser(BaseDao[models.ResUser]):
     def __init__(
         self,
         session: AsyncSession,
     ) -> None:
-        super().__init__(models.ResUsers, session)
+        super().__init__(models.ResUser, session)
 
-    async def upsert(self, data: dto.ResUsers) -> dto.ResUsersResponse:
+    async def upsert(self, data: dto.ResUser) -> dto.ResUser:
         stmt = (
-            insert(models.ResUsers)
+            insert(models.ResUser)
             .values(
                 odoo_id=data.odoo_id,
                 name=data.name,
@@ -26,7 +26,7 @@ class ResUsers(BaseDao[models.ResUsers]):
             )
             .on_conflict_do_update(
                 index_elements=[
-                    models.ResUsers.odoo_id,
+                    models.ResUser.odoo_id,
                 ],
                 set_={
                     "name": data.name,
@@ -35,7 +35,7 @@ class ResUsers(BaseDao[models.ResUsers]):
                     "updated_at": datetime.now(),
                 },
             )
-            .returning(models.ResUsers)
+            .returning(models.ResUser)
         )
         result = await self.session.execute(stmt)
         await self.session.commit()

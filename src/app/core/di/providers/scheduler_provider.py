@@ -13,7 +13,7 @@ from dishka import (
 from dishka.integrations.arq import setup_dishka
 
 from app.core.config.redis import RedisConfig
-from app.scheduler.jobs.sync import sync_all, upsert_maintenance_request
+from app.scheduler.jobs import sync_res_users
 
 
 def at_every_x_minutes(x: int, start: int = 0, end: int = 59):
@@ -33,14 +33,14 @@ class SchedulerProvider(Provider):
         settings.redis_pool = pool
         settings.cron_jobs = [
             cron(
-                sync_all,
+                sync_res_users,
                 # hour=0,
                 # minute=0,
                 minute=at_every_x_minutes(1),
                 run_at_startup=True,
             ),
         ]
-        settings.functions = [upsert_maintenance_request]
+        settings.functions = []
 
         return settings
 

@@ -1,8 +1,9 @@
 [semantic_release]
 version_variables = [
-    "app/__init__.py:__version__"
+    "src/tgbot/__init__.py:__version__"
 ]
 assets = []
+build_command = "wget -qO- https://astral.sh/uv/install.sh | sh && ~/.local/bin/uv build"
 build_command_env = []
 commit_message = "chore(release): v{version} [skip ci]"
 commit_parser = "conventional"
@@ -53,7 +54,7 @@ autoescape = false
 
 [semantic_release.commit_author]
 env = "GIT_COMMIT_AUTHOR"
-default = "Katulos <123748719+Katulos@users.noreply.github.com>q>"
+default = "Katulos <123748719+Katulos@users.noreply.github.com>"
 
 [semantic_release.commit_parser_options]
 minor_tags = ["feat"]

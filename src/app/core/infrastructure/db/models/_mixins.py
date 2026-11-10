@@ -30,6 +30,19 @@ class UpdatedAtMixin:
     )
 
 
+class ExternalSyncMixin:
+    """Mixin adding external synchronization timestamp."""
+
+    __abstract__ = True
+
+    last_sync_time: orm.Mapped[datetime] = orm.mapped_column(
+        sa.DateTime(timezone=True),
+        server_default=sa.func.now(),
+        onupdate=sa.func.now(),
+        doc="Timestamp of the last external synchronization",
+    )
+
+
 class CreatedUpdatedAtMixin(CreatedAtMixin, UpdatedAtMixin):
     """Mixin combining both created_at and updated_at timestamps."""
 
