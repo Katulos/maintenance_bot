@@ -1,7 +1,7 @@
 from dataclasses import dataclass
+from typing import Any
 
 from .enums.kanban import KanbanState
-from .res_users import ResUser
 
 
 @dataclass
@@ -24,18 +24,18 @@ class MaintenanceEquipment:
     model: str | bool
     serial_no: str | bool
     maintenance_count: int
-    category_id: MaintenanceStage
-    technician_user_id: int
-    owner_user_id: int
+    category_id: MaintenanceEquipmentCategory | bool
+    # technician_user_id: ResUser | Any
+    # owner_user_id: ResUser | Any
 
 
 @dataclass
 class MaintenanceRequest:
     odoo_id: int
     name: str
-    equipment_id: MaintenanceEquipment
+    equipment_id: MaintenanceEquipment | Any
     stage_id: MaintenanceStage
-    user_id: ResUser
-    create_uid: ResUser
-    owner_user_id: ResUser
+    # user_id: ResUser | Any
+    # create_uid: ResUser | bool | Any | None
+    # owner_user_id: ResUser | bool | Any | None
     kanban_state: KanbanState

@@ -12,7 +12,10 @@ from dishka import (
 )
 from dishka.integrations.arq import setup_dishka
 
-from ....scheduler.jobs import sync_res_users, upsert_res_user
+from ....scheduler.jobs import (
+    sync_all,
+    upsert_maintenance_request,
+)
 from ...config import settings
 
 
@@ -38,16 +41,16 @@ class SchedulerProvider(Provider):
         settings.redis_pool = pool
         settings.cron_jobs = [
             cron(
-                sync_res_users,
-                name="Sync Odoo Users",
+                sync_all,
+                name="Sync Odoo",
                 # hour=_at_every_x_hours(1),
                 minute=_at_every_x_minutes(1),
                 run_at_startup=True,
-                timeout=1500,
-                max_tries=5,
+                # timeout=1500,
+                # max_tries=5,
             ),
         ]
-        settings.functions = [upsert_res_user]
+        settings.functions = [upsert_maintenance_request]
 
         return settings
 
