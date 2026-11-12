@@ -7,7 +7,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
      apt-transport-https \
      git-flow \
-     gpg
+     gpg \
+     postgresql-client
 
 RUN apt-get clean
 

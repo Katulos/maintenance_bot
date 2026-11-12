@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy.dialects.postgresql import insert
 
 from ... import dto
@@ -23,6 +21,9 @@ class ResUser(BaseDao[models.ResUser]):
                 name=data.name,
                 telegram_id=data.telegram_id,
                 employee_type=data.employee_type,
+                create_date=data.create_date,
+                write_date=data.write_date,
+                last_sync_time=data.last_sync_time,
             )
             .on_conflict_do_update(
                 index_elements=[
@@ -32,7 +33,7 @@ class ResUser(BaseDao[models.ResUser]):
                     "name": data.name,
                     "telegram_id": data.telegram_id,
                     "employee_type": data.employee_type,
-                    "updated_at": datetime.now(),
+                    "write_date": data.write_date,
                 },
             )
             .returning(models.ResUser)

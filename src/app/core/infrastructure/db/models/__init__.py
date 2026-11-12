@@ -5,4 +5,10 @@ from ._mixins import (
     ExternalSyncMixin,
     UpdatedAtMixin,
 )
+from .maintenances import (
+    MaintenanceEquipment,
+    MaintenanceEquipmentCategory,
+    MaintenanceRequest,
+    MaintenanceStage,
+)
 from .res_users import ResUser

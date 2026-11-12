@@ -12,12 +12,6 @@
             "id": "init_db",
             "description": "Names of modules for init",
             "default": "base"
-        },
-        {
-            "type": "promptString",
-            "id": "update_db",
-            "description": "Names of modules for update",
-            "default": "base"
         }
     ],
     "tasks": [
@@ -33,7 +27,7 @@
         },
         {
             "label": "DropDB",
-            "command": "dropdb ${input:dbName} && rm -rf /home/${env:USER}/.local/share/Odoo/filestore/${input:dbName}",
+            "command": "dropdb ${input:dbName}",
             "args": [],
             "type": "shell",
             "problemMatcher": [],

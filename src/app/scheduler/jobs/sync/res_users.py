@@ -1,6 +1,6 @@
 import logging
 
-from adaptix import Retort, name_mapping
+from adaptix import P, Retort, loader, name_mapping
 from arq import ArqRedis
 from dishka import AsyncContainer, FromDishka
 from dishka.integrations.arq import inject
@@ -15,8 +15,11 @@ _retort = Retort(
     recipe=[
         name_mapping(
             dto.ResUser,
-            map={"odoo_id": "id"},
+            map={
+                "odoo_id": "id",
+            },
         ),
+        loader(P[dto.ResUser].telegram_id, lambda x: int(x)),
     ],
 )
 
@@ -35,15 +38,19 @@ async def sync_res_users(
                 "id",
                 "telegram_id",
                 "name",
+                "employee_type",
                 "create_date",
                 "write_date",
             ],
         )
 
-        vals = _retort.load(records, list[dto.ResUser])
-        logging.info(vals)
-        # for val in vals:
-        #     await scheduler.enqueue_job("upsert_res_user", val)
+        vals: list[dto.ResUser] = _retort.load(records, list[dto.ResUser])
+        for val in vals:
+            if val.telegram_id != 0:
+                await scheduler.enqueue_job(
+                    "upsert_res_user",
+                    val,
+                )
 
     except RPCError as e:
         # TODO: disable sync
@@ -59,5 +66,4 @@ async def upsert_res_user(
 ) -> None:
     container: AsyncContainer = ctx["dishka_request_container"]
     dao: DAO = await container.get(DAO)
-
     await dao.res_users.upsert(data)

@@ -2,6 +2,12 @@ services:
   devcontainer:
     env_file:
       - .env
+    environment:
+      - PGHOST=${POSTGRES_HOST}
+      - PGPORT=${POSTGRES_PORT}
+      - PGUSER=${POSTGRES_USER}
+      - PGPASSWORD=${POSTGRES_PASSWORD}
+      - PGDATABASE=${POSTGRES_DB}
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile

@@ -12,16 +12,21 @@ from dishka import (
 )
 from dishka.integrations.arq import setup_dishka
 
-from ....scheduler.jobs import sync_res_users
+from ....scheduler.jobs import sync_res_users, upsert_res_user
 from ...config import settings
 
 
-def at_every_x_minutes(x: int, start: int = 0, end: int = 59):
+def _at_every_x_minutes(x: int, start: int = 0, end: int = 59):
+    return {*list(range(start, end, x))}
+
+
+def _at_every_x_hours(x: int, start: int = 0, end: int = 23):
     return {*list(range(start, end, x))}
 
 
 class WorkerSettings(WorkerSettingsBase):
-    pass
+    redis_pool: ArqRedis
+    functions = []
 
 
 class SchedulerProvider(Provider):
@@ -34,13 +39,15 @@ class SchedulerProvider(Provider):
         settings.cron_jobs = [
             cron(
                 sync_res_users,
-                # hour=0,
-                # minute=0,
-                minute=at_every_x_minutes(1),
+                name="Sync Odoo Users",
+                # hour=_at_every_x_hours(1),
+                minute=_at_every_x_minutes(1),
                 run_at_startup=True,
+                timeout=1500,
+                max_tries=5,
             ),
         ]
-        settings.functions = []
+        settings.functions = [upsert_res_user]
 
         return settings
 
